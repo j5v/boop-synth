@@ -1,10 +1,11 @@
 import './Content.css'
+import SynthGraphEditor from './SynthGraphEditor.jsx'
 
 function Content() {
 
   return (
     <div className="Content">
-      Content
+      <SynthGraphEditor />
     </div>
   )
 }

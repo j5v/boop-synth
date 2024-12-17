@@ -1,0 +1,11 @@
+.SynthGraph {
+  flex: auto;
+  overflow: auto;
+  background-color: #000;
+}
+
+@media (prefers-color-scheme: light) {
+  .SynthGraph {
+    background-color: #fff;
+  }
+}

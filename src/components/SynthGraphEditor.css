@@ -1,12 +1,12 @@
-.Content {
+.SynthGraphEditor {
   display: flex;
-  flex: auto;
   overflow: auto;
+  flex: auto;
   background-color: #101010;
 }
 
 @media (prefers-color-scheme: light) {
-  .Content {
+  .SynthGraphEditor {
     background-color: #f0f0f0;
   }
 }

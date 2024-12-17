@@ -1,10 +1,11 @@
 import './Footer.css'
+import FooterItem from './FooterItem.jsx'
 
 function Footer() {
 
   return (
     <div className="Footer">
-      Footer
+      <FooterItem text="j5v" />
     </div>
   )
 }

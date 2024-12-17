@@ -1,0 +1,11 @@
+.SynthNodeProperties {
+  flex-basis: 18rem;
+  overflow: auto;
+  background-color: #202020;
+}
+
+@media (prefers-color-scheme: light) {
+  .SynthNodeProperties {
+    background-color: #e0e0e0;
+  }
+}

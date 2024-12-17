@@ -4,7 +4,7 @@ function Header() {
 
   return (
     <div className="Header">
-      Header
+      FMC 2
     </div>
   )
 }
