@@ -1,0 +1,11 @@
+.Content {
+  flex: auto;
+  overflow: auto;
+  background-color: #101010;
+}
+
+@media (prefers-color-scheme: light) {
+  .Content {
+    background-color: #f0f0f0;
+  }
+}
