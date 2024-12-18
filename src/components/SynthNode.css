@@ -1,0 +1,12 @@
+.SynthNodeBox {
+  stroke-width: 2px;
+  stroke: #505050;
+  fill: #000;
+} 
+
+@media (prefers-color-scheme: light) {
+  .SynthNodeBox {
+    stroke: "2px #c0c0c0 solid";
+    fill: #fff;
+  }
+}

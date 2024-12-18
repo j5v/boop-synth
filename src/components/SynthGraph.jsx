@@ -1,12 +1,25 @@
 import './SynthGraph.css'
-import Placeholder from './Placeholder.jsx'
+import SynthNode from './SynthNode.jsx'
 
 function SynthGraph() {
 
+  // test data
+  const OP_TYPES = {
+    MOCK: { id: 0, name: 'Mock' }
+  }
+  
+  const synthNode = { // units: rem
+    x: 0,
+    y: 0,
+    w: 10,
+    h: 4,
+    nodeTypeId: OP_TYPES.MOCK.id
+  }
+
   return (
-    <div className="SynthGraph">
-      <Placeholder text="SynthGraph" />
-    </div>
+    <svg className="SynthGraph">
+      <SynthNode synthNode={synthNode} />
+    </svg>
   )
 }
 
