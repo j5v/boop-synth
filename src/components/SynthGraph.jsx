@@ -5,15 +5,16 @@ function SynthGraph() {
 
   // test data
   const OP_TYPES = {
-    MOCK: { id: 0, name: 'Mock' }
+    MOCK: { id: 0, name: 'Mock synth node' }
   }
   
   const synthNode = { // units: rem
-    x: 0,
-    y: 0,
+    x: 2,
+    y: 1,
     w: 10,
-    h: 4,
-    nodeTypeId: OP_TYPES.MOCK.id
+    h: 7,
+    nodeTypeId: OP_TYPES.MOCK.id,
+    displayName: OP_TYPES.MOCK.name
   }
 
   return (
