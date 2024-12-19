@@ -7,7 +7,7 @@ function App() {
 
   return (
     <div className="App">
-      <Header />
+      <Header text="FMC 2" />
       <Content />
       <Footer />
     </div>

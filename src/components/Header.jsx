@@ -1,10 +1,12 @@
 import './Header.css'
 
-function Header() {
+function Header(props) {
+
+  const className = `Header ${props.context || ''}`
 
   return (
-    <div className="Header">
-      FMC 2
+    <div className={className}>
+      {props.text || ''}
     </div>
   )
 }

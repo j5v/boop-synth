@@ -1,11 +1,14 @@
 import './SynthNodeProperties.css'
-import Placeholder from './Placeholder.jsx'
+import Header from './Header.jsx'
 
 function SynthNodeProperties() {
 
   return (
     <div className="SynthNodeProperties">
-      <Placeholder text="SynthNodeProperties" />
+      <Header
+        text="Synth Node Properties"
+        context="property-sheet"
+      />
     </div>
   )
 }

@@ -1,4 +1,15 @@
 .Header {
   height: 2rem;
-  margin: 0 0.6rem;
+  padding: 0.15rem 0.6rem 0 0.6rem;
+}
+
+.Header.property-sheet {
+  background-color: #333;
+  
+}
+
+@media (prefers-color-scheme: light) {
+  .Header.property-sheet {
+    background-color: #ddd;
+  }
 }
