@@ -3,14 +3,39 @@ const synthNodeTypes = {
   GEN_FM: { id: 1, name: 'FM' },
 }
 
+const newCreator = ({ defaultObject }) => {
+
+  let id = 0;
+ 
+  const newObject = (options) => {
+    id++;
+    return {
+      ...defaultObject,
+      id,
+      ...options
+    }
+  }
+  return {
+    newObject
+  }
+}
+
+const synthNodeCreator = newCreator({
+  defaultObject: {
+    x: 2,
+    y: 1,
+    w: 10,
+    h: 7,
+    nodeTypeId: synthNodeTypes.MOCK.id,
+    displayName: 'Node',
+  }
+})
+
 const getNodeTypeById = id => {
   let found = false;
-  console.log('looking for id', id);
-  for (let obj in synthNodeTypes) {
-    console.log('synthNodeTypes[obj]', synthNodeTypes[obj]);
-    console.log('obj.id', obj.id);
-    if (synthNodeTypes[obj].id == id) {
-      found = synthNodeTypes[obj];
+  for (let key in synthNodeTypes) {
+    if (synthNodeTypes[key].id == id) {
+      found = synthNodeTypes[key];
       break;
     }
   }
@@ -20,5 +45,6 @@ const getNodeTypeById = id => {
 
 export {
   synthNodeTypes,
+  synthNodeCreator,
   getNodeTypeById
 }

@@ -1,33 +1,27 @@
 import { create } from 'zustand'
-import { synthNodeTypes } from '../lib/synth.js'
+import { synthNodeTypes, synthNodeCreator } from '../lib/synth.js'
 
 const usePatchStore = create((set) => ({
   nodes: [ 
-    {
-      id: 1,
-      x: 2,
-      y: 1,
-      w: 10,
-      h: 7,
+    synthNodeCreator.newObject({
       nodeTypeId: synthNodeTypes.MOCK.id,
-      displayName: 'Node A'
-    },
-    {
-      id: 2,
-      x: 16,
-      y: 4,
-      w: 10,
-      h: 7,
+    }),
+    synthNodeCreator.newObject({
       nodeTypeId: synthNodeTypes.GEN_FM.id,
-      displayName: 'Node B'
-    }    
-
+      x: 20
+    }),
    ],
 
   // Add a new node
   addNode: (node) =>
     set((state) => ({
-      nodes: [...state.nodes, { id: Date.now(), text: node, completed: false }],
+      nodes: [
+        ...state.nodes,
+        synthNodeCreator.newObject({
+          nodeTypeId: synthNodeTypes.GEN_FM.id,
+          x: 20
+        })
+      ],
     })),
 
   // Remove a node by ID
