@@ -14,7 +14,7 @@ function SynthNodeBox(props) {
       width={asRem(synthNode.w)}
       height={asRem(synthNode.h)}
     />
-)
+  )
 }
 
 export default SynthNodeBox
