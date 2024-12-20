@@ -1,5 +1,5 @@
 import './SynthNodeBox.css'
-import asRem from '../lib/units.js'
+import { asRem } from '../lib/utils.js'
  
 function SynthNodeBox(props) {
 

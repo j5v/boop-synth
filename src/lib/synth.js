@@ -1,26 +1,11 @@
+import { newCreator } from '../lib/utils.js'
+
 const synthNodeTypes = {
   MOCK: { id: 0, name: 'TEST' },
   GEN_FM: { id: 1, name: 'FM' },
 }
 
-const newCreator = ({ defaultObject }) => {
-
-  let id = 0;
- 
-  const newObject = (options) => {
-    id++;
-    return {
-      ...defaultObject,
-      id,
-      ...options
-    }
-  }
-  return {
-    newObject
-  }
-}
-
-const synthNodeCreator = newCreator({
+const defaultSynthNode = {
   defaultObject: {
     x: 2,
     y: 1,
@@ -29,7 +14,9 @@ const synthNodeCreator = newCreator({
     nodeTypeId: synthNodeTypes.MOCK.id,
     displayName: 'Node',
   }
-})
+}
+
+const synthNodeCreator = newCreator(defaultSynthNode)
 
 const getNodeTypeById = id => {
   let found = false;

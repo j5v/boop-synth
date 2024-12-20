@@ -1,13 +1,11 @@
 import './SynthNodeTitle.css'
-import asRem from '../lib/units.js'
+import { asRem } from '../lib/utils.js'
 import { getNodeTypeById } from '../lib/synth.js'
  
 function SynthNodeTitle(props) {
 
   const { synthNode } = props;
   const nodeType = getNodeTypeById(synthNode.nodeTypeId);
-  console.log('synthNode', synthNode);
-  console.log('nodeType', nodeType);
   const displayTypeName = nodeType ? `(${nodeType.name})` : '';
 
   return (
