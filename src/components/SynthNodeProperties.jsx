@@ -6,9 +6,10 @@ function SynthNodeProperties() {
   return (
     <div className="SynthNodeProperties">
       <Header
-        text="Synth Node Properties"
         context="property-sheet"
-      />
+      >
+        <div>Synth Node Properties</div>
+      </Header>
     </div>
   )
 }

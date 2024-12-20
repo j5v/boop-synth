@@ -1,5 +1,15 @@
 import { newCreator } from '../lib/utils.js'
 
+const BITDEPTH_16 = 0;
+
+const outputSpec = { // TODO: expand and make state
+  sps: 44100,
+  channels: 1,
+  depth: BITDEPTH_16,
+  length: 22050,
+  gain: 0.707
+}
+
 const synthNodeTypes = {
   MOCK: { id: 0, name: 'TEST' },
   GEN_FM: { id: 1, name: 'FM' },

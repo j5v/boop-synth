@@ -6,7 +6,7 @@ function Header(props) {
 
   return (
     <div className={className}>
-      {props.text || ''}
+      {props.children}
     </div>
   )
 }

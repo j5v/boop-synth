@@ -5,7 +5,9 @@ function Footer() {
 
   return (
     <div className="Footer">
-      <FooterItem text="j5v" />
+      <FooterItem>
+        <div><a href="http://johnvalentine.co.uk" target="_blank">j5v</a></div>
+      </FooterItem>
     </div>
   )
 }

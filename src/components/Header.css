@@ -1,17 +1,25 @@
 .Header {
-  height: 2rem;
-  padding: 0.15rem 0.6rem 0 0.6rem;
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  height: 3rem;
+  gap: 1rem;
+  padding: 0.15rem 0.6rem 0.15rem 1.0rem;
   background-color: #282828;
 }
 
 .Header.property-sheet {
+  padding: 0.15rem 0.6rem 0rem 0.6rem;
   background-color: #333;
-  
+  height: 2rem;
+}
+
+.Header .title {
+  font-size: 1.2rem;
 }
 
 @media (prefers-color-scheme: light) {
   .Header {
-    height: 2rem;
     padding: 0.15rem 0.6rem 0 0.6rem;
     background-color: #d0d0d0;
   }
