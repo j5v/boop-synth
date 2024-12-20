@@ -13,10 +13,12 @@ const defaultSynthNode = {
     h: 7,
     nodeTypeId: synthNodeTypes.MOCK.id,
     displayName: 'Node',
+    inputs: [],
+    output: []
   }
 }
 
-const synthNodeCreator = newCreator(defaultSynthNode)
+const newSynthNode = newCreator(defaultSynthNode)
 
 const getNodeTypeById = id => {
   let found = false;
@@ -32,6 +34,6 @@ const getNodeTypeById = id => {
 
 export {
   synthNodeTypes,
-  synthNodeCreator,
+  newSynthNode,
   getNodeTypeById
 }

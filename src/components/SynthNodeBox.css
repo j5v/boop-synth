@@ -1,13 +1,23 @@
 .SynthNodeBox {
-  stroke-width: 2px;
+  stroke-width: 1px;
   stroke: #505050;
-  fill: #181818;
+  fill: #202020;
+  cursor: pointer;
+} 
+.SynthNodeBox.selected {
+  stroke-width: 2px;
+  stroke: #707070;
+  fill: #303030;
 } 
 
 @media (prefers-color-scheme: light) {
   .SynthNodeBox {
-    stroke-width: 2px;
     stroke: #c0c0c0;
-    fill: #eee;
+    fill: #f0f0f0;
   }
+  .SynthNodeBox.selected {
+    stroke: #a0a0a0;
+    fill: #e0e0e0;
+  } 
+  
 }
