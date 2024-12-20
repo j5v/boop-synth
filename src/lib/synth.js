@@ -11,8 +11,9 @@ const outputSpec = { // TODO: expand and make state
 }
 
 const synthNodeTypes = {
-  MOCK: { id: 0, name: 'TEST' },
-  GEN_FM: { id: 1, name: 'FM' },
+  MOCK: { id: 0, name: 'Test' },
+  OUTPUT: { id: 1, name: 'Output' },
+  GEN_FM: { id: 2, name: 'FM' },
 }
 
 const defaultSynthNode = {
@@ -21,7 +22,7 @@ const defaultSynthNode = {
     y: 1,
     w: 10,
     h: 7,
-    nodeTypeId: synthNodeTypes.MOCK.id,
+    nodeTypeId: synthNodeTypes.GEN_FM.id,
     displayName: 'Node',
     inputs: [],
     output: []

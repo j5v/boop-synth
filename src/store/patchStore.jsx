@@ -35,13 +35,15 @@ const usePatchStore = create((set) => ({
       ),
     })),  
 
-  // Toggle a node's completion status
-  toggleNode: (id) =>
+  // Update node properties with an object
+  updateNode: (id, obj) =>
     set((state) => ({
       nodes: state.nodes.map((node) =>
-        node.id === id ? { ...node, completed: !node.completed } : node
+        node.id === id ? { ...node, ...obj } : node
       ),
     })),
+
+
 }));
 
 export default usePatchStore;

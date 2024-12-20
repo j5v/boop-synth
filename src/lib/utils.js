@@ -22,7 +22,16 @@ const newCreator = ({ defaultObject }) => {
 
 const asRem = x => x + 'rem';  
 
+const remAsPx = rem => {    
+  return rem * (parseFloat(getComputedStyle(document.documentElement).fontSize) || 16);
+}
+const pxAsRem = pix => {    
+  return pix / (parseFloat(getComputedStyle(document.documentElement).fontSize) || 16);
+}
+
 export {
   newCreator,
-  asRem
+  asRem,
+  remAsPx,
+  pxAsRem
 }

@@ -10,7 +10,6 @@ function SynthNode(props) {
     <>
       <SynthNodeBox synthNode={synthNode} />
       <SynthNodeTitle synthNode={synthNode} />
-
     </>
 
   )
