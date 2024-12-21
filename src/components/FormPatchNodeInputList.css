@@ -1,0 +1,8 @@
+.form-input-row {
+  overflow: auto;
+}
+
+@media (prefers-color-scheme: light) {
+  .form-input-row {
+  }
+}

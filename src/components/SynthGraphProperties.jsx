@@ -25,7 +25,7 @@ function SynthGraphProperties() {
 
       <ParameterGroup>
         <Header context="property-sheet-subheading">
-          <div>Node list</div>
+          <div>Node processing order</div>
         </Header>
         <SynthGraphNodeList />
       </ParameterGroup>

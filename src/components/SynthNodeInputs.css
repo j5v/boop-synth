@@ -9,9 +9,15 @@
 
 .terminal-level {
   stroke: none;
-  fill: #3fe01f;
+  fill: #3FFF20;
   cursor: pointer;
 }
+
+.terminal-frequency {
+  stroke: none;
+  fill: #4080FF;
+  cursor: pointer;
+} 
 
 @media (prefers-color-scheme: light) {
   .terminal-input-label, .terminal-output-label {
@@ -20,5 +26,8 @@
 
   .terminal-level {
     fill: #248311;
+  } 
+  .terminal-frequency {
+    fill: #008351;
   } 
 }

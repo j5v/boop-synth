@@ -11,24 +11,25 @@ function SynthNodeInputs(props) {
 
   return (
     (inputs || []).map(i => {
-      py += 2;
       const classCSS = getSynthNodeTerminalIntentsById(i.intentId).classCSS;
-
-      return (
-        <g key={i.id}>
-          <circle
-            className={classCSS}
-            cx={asRem(synthNode.x)}
-            cy={asRem(synthNode.y + py)}
-            r={asRem(0.4)}
-          />
-          <text
-            className="terminal-input-label"
-            x={asRem(synthNode.x + 1)}
-            y={asRem(synthNode.y + py + 0.06)}
-          >{i.displayName}</text>
-        </g>
-      )
+      if (i.exposed) {
+        py += 2;
+        return (
+          <g key={i.id}>
+            <circle
+              className={classCSS}
+              cx={asRem(synthNode.x)}
+              cy={asRem(synthNode.y + py)}
+              r={asRem(0.4)}
+            />
+            <text
+              className="terminal-input-label"
+              x={asRem(synthNode.x + 1)}
+              y={asRem(synthNode.y + py + 0.06)}
+            >{i.displayName}</text>
+          </g>
+        )
+      }
     })
   )
 }

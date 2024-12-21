@@ -1,12 +1,11 @@
-.SynthNodeProperties {
-  flex-basis: 18rem;
-  overflow: auto;
-  background-color: #202020;
-}
-
 .SynthNodeProperties .parameters {
   display: flex;
   flex-direction: column;
+  padding: 0.2rem 0.6rem;
+}
+
+.SynthNodeProperties .node-title {
+  color: #fc0;
 }
 
 .SynthNodeProperties .parameter-row {
@@ -17,7 +16,8 @@
 }
 
 @media (prefers-color-scheme: light) {
-  .SynthNodeProperties {
-    background-color: #e0e0e0;
+  .SynthNodeProperties .node-title {
+    color: #640;
   }
+ 
 }

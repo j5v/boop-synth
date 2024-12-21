@@ -15,6 +15,7 @@ const outputSpec = { // TODO: expand and make state
 const synthNodeTerminalIntents = { // draft only
   LEVEL: { id: 0, name: 'Level', classCSS: 'terminal-level' },
   FREQUENCY: { id: 1, name: 'Frequency', classCSS: 'terminal-frequency' },
+  SOURCE: { id: 1, name: 'Source', classCSS: 'terminal-source' },
 }
 
 const getSynthNodeTerminalIntentsById = id => {
@@ -43,12 +44,14 @@ const synthNodeTypes = {
         displayName: 'Signal',
         intentId: synthNodeTerminalIntents.LEVEL.id,
         exposed: true,
+        defaultValue: 0,
       },
       {
         id: 2,
         displayName: 'Gain',
         intentId: synthNodeTerminalIntents.LEVEL.id,
         exposed: true,
+        defaultValue: 1.0,
       }
     ],
     outputs: [],
@@ -59,16 +62,32 @@ const synthNodeTypes = {
     inputs: [
       {
         id: 1,
-        displayName: 'Modulator',
-        intentId: synthNodeTerminalIntents.LEVEL.id,
-        exposed: true,
+        displayName: 'Carrier Frequency',
+        intentId: synthNodeTerminalIntents.FREQUENCY.id,
+        exposed: false,
+        defaultValue: 1,
       },
       {
         id: 2,
+        displayName: 'Carrier Source',
+        intentId: synthNodeTerminalIntents.SOURCE.id,
+        exposed: false,
+        defaultValue: 1,
+      },
+      {
+        id: 3,
+        displayName: 'Modulator',
+        intentId: synthNodeTerminalIntents.LEVEL.id,
+        exposed: true,
+        defaultValue: 0,
+      },
+      {
+        id: 4,
         displayName: 'Mix in',
         intentId: synthNodeTerminalIntents.LEVEL.id,
         exposed: true,
-      }      
+        defaultValue: 0,
+      },
     ],
     outputs: [
       {
@@ -76,6 +95,7 @@ const synthNodeTypes = {
         displayName: 'Signal',
         intentId: synthNodeTerminalIntents.LEVEL.id,
         exposed: true,
+        defaultValue: 0,
       }
     ],
   },

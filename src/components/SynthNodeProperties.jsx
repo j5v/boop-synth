@@ -1,6 +1,7 @@
 import './SynthNodeProperties.css'
 import Header from './Header.jsx'
 import { getNodeTypeById } from '../lib/synth.js'
+import FormPatchNodeInputList from './FormPatchNodeInputList.jsx'
 
 function SynthNodeProperties(props) {
 
@@ -13,18 +14,17 @@ function SynthNodeProperties(props) {
       <Header
         context="property-sheet"
       >
-        <div>{`${synthNode.id}: ${synthNode.displayName} ${displayTypeName}`}</div>
+      <div className="node-title">
+        {`${synthNode.id}: ${synthNode.displayName} ${displayTypeName}`}
+      </div>
       </Header>
 
       <div className="parameters">
+        <FormPatchNodeInputList synthNode={synthNode} />
+      </div>
       <div className="parameter-row">
-          <div className="modulatable">[ ]</div>
-          <div className="parameter-edit">Mock Param 1</div>
-        </div>
-        <div className="parameter-row">
-          <div className="modulatable">[ ]</div>
-          <div className="parameter-edit">Mock Param 2</div>
-        </div>
+        <div className="modulatable">[ ]</div>
+        <div className="parameter-edit">Mock Param 1</div>
       </div>
 
     </div>

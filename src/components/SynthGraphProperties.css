@@ -1,7 +1,7 @@
 .SynthGraphProperties {
   flex-basis: 18rem;
   overflow: auto;
-  background-color: #202038;
+  background-color: #202028;
 }
 
 .SynthGraphProperties .parameters {
@@ -18,6 +18,6 @@
 
 @media (prefers-color-scheme: light) {
   .SynthGraphProperties {
-    background-color: #e0e0ff;
+    background-color: #f0f0f8;
   }
 }
