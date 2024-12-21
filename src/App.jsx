@@ -11,6 +11,7 @@ function App() {
         <div className="button-bar">
           <button>Play</button>
           <button>Download</button>
+          <a href="http://johnvalentine.co.uk?art=fmc2" target="_blank"><button>?</button></a>
         </div>
       </Header>
       <Content />

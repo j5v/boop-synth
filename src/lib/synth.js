@@ -50,7 +50,7 @@ const synthNodeTypes = {
         id: 2,
         displayName: 'Gain',
         intentId: synthNodeTerminalIntents.LEVEL.id,
-        exposed: true,
+        exposed: false,
         defaultValue: 1.0,
       }
     ],

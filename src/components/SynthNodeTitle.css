@@ -1,6 +1,7 @@
 .SynthNodeTitle {
   fill: #fc0;
   cursor: pointer;
+  pointer-events: none;
 } 
 
 @media (prefers-color-scheme: light) {

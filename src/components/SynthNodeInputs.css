@@ -1,6 +1,7 @@
 .terminal-input-label, .terminal-output-label {
   dominant-baseline: middle;
   fill: white;
+  pointer-events: none;
 }
 
 .terminal-output-label {

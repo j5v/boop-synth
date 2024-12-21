@@ -6,15 +6,14 @@ function SynthNodeBox(props) {
 
   const { synthNode } = props;
 
-  const classes = ['SynthNodeBox'];
-  if (synthNode.selected) classes.push('selected');
+  // Calculate box height, based on the number of terminals
 
   const inputCount = (synthNode.inputs && synthNode.inputs.filter(i => i.exposed).length) || 0;
   const outputCount = (synthNode.outputs && synthNode.outputs.length) || 0;
   const maxTerminals = Math.max(inputCount, outputCount);
   const nodeHeight = 2 + maxTerminals * 2.25;
 
-  // Selection
+  // Selection: event, state, and CSS classes
 
   const selectThisNode = usePatchStore((state) => state.selectExclusiveNode)
 
@@ -24,16 +23,19 @@ function SynthNodeBox(props) {
     selectThisNode(synthNode.id);
   };
 
+  const classes = ['SynthNodeBox'];
+  if (synthNode.selected) classes.push('selected');
+
   return (
-      <rect
-        className={classes.join(' ')}
-        x={asRem(synthNode.x)}
-        y={asRem(synthNode.y)}
-        rx="0.6rem"
-        width={asRem(synthNode.w)}
-        height={asRem(nodeHeight)}
-        onClick={handleClick}
-      />
+    <rect
+      className={classes.join(' ')}
+      x={asRem(synthNode.x)}
+      y={asRem(synthNode.y)}
+      rx="0.6rem"
+      width={asRem(synthNode.w)}
+      height={asRem(nodeHeight)}
+      onClick={handleClick}
+    />
   )
 }
 
