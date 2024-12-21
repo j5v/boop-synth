@@ -9,6 +9,11 @@ function SynthNodeBox(props) {
   const classes = ['SynthNodeBox'];
   if (synthNode.selected) classes.push('selected');
 
+  const inputCount = (synthNode.inputs && synthNode.inputs.length) || 0;
+  const outputCount = (synthNode.outputs && synthNode.outputs.length) || 0;
+  const maxTerminals = Math.max(inputCount, outputCount);
+  const nodeHeight = 2 + maxTerminals * 2.25;
+
   // Selection
 
   const selectThisNode = usePatchStore((state) => state.selectExclusiveNode)
@@ -26,7 +31,7 @@ function SynthNodeBox(props) {
         y={asRem(synthNode.y)}
         rx="0.6rem"
         width={asRem(synthNode.w)}
-        height={asRem(synthNode.h)}
+        height={asRem(nodeHeight)}
         onClick={handleClick}
       />
   )

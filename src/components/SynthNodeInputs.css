@@ -1,0 +1,20 @@
+.terminal-label {
+  dominant-baseline: middle;
+  fill: white;
+}
+
+.terminal-level {
+  stroke: none;
+  fill: #3fe01f;
+  cursor: pointer;
+}
+
+@media (prefers-color-scheme: light) {
+  .terminal-label {
+    fill: black;
+  }
+
+  .terminal-level {
+    fill: #248311;
+  } 
+}
