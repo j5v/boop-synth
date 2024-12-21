@@ -1,0 +1,11 @@
+.IconGrab {
+  stroke: hsla(0, 0%, 100%, 0.25);
+  stroke-width: 0.1;
+  stroke-dasharray: 0.1 0.3;
+}
+
+@media (prefers-color-scheme: light) {
+  .IconGrab {
+    fill: hsla(0, 0%, 0%, 0.2);
+  }
+}

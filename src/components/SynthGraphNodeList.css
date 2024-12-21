@@ -12,12 +12,14 @@
   padding: 0.2rem 0.8rem 0.3rem 0.8rem;
   background-color: hsla(0, 0%, 0%, 0.2);
   border: 1px solid hsla(0, 0%, 100%, 0.3);
+  /* border-radius: 0.5rem; */
   cursor: pointer;
 }
 
 .grab-handle-icon {
-  stroke: hsla(0, 0%, 100%, 0.2);
+  stroke: hsla(0, 0%, 100%, 0.25);
   stroke-width: 0.1;
+  stroke-dasharray: 0.1 0.3;
 }
 
 @media (prefers-color-scheme: light) {

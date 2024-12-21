@@ -1,6 +1,7 @@
 import './SynthGraphNodeList.css'
 import usePatchStore from '../store/patchStore.jsx'
 import { getNodeTypeById } from '../lib/synth.js'
+import IconGrab from './IconGrab.jsx'
 
 function ParameterGroup(props) {
 
@@ -29,13 +30,7 @@ function ParameterGroup(props) {
             onClick={handleClick}
           >
             <div>{`${synthNode.id}: ${synthNode.displayName} ${displayTypeName}`}</div>
-            <svg
-              className="grab-handle-icon" 
-              viewBox="-0.3 -0.3 1.3 1.3" 
-              height="1.5rem" 
-              width="1.5rem">
-                <path d="M 0,0.1 L 0.8,0.1 M 0,0.5 L 0.8,0.5 M 0,0.9 L 0.8,0.9"/>
-            </svg>
+            <IconGrab />
           </div>
         );
       })}

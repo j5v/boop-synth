@@ -42,11 +42,13 @@ const synthNodeTypes = {
         id: 1,
         displayName: 'Signal',
         intentId: synthNodeTerminalIntents.LEVEL.id,
+        exposed: true,
       },
       {
         id: 2,
         displayName: 'Gain',
         intentId: synthNodeTerminalIntents.LEVEL.id,
+        exposed: true,
       }
     ],
     outputs: [],
@@ -59,11 +61,13 @@ const synthNodeTypes = {
         id: 1,
         displayName: 'Modulator',
         intentId: synthNodeTerminalIntents.LEVEL.id,
+        exposed: true,
       },
       {
         id: 2,
         displayName: 'Mix in',
         intentId: synthNodeTerminalIntents.LEVEL.id,
+        exposed: true,
       }      
     ],
     outputs: [
@@ -71,6 +75,7 @@ const synthNodeTypes = {
         id: 1,
         displayName: 'Signal',
         intentId: synthNodeTerminalIntents.LEVEL.id,
+        exposed: true,
       }
     ],
   },
