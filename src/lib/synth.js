@@ -12,16 +12,16 @@ const outputSpec = { // TODO: expand and make state
 
 // Synth Node Parameter intents
 
-const synthNodeInputIntents = { // draft only
+const synthNodeTerminalIntents = { // draft only
   LEVEL: { id: 0, name: 'Level', classCSS: 'terminal-level' },
   FREQUENCY: { id: 1, name: 'Frequency', classCSS: 'terminal-frequency' },
 }
 
-const getSynthNodeInputIntentsById = id => {
+const getSynthNodeTerminalIntentsById = id => {
   let found = false;
-  for (let key in synthNodeInputIntents) {
-    if (synthNodeInputIntents[key].id == id) {
-      found = synthNodeInputIntents[key];
+  for (let key in synthNodeTerminalIntents) {
+    if (synthNodeTerminalIntents[key].id == id) {
+      found = synthNodeTerminalIntents[key];
       break;
     }
   }
@@ -31,20 +31,49 @@ const getSynthNodeInputIntentsById = id => {
 // Synth Node Types
 
 const synthNodeTypes = {
-  MOCK: { id: 0, name: 'Test' },
-  OUTPUT: { id: 1, name: 'Output', inputs: [
-    {
-      id: 1,
-      displayName: 'Signal',
-      intentId: synthNodeInputIntents.LEVEL.id,
-    },
-    {
-      id: 2,
-      displayName: 'Gain',
-      intentId: synthNodeInputIntents.LEVEL.id,
-    }
-  ] },
-  GEN_FM: { id: 2, name: 'FM' },
+  MOCK: {
+    id: 0,
+    name: 'Test' },
+  OUTPUT: {
+    id: 1,
+    name: 'Output',
+    inputs: [
+      {
+        id: 1,
+        displayName: 'Signal',
+        intentId: synthNodeTerminalIntents.LEVEL.id,
+      },
+      {
+        id: 2,
+        displayName: 'Gain',
+        intentId: synthNodeTerminalIntents.LEVEL.id,
+      }
+    ],
+    outputs: [],
+  },
+  GEN_FM: {
+    id: 2,
+    name: 'FM',
+    inputs: [
+      {
+        id: 1,
+        displayName: 'Modulator',
+        intentId: synthNodeTerminalIntents.LEVEL.id,
+      },
+      {
+        id: 2,
+        displayName: 'Mix in',
+        intentId: synthNodeTerminalIntents.LEVEL.id,
+      }      
+    ],
+    outputs: [
+      {
+        id: 1,
+        displayName: 'Signal',
+        intentId: synthNodeTerminalIntents.LEVEL.id,
+      }
+    ],
+  },
 }
 
 const getNodeTypeById = id => {
@@ -62,11 +91,11 @@ const defaultSynthNode = {
   defaultObject: {
     x: 2,
     y: 1,
-    w: 10,
+    w: 11,
     nodeTypeId: synthNodeTypes.GEN_FM.id,
     displayName: 'Node',
-    inputs: [],
-    output: []
+    inputs: [ ...synthNodeTypes.GEN_FM.inputs ],
+    output: [ ...synthNodeTypes.GEN_FM.outputs ]
   }
 }
 
@@ -74,8 +103,8 @@ const newSynthNode = newCreator(defaultSynthNode)
 
 
 export {
-  synthNodeInputIntents,
-  getSynthNodeInputIntentsById,
+  synthNodeTerminalIntents,
+  getSynthNodeTerminalIntentsById,
   synthNodeTypes,
   getNodeTypeById,
   newSynthNode,

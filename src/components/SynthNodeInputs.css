@@ -1,6 +1,10 @@
-.terminal-label {
+.terminal-input-label, .terminal-output-label {
   dominant-baseline: middle;
   fill: white;
+}
+
+.terminal-output-label {
+  text-anchor: end;
 }
 
 .terminal-level {
@@ -10,7 +14,7 @@
 }
 
 @media (prefers-color-scheme: light) {
-  .terminal-label {
+  .terminal-input-label, .terminal-output-label {
     fill: black;
   }
 

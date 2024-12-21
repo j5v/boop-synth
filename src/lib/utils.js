@@ -20,7 +20,7 @@ const newCreator = ({ defaultObject }) => {
   }
 }
 
-const asRem = x => x + 'rem';  
+const asRem = x => `${x}rem`
 
 const remAsPx = rem => {    
   return rem * (parseFloat(getComputedStyle(document.documentElement).fontSize) || 16);

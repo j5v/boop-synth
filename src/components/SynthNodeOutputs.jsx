@@ -2,29 +2,30 @@ import './SynthNodeInputs.css'
 import { asRem } from '../lib/utils.js'
 import { getSynthNodeTerminalIntentsById } from '../lib/synth.js'
 
-function SynthNodeInputs(props) {
+function SynthNodeOutputs(props) {
 
   const { synthNode } = props;
-  const { inputs } = synthNode;
+  const { outputs } = synthNode;
 
-  let py = 1; 
+  let py = 1;
 
   return (
-    (inputs || []).map(i => {
+    (outputs || []).map(i => {
       py += 2;
       const classCSS = getSynthNodeTerminalIntentsById(i.intentId).classCSS;
 
       return (
         <g key={i.id}>
           <circle
+            
             className={classCSS}
-            cx={asRem(synthNode.x)}
+            cx={asRem(synthNode.x + synthNode.w)}
             cy={asRem(synthNode.y + py)}
             r={asRem(0.4)}
           />
           <text
-            className="terminal-input-label"
-            x={asRem(synthNode.x + 1)}
+            className="terminal-output-label"
+            x={asRem(synthNode.x + synthNode.w - 1)}
             y={asRem(synthNode.y + py + 0.06)}
           >{i.displayName}</text>
         </g>
@@ -33,4 +34,4 @@ function SynthNodeInputs(props) {
   )
 }
 
-export default SynthNodeInputs
+export default SynthNodeOutputs

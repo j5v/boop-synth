@@ -1,13 +1,15 @@
 import { create } from 'zustand'
-import { synthNodeTypes, synthNodeInputIntents, newSynthNode, getNodeTypeById } from '../lib/synth.js'
+import { synthNodeTypes, newSynthNode } from '../lib/synth.js'
 
 const usePatchStore = create((set) => ({
   nodes: [ 
-    newSynthNode.newObject({}),
+    newSynthNode.newObject({
+      outputs: [ ...synthNodeTypes.GEN_FM.outputs ],
+    }),
     newSynthNode.newObject({
       nodeTypeId: synthNodeTypes.OUTPUT.id,
-      x: 17,
-      y: 2,
+      x: 18,
+      y: 3,
       inputs: [ ...synthNodeTypes.OUTPUT.inputs ]
     }),
    ],
