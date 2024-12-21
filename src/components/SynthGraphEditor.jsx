@@ -1,7 +1,8 @@
 import './SynthGraphEditor.css'
 import SynthNodeProperties from './SynthNodeProperties.jsx'
+import SynthGraphProperties from './SynthGraphProperties.jsx'
 import SynthGraph from './SynthGraph.jsx'
-import { useRef, useState } from 'react'
+import { useRef } from 'react'
 
 import usePatchStore from '../store/patchStore.jsx';
 
@@ -33,8 +34,10 @@ function SynthGraphEditor() {
 
   return (
     <div className="SynthGraphEditor">
-      <SynthGraph />
-      {selectedNode ? <SynthNodeProperties synthNode={selectedNode}/> : <></>}
+      <SynthGraph />{selectedNode ?
+        <SynthNodeProperties synthNode={selectedNode}/> :
+        <SynthGraphProperties />
+      }
     </div>
   )
 }

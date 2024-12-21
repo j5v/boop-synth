@@ -1,0 +1,23 @@
+.SynthGraphProperties {
+  flex-basis: 18rem;
+  overflow: auto;
+  background-color: #202038;
+}
+
+.SynthGraphProperties .parameters {
+  display: flex;
+  flex-direction: column;
+}
+
+.SynthGraphProperties .parameter-row {
+  display: flex;
+  flex-direction: row;
+  gap: 0.6rem;
+  padding: 0.2rem 0.6rem;
+}
+
+@media (prefers-color-scheme: light) {
+  .SynthGraphProperties {
+    background-color: #e0e0ff;
+  }
+}

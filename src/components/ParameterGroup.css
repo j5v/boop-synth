@@ -1,0 +1,10 @@
+.ParameterGroup {
+  display: flex;
+  flex-direction: column;
+  padding: 0.2rem 0 0 0;
+}
+
+@media (prefers-color-scheme: light) {
+  .ParameterGroup {
+  }
+}

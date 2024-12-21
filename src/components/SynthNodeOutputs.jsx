@@ -1,4 +1,4 @@
-import './SynthNodeInputs.css'
+import './SynthNodeInputs.css' // deliberately Inputs
 import { asRem } from '../lib/utils.js'
 import { getSynthNodeTerminalIntentsById } from '../lib/synth.js'
 

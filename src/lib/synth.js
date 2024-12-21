@@ -89,9 +89,9 @@ const getNodeTypeById = id => {
 
 const defaultSynthNode = {
   defaultObject: {
-    x: 2,
-    y: 1,
-    w: 11,
+    x: 2, // rem
+    y: 1, // rem
+    w: 11, // rem
     nodeTypeId: synthNodeTypes.GEN_FM.id,
     displayName: 'Node',
     inputs: [ ...synthNodeTypes.GEN_FM.inputs ],
@@ -101,6 +101,22 @@ const defaultSynthNode = {
 
 const newSynthNode = newCreator(defaultSynthNode)
 
+// Default fragments for init state
+const defaultPatchNodes = [ 
+  newSynthNode.newObject({
+    outputs: [ ...synthNodeTypes.GEN_FM.outputs ],
+  }),
+  newSynthNode.newObject({
+    nodeTypeId: synthNodeTypes.OUTPUT.id,
+    x: 18,
+    y: 3,
+    inputs: [ ...synthNodeTypes.OUTPUT.inputs ]
+  }),
+]
+const defaultPerfNodes = {
+  
+}
+
 
 export {
   synthNodeTerminalIntents,
@@ -108,4 +124,8 @@ export {
   synthNodeTypes,
   getNodeTypeById,
   newSynthNode,
+  defaultSynthNode,
+  defaultPatchNodes,
+  defaultPerfNodes,
+
 }

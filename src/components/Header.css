@@ -13,6 +13,11 @@
   background-color: #333;
   height: 2rem;
 }
+.Header.property-sheet-subheading {
+  background-color: inherit;
+  padding: 0.15rem 0.6rem 0rem 0.6rem;
+  height: 2rem;
+}
 
 .Header .title {
   font-size: 1.2rem;
