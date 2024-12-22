@@ -1,5 +1,4 @@
 import './SynthGraphProperties.css'
-import usePatchStore from '../store/patchStore.jsx'
 
 import Header from './Header.jsx'
 import ParameterGroup from './ParameterGroup.jsx'
@@ -7,8 +6,6 @@ import PerformancePropertiesForm from './PerformancePropertiesForm.jsx'
 import SynthGraphNodeList from './SynthGraphNodeList.jsx'
 
 function SynthGraphProperties() {
-
-  const patch = usePatchStore((state) => state.patch);
 
   return (
     <div className="SynthGraphProperties">

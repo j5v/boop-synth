@@ -17,7 +17,7 @@ function SynthGraph() {
       <SynthNodes />
       <SynthNodeLinks />
     </svg>
-  ) 
+  )
 }
 
 export default SynthGraph
