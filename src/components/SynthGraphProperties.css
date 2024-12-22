@@ -2,6 +2,7 @@
   flex-basis: 18rem;
   overflow: auto;
   background-color: #202028;
+  border-left: black 2px solid;
 }
 
 .SynthGraphProperties .parameters {

@@ -1,0 +1,11 @@
+.synth-node-cable {
+  stroke-width: 4px;
+  fill: none;
+  stroke: hsl(120, 80%, 40%);
+}
+
+@media (prefers-color-scheme: light) {
+  .synth-node-cable {
+    stroke: hsl(120, 100%, 30%);
+  }
+}

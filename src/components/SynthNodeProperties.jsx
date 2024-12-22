@@ -22,10 +22,6 @@ function SynthNodeProperties(props) {
       <div className="parameters">
         <FormPatchNodeInputList synthNode={synthNode} />
       </div>
-      <div className="parameter-row">
-        <div className="modulatable">[ ]</div>
-        <div className="parameter-edit">Mock Param 1</div>
-      </div>
 
     </div>
   )

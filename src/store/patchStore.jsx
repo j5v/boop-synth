@@ -4,7 +4,7 @@ import { synthNodeTypes, defaultPatchNodes, defaultPerfNodes } from '../lib/synt
 const usePatchStore = create((set) => ({
   nodes: defaultPatchNodes, // non-clone is OK here
   perf: defaultPerfNodes, // non-clone is OK here
-
+  
   addNode: () =>
     set((state) => ({
       nodes: [
@@ -29,6 +29,7 @@ const usePatchStore = create((set) => ({
           { ...node, selected: false }
       ),
     })),
+
 
   // Update node properties with an object
   updateNode: (nodeId, obj) =>

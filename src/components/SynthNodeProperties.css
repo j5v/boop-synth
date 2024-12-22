@@ -2,6 +2,7 @@
   display: flex;
   flex-direction: column;
   padding: 0.2rem 0.6rem;
+  border-left: black 2px solid;
 }
 
 .SynthNodeProperties .node-title {

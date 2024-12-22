@@ -1,0 +1,19 @@
+.form-input-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.6rem;
+  overflow: auto;
+  padding: 0.15rem 0;
+}
+.form-input-row .exposure {
+  flex-basis: 1rem;
+  width: 1rem;
+}
+.form-input-row .label {
+  flex: auto;
+}
+.form-input-row input.number {
+  flex-basis: 4rem;
+  width: 4rem;
+  text-align: right;
+}

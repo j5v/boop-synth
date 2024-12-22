@@ -1,23 +1,23 @@
 import './SynthGraph.css'
-import SynthNode from './SynthNode.jsx'
-
 import usePatchStore from '../store/patchStore.jsx';
+import SynthNodes from './SynthNodes.jsx'
+import SynthNodeLinks from './SynthNodeLinks.jsx'
 
 function SynthGraph() {
 
-  const nodes = usePatchStore((state) => state.nodes);
-  const selectThisNode = usePatchStore((state) => state.selectExclusiveNode);
+  const selectThisNode = usePatchStore(
+    (state) => state.selectExclusiveNode
+  );
 
   return (
     <svg
       className="SynthGraph"
       onClick = {() => selectThisNode()}
     >
-      {nodes.map(node => (
-        <SynthNode key={node.id} synthNode={node} />
-      ))}
+      <SynthNodes />
+      <SynthNodeLinks />
     </svg>
-  )
+  ) 
 }
 
 export default SynthGraph

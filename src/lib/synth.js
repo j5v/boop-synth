@@ -13,9 +13,9 @@ const outputSpec = { // TODO: expand and make state
 // Synth Node Parameter intents
 
 const synthNodeTerminalIntents = { // draft only
-  LEVEL: { id: 0, name: 'Level', classCSS: 'terminal-level' },
-  FREQUENCY: { id: 1, name: 'Frequency', classCSS: 'terminal-frequency' },
-  SOURCE: { id: 1, name: 'Source', classCSS: 'terminal-source' },
+  LEVEL: { id: 0, name: 'Level', classCSS: 'terminal-level', modulatable: true },
+  FREQUENCY: { id: 1, name: 'Frequency', classCSS: 'terminal-frequency', modulatable: false },
+  SOURCE: { id: 2, name: 'Source', classCSS: 'terminal-source', modulatable: false },
 }
 
 const getSynthNodeTerminalIntentsById = id => {
@@ -34,7 +34,8 @@ const getSynthNodeTerminalIntentsById = id => {
 const synthNodeTypes = {
   MOCK: {
     id: 0,
-    name: 'Test' },
+    name: 'Test'
+  },
   OUTPUT: {
     id: 1,
     name: 'Output',
@@ -62,15 +63,15 @@ const synthNodeTypes = {
     inputs: [
       {
         id: 1,
-        displayName: 'Carrier Frequency',
-        intentId: synthNodeTerminalIntents.FREQUENCY.id,
+        displayName: 'Carrier Source',
+        intentId: synthNodeTerminalIntents.SOURCE.id,
         exposed: false,
         defaultValue: 1,
       },
       {
         id: 2,
-        displayName: 'Carrier Source',
-        intentId: synthNodeTerminalIntents.SOURCE.id,
+        displayName: 'Carrier Frequency',
+        intentId: synthNodeTerminalIntents.FREQUENCY.id,
         exposed: false,
         defaultValue: 1,
       },
@@ -83,7 +84,7 @@ const synthNodeTypes = {
       },
       {
         id: 4,
-        displayName: 'Mix in',
+        displayName: 'Post-mix',
         intentId: synthNodeTerminalIntents.LEVEL.id,
         exposed: true,
         defaultValue: 0,
@@ -100,17 +101,6 @@ const synthNodeTypes = {
     ],
   },
 }
-
-const getNodeTypeById = id => {
-  let found = false;
-  for (let key in synthNodeTypes) {
-    if (synthNodeTypes[key].id == id) {
-      found = synthNodeTypes[key];
-      break;
-    }
-  }
-  return found;
-} 
 
 const defaultSynthNode = {
   defaultObject: {
@@ -133,14 +123,37 @@ const defaultPatchNodes = [
   }),
   newSynthNode.newObject({
     nodeTypeId: synthNodeTypes.OUTPUT.id,
-    x: 18,
-    y: 3,
+    x: 12,
+    y: 13,
     inputs: [ ...synthNodeTypes.OUTPUT.inputs ]
   }),
-]
+];
+
+// add a link
+defaultPatchNodes[1].inputs[0].link = {
+  synthNodeId: defaultPatchNodes[0].id,
+  outputId: 1
+}
+
 const defaultPerfNodes = {
   
 }
+
+
+// query functons
+const getItemById = (list, id) => {
+  let foundItem;
+  for (let key in list) {
+    if (list[key].id == id) {
+      foundItem = list[key];
+      break;
+    }
+  }
+  return foundItem;
+} 
+
+const getNodeTypeById = id => getItemById(synthNodeTypes, id);
+  
 
 
 export {
@@ -152,5 +165,5 @@ export {
   defaultSynthNode,
   defaultPatchNodes,
   defaultPerfNodes,
-
+  getItemById
 }
