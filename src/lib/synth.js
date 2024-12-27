@@ -1,8 +1,9 @@
 import { newCreator } from '../lib/utils.js'
+import saveAs from '../lib/FileSaver.js'
 
 const BITDEPTH_16 = 0;
 
-const defaultOutputSpec = { // TODO: expand and make state
+const defaultOutputSpec = {
   sps: 44100,
   channels: 1,
   depth: BITDEPTH_16,
@@ -154,6 +155,146 @@ const getItemById = (list, id) => {
 const getNodeTypeById = id => getItemById(synthNodeTypes, id);
   
 
+// processing
+
+const testSpec = {
+  sampleRate: 44100, // sps
+  duration: 0.25, // seconds
+  freq: 440,
+  gain: 0.3,
+  channels: 1,
+  filename: 'FMC 2 - test 1.wav',
+}
+
+const generate = function ({ sampleRate, duration, freq, gain }) {
+  // test spec.
+  var samples = new Array();
+  var sampleFrames = sampleRate * duration;
+  var fNormalize = 2 * Math.PI * freq / sampleRate;
+
+  // Generate audio, one channel.
+  for (var i = 0; i < sampleFrames; i++) {
+    samples.push(Math.sin(i * fNormalize) * gain);
+  }
+
+  return {
+    sampleFrames,
+    samples
+  }
+}
+
+const generateFile = function () {
+
+  var dataview = encodeWAV(
+    generate(testSpec).samples,
+    testSpec.sampleRate,
+    testSpec.channels
+  );
+
+  var audioBlob = new Blob([dataview], { type : 'audio/wav' });
+  saveAs(audioBlob, testSpec.filename);
+  
+  function encodeWAV(buf, sr, ch) {
+    var bytesPerSample = 2;
+  
+    var buffer = new ArrayBuffer(44 + buf.length * ch * bytesPerSample);
+    var view = new DataView(buffer);
+  
+    /* RIFF identifier */
+    writeString(view, 0, 'RIFF');
+  
+    /* file length */
+    view.setUint32(4, 32 + buf.length * 2, true);
+  
+    /* RIFF type */
+    writeString(view, 8, 'WAVE');
+  
+    /* format chunk identifier */
+    writeString(view, 12, 'fmt ');
+  
+    /* format chunk length */
+    view.setUint32(16, 16, true);
+  
+    /* sample format (raw) */
+    view.setUint16(20, 1, true);
+  
+    /* channel count */
+    view.setUint16(22, 1, true);
+  
+    /* sample rate */
+    view.setUint32(24, sr, true);
+  
+    /* byte rate (sample rate * block align) */
+    view.setUint32(28, sr * 2, true);
+  
+    /* block align (channel count * bytes per sample) */
+    view.setUint16(32, 2, true);
+  
+    /* bits per sample */
+    view.setUint16(34, 16, true);
+  
+    /* data chunk identifier */
+    writeString(view, 36, 'data');
+  
+    /* data chunk length */
+    view.setUint32(40, buf.length * 2, true);
+  
+    floatTo16BitPCM(view, 44, buf);
+  
+    return view;
+  
+    function floatTo16BitPCM(output, offset, input) {
+      var bytesPerSample = 2;
+      for (var i = 0; i < input.length; i++, offset += bytesPerSample) {
+        var s = Math.max(-1, Math.min(1, input[i]));
+        output.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
+      }
+    }
+    
+    function writeString(view, offset, string) {
+      // TODO: check if this supports Unicode (and does it need to?)
+      for (var i = 0; i < string.length; i++) {
+        view.setUint8(offset + i, string.charCodeAt(i));
+      }
+    }
+    
+  }
+}
+
+const generateAndPlay = function () {
+  // TODO: use patch data.
+  const { duration, rate, channels, sampleRate } = testSpec;
+  console.log(testSpec);
+
+  // synthesize a buffer
+  const output = generate(testSpec).samples;
+
+  // allocate audio context
+  const audioCtx = new AudioContext();
+  
+  // allocate audio buffer
+  const sampleFrames = duration * sampleRate;
+  const myArrayBuffer = audioCtx.createBuffer(channels, sampleFrames, sampleRate);
+
+  // populate buffer
+  for (var channel = 0; channel < channels; channel++) {
+    var nowBuffering = myArrayBuffer.getChannelData(channel);
+    for (var i = 0; i < sampleFrames; i++) {
+      nowBuffering[i] = output[i];
+    }
+  }
+
+  // Play buffer
+  var source = audioCtx.createBufferSource();
+  source.buffer = myArrayBuffer;
+  source.connect(audioCtx.destination);
+  source.start();
+
+  // TODO: check if context and buffers need async deallocation
+
+}
+
+
 
 export {
   synthNodeTerminalIntents,
@@ -166,4 +307,7 @@ export {
   defaultOutputSpec,
   defaultPatchPerformance,
   getItemById,
+
+  generateFile,
+  generateAndPlay,
 }
