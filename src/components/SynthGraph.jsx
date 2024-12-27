@@ -6,13 +6,15 @@ import SynthNodeLinks from './SynthNodeLinks.jsx'
 function SynthGraph() {
 
   const selectThisNode = usePatchStore(
+    // On the SynthGraph (background), click unselects all nodes.
+    // In SynthNodes[<SynthNode>] click on a node to select it.
     (state) => state.selectExclusiveNode
   );
 
   return (
     <svg
       className="SynthGraph"
-      onClick = {() => selectThisNode()}
+      onClick = {selectThisNode}
     >
       <SynthNodes />
       <SynthNodeLinks />
