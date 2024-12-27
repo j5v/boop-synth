@@ -264,7 +264,6 @@ const generateFile = function () {
 const generateAndPlay = function () {
   // TODO: use patch data.
   const { duration, rate, channels, sampleRate } = testSpec;
-  console.log(testSpec);
 
   // synthesize a buffer
   const output = generate(testSpec).samples;

@@ -55,36 +55,16 @@ const usePatchStore = create((set) => ({
 
   // Drag node
 
-  startDragSelectedNodes: () =>
-    set(state => ({
-      ...state,
-      dragging: true,
-      nodes: state.nodes.map(node =>
-        node.selected ?
-          { ...node, dragging: true } :
-          { ...node }
-      ),
-    })),
-
   dragSelectedNodes: (dx, dy) =>
     set(state => ({
       ...state,
       nodes: state.nodes.map(node =>
-        node.selected && state.dragging ?
+        node.selected ?
           { ...node, x: node.x + dx, y: node.y + dy } :
           { ...node }
       ),
     })),
   
-  endDragSelectedNodes: () =>
-    set(state => ({
-      ...state,
-      dragging: false,
-      nodes: state.nodes.map(node => (
-        { ...node, dragging: false }
-      )),
-    })),
-
 }));
 
 export default usePatchStore;

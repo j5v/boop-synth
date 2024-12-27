@@ -4,6 +4,10 @@
   background-color: #000;
 }
 
+.SynthGraph.dragging .SynthNodeBox.selected {
+  cursor: move;
+}
+
 @media (prefers-color-scheme: light) {
   .SynthGraph {
     background-color: #fff;
