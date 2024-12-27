@@ -15,14 +15,14 @@ function SynthGraphProperties() {
 
       <ParameterGroup>
         <Header context="property-sheet-subheading">
-          <div>Performance</div>
+          <div className="group-title">Performance</div>
         </Header>
-        <PerformancePropertiesForm></PerformancePropertiesForm>
+        <PerformancePropertiesForm />
       </ParameterGroup>
 
       <ParameterGroup>
         <Header context="property-sheet-subheading">
-          <div>Node processing order</div>
+          <div className="group-title">Node processing order</div>
         </Header>
         <SynthGraphNodeList />
       </ParameterGroup>

@@ -10,15 +10,20 @@
 
 .terminal-level {
   stroke: none;
-  fill: #3FFF20;
-  cursor: pointer;
+  fill: hsl(120, 50%, 60%);
 }
 
 .terminal-frequency {
   stroke: none;
   fill: #4080FF;
-  cursor: pointer;
-} 
+}
+
+.terminal-outline {
+  stroke: none;
+  fill: #000;
+}
+
+
 
 @media (prefers-color-scheme: light) {
   .terminal-input-label, .terminal-output-label {

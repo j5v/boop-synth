@@ -1,8 +1,8 @@
 .PerformancePropertiesForm {
   display: flex;
   flex-direction: column;
-  x-padding: 0.15rem 0.6rem 0.15rem 1.0rem;
-  background-color: #289828;
+  padding: 0.15rem 0.6rem 0.15rem 1.0rem;
+  x-background-color: #289828;
 }
 
 @media (prefers-color-scheme: light) {

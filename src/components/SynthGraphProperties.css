@@ -1,8 +1,12 @@
 .SynthGraphProperties {
   flex-basis: 18rem;
   overflow: auto;
-  background-color: #202028;
+  background-color: hsl(240, 15%, 10%);
   border-left: black 2px solid;
+}
+
+.SynthGraphProperties .group-title {
+  font-weight: 700;
 }
 
 .SynthGraphProperties .parameters {

@@ -1,6 +1,7 @@
 import './SynthNodeBox.css'
-import { asRem } from '../lib/utils.js'
 import usePatchStore from '../store/patchStore.jsx'
+import { useRef } from 'react'
+import { asRem } from '../lib/utils.js'
 
 function SynthNodeBox(props) {
 
@@ -25,6 +26,26 @@ function SynthNodeBox(props) {
 
   const classes = ['SynthNodeBox'];
   if (synthNode.selected) classes.push('selected');
+
+  // DRAG
+  // begin drag
+
+  const handleMouseMove = useRef(e => {
+    setPosition(position => {
+      const xDiff = position.coords.x - e.pageX;
+      const yDiff = position.coords.y - e.pageY;
+      return {
+        x: position.x - xDiff,
+        y: position.y - yDiff,
+        coords: {
+          x: e.pageX,
+          y: e.pageY,
+        },
+      };
+    });
+  });
+
+  // end drag
 
   return (
     <rect

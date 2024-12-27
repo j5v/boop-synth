@@ -1,11 +1,20 @@
-.synth-node-cable {
+.synth-node-cable, .synth-node-cable-outline {
   stroke-width: 4px;
   fill: none;
   stroke: hsl(120, 80%, 40%);
+  stroke-linecap: round;
+}
+
+.synth-node-cable-outline {
+  stroke-width: 5px;
+  stroke: hsl(120, 0%, 0%);
 }
 
 @media (prefers-color-scheme: light) {
   .synth-node-cable {
     stroke: hsl(120, 100%, 30%);
+  }
+  .synth-node-cable-outline {
+    stroke: hsl(120, 0%, 100%);
   }
 }

@@ -2,12 +2,16 @@ import { newCreator } from '../lib/utils.js'
 
 const BITDEPTH_16 = 0;
 
-const outputSpec = { // TODO: expand and make state
+const defaultOutputSpec = { // TODO: expand and make state
   sps: 44100,
   channels: 1,
   depth: BITDEPTH_16,
   length: 22050,
-  gain: 0.707
+  gain: Math.sqrt(2) * 0.5
+}
+const defaultPatchPerformance = {
+  baseFreq: 440 * Math.pow(2, -9/12), // C below concert pitch A
+  baseNoteMIDI: 60
 }
 
 // Synth Node Parameter intents
@@ -123,8 +127,8 @@ const defaultPatchNodes = [
   }),
   newSynthNode.newObject({
     nodeTypeId: synthNodeTypes.OUTPUT.id,
-    x: 12,
-    y: 13,
+    x: 16,
+    y: 9,
     inputs: [ ...synthNodeTypes.OUTPUT.inputs ]
   }),
 ];
@@ -134,11 +138,6 @@ defaultPatchNodes[1].inputs[0].link = {
   synthNodeId: defaultPatchNodes[0].id,
   outputId: 1
 }
-
-const defaultPerfNodes = {
-  
-}
-
 
 // query functons
 const getItemById = (list, id) => {
@@ -164,6 +163,7 @@ export {
   newSynthNode,
   defaultSynthNode,
   defaultPatchNodes,
-  defaultPerfNodes,
-  getItemById
+  defaultOutputSpec,
+  defaultPatchPerformance,
+  getItemById,
 }

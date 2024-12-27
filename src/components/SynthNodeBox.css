@@ -2,7 +2,7 @@
   stroke-width: 1px;
   stroke: #505050;
   fill: #202020;
-  cursor: grab;
+  cursor: default;
 } 
 .SynthNodeBox.selected {
   stroke-width: 2px;

@@ -1,9 +1,9 @@
 import { create } from 'zustand'
-import { synthNodeTypes, defaultPatchNodes, defaultPerfNodes } from '../lib/synth.js'
+import { synthNodeTypes, defaultPatchNodes, defaultOutputSpec } from '../lib/synth.js'
 
 const usePatchStore = create((set) => ({
   nodes: defaultPatchNodes, // non-clone is OK here
-  perf: defaultPerfNodes, // non-clone is OK here
+  perf: {...defaultOutputSpec},
   
   addNode: () =>
     set((state) => ({

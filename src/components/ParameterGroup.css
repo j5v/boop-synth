@@ -1,5 +1,6 @@
 .ParameterGroup {
   display: flex;
   flex-direction: column;
-  padding: 0.2rem 0 0 0;
+  padding: 0.2rem 0 0.2rem 0;
+  border-bottom: 1px solid hsla(0,100%,100%,0.05);
 }
