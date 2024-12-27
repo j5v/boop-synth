@@ -1,7 +1,7 @@
 import './SynthNodes.css'
 import SynthNode from './SynthNode.jsx'
 
-import usePatchStore from '../store/patchStore.jsx';
+import usePatchStore from '../../store/patchStore.jsx';
 
 function SynthNodes() {
 

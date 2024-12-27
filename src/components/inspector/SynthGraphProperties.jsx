@@ -1,6 +1,6 @@
 import './SynthGraphProperties.css'
 
-import Header from './Header.jsx'
+import Header from '../layout/Header.jsx'
 import ParameterGroup from './ParameterGroup.jsx'
 import PerformancePropertiesForm from './PerformancePropertiesForm.jsx'
 import SynthGraphNodeList from './SynthGraphNodeList.jsx'

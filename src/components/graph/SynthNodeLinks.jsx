@@ -1,5 +1,5 @@
 import './SynthNodeLinks.css'
-import usePatchStore from '../store/patchStore.jsx';
+import usePatchStore from '../../store/patchStore.jsx';
 import SynthNodeLink from './SynthNodeLink.jsx'
 
 function SynthNodeLinks() {
@@ -39,7 +39,7 @@ function SynthNodeLinks() {
         
           const outputPos = {
             x: outputNode.x + outputNode.w,
-            y: outputNode.x + outputIndex * 2
+            y: outputNode.y + outputIndex * 2 + 1
           };
 
           return (

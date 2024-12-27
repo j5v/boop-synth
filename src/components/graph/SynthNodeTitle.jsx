@@ -1,6 +1,6 @@
 import './SynthNodeTitle.css'
-import { asRem } from '../lib/utils.js'
-import { getNodeTypeById } from '../lib/synth.js'
+import { asRem } from '../../lib/utils.js'
+import { getNodeTypeById } from '../../lib/synth.js'
  
 function SynthNodeTitle(props) {
 

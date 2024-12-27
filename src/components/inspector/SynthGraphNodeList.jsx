@@ -1,7 +1,7 @@
 import './SynthGraphNodeList.css'
-import usePatchStore from '../store/patchStore.jsx'
-import { getNodeTypeById } from '../lib/synth.js'
-import IconGrab from './IconGrab.jsx'
+import usePatchStore from '../../store/patchStore.jsx'
+import { getNodeTypeById } from '../../lib/synth.js'
+import IconGrab from '../generic/IconGrab.jsx'
 
 function ParameterGroup(props) {
 

@@ -1,5 +1,5 @@
 import './PerformancePropertiesForm.css'
-import usePatchStore from '../store/patchStore.jsx';
+import usePatchStore from '../../store/patchStore.jsx';
 
 function PerformancePropertiesForm(props) {
 

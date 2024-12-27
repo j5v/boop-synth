@@ -1,7 +1,7 @@
 import './App.css'
-import Header from './components/Header.jsx'
-import Footer from './components/Footer.jsx'
-import Content from './components/Content.jsx'
+import Header from './components/layout/Header.jsx'
+import Footer from './components/layout/Footer.jsx'
+import Content from './components/layout/Content.jsx'
 import { generateAndPlay, generateFile } from './lib/synth.js'
 
 function App() {

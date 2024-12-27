@@ -1,6 +1,6 @@
 import './SynthNodeInputs.css' // deliberately Inputs
-import { asRem, remAsPx } from '../lib/utils.js'
-import { getSynthNodeTerminalIntentsById } from '../lib/synth.js'
+import { asRem, remAsPx } from '../../lib/utils.js'
+import { getSynthNodeTerminalIntentsById } from '../../lib/synth.js'
 
 function SynthNodeOutputs(props) {
 

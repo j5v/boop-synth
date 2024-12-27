@@ -1,9 +1,9 @@
 import './SynthGraphEditor.css'
-import SynthNodeProperties from './SynthNodeProperties.jsx'
-import SynthGraphProperties from './SynthGraphProperties.jsx'
+import SynthNodeProperties from '../inspector/SynthNodeProperties.jsx'
+import SynthGraphProperties from '../inspector/SynthGraphProperties.jsx'
 import SynthGraph from './SynthGraph.jsx'
 
-import usePatchStore from '../store/patchStore.jsx';
+import usePatchStore from '../../store/patchStore.jsx';
 
 function SynthGraphEditor() {
 
@@ -12,7 +12,8 @@ function SynthGraphEditor() {
 
   return (
     <div className="SynthGraphEditor">
-      <SynthGraph />{selectedNode ?
+      <SynthGraph />
+      {selectedNode ?
         <SynthNodeProperties synthNode={selectedNode}/> :
         <SynthGraphProperties />
       }

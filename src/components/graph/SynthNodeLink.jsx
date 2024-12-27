@@ -1,5 +1,5 @@
 import './SynthNodeLink.css'
-import { remAsPx } from '../lib/utils.js'
+import { remAsPx } from '../../lib/utils.js'
 
 function SynthNodeLink({ outputPos, inputPos }) {
 

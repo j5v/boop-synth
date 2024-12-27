@@ -1,5 +1,5 @@
 import './Content.css'
-import SynthGraphEditor from './SynthGraphEditor.jsx'
+import SynthGraphEditor from '../graph/SynthGraphEditor.jsx'
 
 function Content() {
 

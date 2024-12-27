@@ -1,6 +1,6 @@
 import './SynthNodeProperties.css'
-import Header from './Header.jsx'
-import { getNodeTypeById } from '../lib/synth.js'
+import Header from '../layout/Header.jsx'
+import { getNodeTypeById } from '../../lib/synth.js'
 import FormPatchNodeInputList from './FormPatchNodeInputList.jsx'
 
 function SynthNodeProperties(props) {

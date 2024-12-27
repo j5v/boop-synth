@@ -1,5 +1,5 @@
 import './FormPatchNodeInputItem.css'
-import { getSynthNodeTerminalIntentsById } from '../lib/synth.js'
+import { getSynthNodeTerminalIntentsById } from '../../lib/synth.js'
 
 function FormPatchNodeInputItem(props) {
 

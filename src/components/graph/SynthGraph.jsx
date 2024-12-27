@@ -1,5 +1,5 @@
 import './SynthGraph.css'
-import usePatchStore from '../store/patchStore.jsx';
+import usePatchStore from '../../store/patchStore.jsx';
 import SynthNodes from './SynthNodes.jsx'
 import SynthNodeLinks from './SynthNodeLinks.jsx'
 
