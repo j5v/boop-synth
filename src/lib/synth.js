@@ -161,7 +161,7 @@ const testSpec = {
   sampleRate: 44100, // sps
   duration: 0.25, // seconds
   freq: 440,
-  gain: 0.3,
+  gain: Math.sqrt(2) * 0.5,
   channels: 1,
   filename: 'FMC 2 - test 1.wav',
 }
