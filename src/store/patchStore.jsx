@@ -1,5 +1,6 @@
 import { create } from 'zustand'
-import { synthNodeTypes, defaultPatchNodes, defaultOutputSpec } from '../lib/synth.js'
+import { synthNodeTypes, defaultPatchNodes, defaultOutputSpec, newSynthNode } from '../lib/synth.js'
+import { swapItemsInArray } from '../lib/utils.js'
 
 const usePatchStore = create((set) => ({
   nodes: defaultPatchNodes, // non-clone is OK here
@@ -10,7 +11,7 @@ const usePatchStore = create((set) => ({
       ...state,
       nodes: [
         ...state.nodes,
-        synthNodeCreator.newObject({
+        newSynthNode.newObject({
           nodeTypeId: synthNodeTypes.GEN_FM.id,
           x: 20
         })
@@ -20,9 +21,15 @@ const usePatchStore = create((set) => ({
   removeNode: (nodeId) =>
     set((state) => ({
       ...state,
-      nodes: state.nodes.filter((node) => node.id !== nodeId),
+      nodes: state.nodes.filter(node => node.id !== nodeId),
     })),
-
+  
+  removeSelectedNodes: () =>
+    set((state) => ({
+      ...state,
+      nodes: state.nodes.filter(node => !node.selected),
+    })),
+    
   selectNode: (nodeId) =>
     set(state => ({
       ...state,
@@ -52,6 +59,16 @@ const usePatchStore = create((set) => ({
         node.id === nodeId ? { ...node, ...obj } : node
       ),
     })),
+
+  swapNodes: (index1, index2) =>
+    set(state => {
+      const nodesWithSwappedItems = swapItemsInArray(state.nodes, index1, index2);
+
+      return {
+      ...state,
+      nodes: nodesWithSwappedItems,
+      }
+    }),
 
   // Drag node
 

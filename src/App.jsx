@@ -10,6 +10,9 @@ function App() {
   const perf = usePatchStore((state) => state.perf);
   const nodes = usePatchStore((state) => state.nodes);
 
+  const addNode = usePatchStore((state) => state.addNode)
+  const removeSelectedNodes = usePatchStore((state) => state.removeSelectedNodes)
+
   return (
     <div className="App">
       <Header>
@@ -17,6 +20,8 @@ function App() {
         <div className="button-bar">
           <button onClick={() => generateAndPlay(nodes, perf)}>Play</button>
           <button onClick={() => generateFile(nodes, perf)}>Download</button>
+          <button onClick={() => addNode()}>+</button>
+          <button onClick={() => removeSelectedNodes()}>&times;</button>
           <a href="http://johnvalentine.co.uk?art=fmc2" target="_blank"><button>?</button></a>
         </div>
       </Header>

@@ -8,12 +8,28 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  align-items: baseline;
   margin-bottom: 0.4rem;
   padding: 0.2rem 0.8rem 0.3rem 0.8rem;
   background-color: hsla(0, 0%, 0%, 0.2);
   border: 1px solid hsla(0, 0%, 100%, 0.3);
   /* border-radius: 0.5rem; */
   cursor: default;
+}
+
+.SynthGraphNodeList .item .iconGroup {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+}
+
+.SynthGraphNodeList .item .invisible {
+  visibility: hidden;
+}
+
+.iconGroup button {
+  padding: 0.1rem 0.3rem;
+  font-size: 0.8rem;
 }
 
 .grab-handle-icon {

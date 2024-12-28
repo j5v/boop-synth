@@ -203,9 +203,9 @@ const defaultSynthNode = {
     y: 1, // rem
     w: 11, // rem
     nodeTypeId: synthNodeTypes.GEN_FM.id,
-    displayName: 'Node',
+    displayName: '',
     inputs: [ ...synthNodeTypes.GEN_FM.inputs ],
-    output: [ ...synthNodeTypes.GEN_FM.outputs ]
+    outputs: [ ...synthNodeTypes.GEN_FM.outputs ]
   }
 }
 
@@ -220,7 +220,8 @@ const defaultPatchNodes = [
     nodeTypeId: synthNodeTypes.OUTPUT.id,
     x: 16,
     y: 9,
-    inputs: [ ...synthNodeTypes.OUTPUT.inputs ]
+    inputs: [ ...synthNodeTypes.OUTPUT.inputs ],
+    outputs: []
   }),
 ];
 
@@ -244,6 +245,14 @@ const getItemById = (list, id) => {
 
 const getNodeTypeById = id => getItemById(synthNodeTypes, id);
   
+const getNodeDisplayTitle = node => {
+  const nodeType = getNodeTypeById(node.nodeTypeId);
+  const displayTypeName = nodeType ? `${nodeType.name}` : '';
+  return [
+    node.displayName,
+    displayTypeName
+  ].filter(i => i > '').join(' - ');
+}
 
 // processing
 
@@ -435,12 +444,12 @@ const generateAndPlay = function (nodes, spec) {
 
 }
 
-
 export {
   synthNodeTerminalIntents,
   getSynthNodeTerminalIntentsById,
   synthNodeTypes,
   getNodeTypeById,
+  getNodeDisplayTitle,
   newSynthNode,
   defaultSynthNode,
   defaultPatchNodes,

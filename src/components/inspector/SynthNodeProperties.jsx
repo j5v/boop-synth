@@ -1,13 +1,12 @@
 import './SynthNodeProperties.css'
 import Header from '../layout/Header.jsx'
-import { getNodeTypeById } from '../../lib/synth.js'
+import { getNodeTypeById, getNodeDisplayTitle } from '../../lib/synth.js'
 import FormPatchNodeInputList from './FormPatchNodeInputList.jsx'
 
 function SynthNodeProperties(props) {
 
   const { synthNode } = props;
-  const nodeType = getNodeTypeById(synthNode.nodeTypeId);
-  const displayTypeName = nodeType ? `(${nodeType.name})` : '';
+  const displayName = getNodeDisplayTitle(synthNode);
 
   return (
     <div className="SynthNodeProperties">
@@ -15,7 +14,7 @@ function SynthNodeProperties(props) {
         context="property-sheet"
       >
       <div className="node-title">
-        {`${synthNode.id}: ${synthNode.displayName} ${displayTypeName}`}
+      {`${synthNode.id}: ${displayName}`}
       </div>
       </Header>
 

@@ -29,9 +29,21 @@ const pxAsRem = pix => {
   return pix / (parseFloat(getComputedStyle(document.documentElement).fontSize) || 16);
 }
 
+function swapItemsInArray(items, firstIndex, secondIndex) {
+  // source: https://stackoverflow.com/questions/41127548/how-do-i-swap-array-elements-in-an-immutable-fashion-within-a-redux-reducer
+  const results = items.slice();
+  const firstItem = items[firstIndex];
+  results[firstIndex] = items[secondIndex];
+  results[secondIndex] = firstItem;
+
+  return results;
+}
+
+
 export {
   newCreator,
   asRem,
   remAsPx,
-  pxAsRem
+  pxAsRem,
+  swapItemsInArray,
 }
