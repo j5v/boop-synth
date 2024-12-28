@@ -12,6 +12,9 @@
 .form-input-row .label {
   flex: auto;
 }
+.form-input-row .units {
+  opacity: 0.7;
+}
 .form-input-row input.number {
   flex-basis: 4rem;
   width: 4rem;

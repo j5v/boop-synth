@@ -8,7 +8,7 @@ function PerformancePropertiesForm() {
   return (
     <div className="PerformancePropertiesForm">
       <div className="form-input-row">
-        <div className="label">Sample Rate</div>
+        <div className="label">Sample Rate<span className="units">, sps</span></div>
         <>{perf.sampleRate}</>
       </div>
       <div className="form-input-row">
@@ -16,12 +16,16 @@ function PerformancePropertiesForm() {
         <>{perf.channels}</>
       </div>
       <div className="form-input-row">
-        <div className="label">Duration</div>
+        <div className="label">Duration<span className="units">, s</span></div>
         <>{perf.duration}</>
       </div>
       <div className="form-input-row">
+        <div className="label">Root Frequency<span className="units">, Hz</span></div>
+        <>{perf.freq.toFixed(4)}</>
+      </div>
+      <div className="form-input-row">
         <div className="label">Gain</div>
-        <>{perf.gain.toFixed(6)}</>
+        <>{perf.gain.toFixed(4)}</>
       </div>
     </div>
   )

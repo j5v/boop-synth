@@ -7,7 +7,10 @@ function FormPatchNodeInputItem(props) {
   const intent = getSynthNodeTerminalIntentsById(inputItem.intentId);
   const { classCSS, name } = intent;
 
-  const inputField = (!inputItem.exposed) ? (
+  const displayUnits = (inputItem.displayUnits) ? (
+    <div className="units">{inputItem.displayUnits}</div>
+  ) : <></>
+  const inputField = (!inputItem.exposed || inputItem.isOffset) ? (
     <input
       className="number"
       value={inputItem.value || inputItem.defaultValue}
@@ -26,6 +29,7 @@ function FormPatchNodeInputItem(props) {
     <div className="form-input-row" key={inputItem.id}>
       <div className="exposure">{exposureField}</div>
       <div className="label" title={name}>{inputItem.displayName}</div>
+      {displayUnits}
       {inputField}
     </div>
   )

@@ -10,7 +10,7 @@ const defaultOutputSpec = {
   filename: 'FMC 2 - output.wav',
   depth: BITDEPTH_16,
 
-  freq: 440,
+  freq: 440 * Math.pow(2, -9/12), // C below concert pitch A
   gain: Math.sqrt(2) * 0.5,
 }
 const defaultPatchPerformance = {
@@ -21,9 +21,9 @@ const defaultPatchPerformance = {
 // Synth Node Parameter intents
 
 const synthNodeTerminalIntents = { // draft only
-  LEVEL: { id: 0, name: 'Level', classCSS: 'terminal-level', modulatable: true },
-  FREQUENCY: { id: 1, name: 'Frequency', classCSS: 'terminal-frequency', modulatable: false },
-  SOURCE: { id: 2, name: 'Source', classCSS: 'terminal-source', modulatable: false },
+  LEVEL: { id: 1, name: 'Level', classCSS: 'terminal-level', modulatable: true },
+  FREQUENCY_OCTAVES: { id: 2, name: 'Frequency (+octave)', classCSS: 'terminal-frequency', modulatable: true },
+  SOURCE: { id: 3, name: 'Source', classCSS: 'terminal-source', modulatable: false },
 }
 
 const getSynthNodeTerminalIntentsById = id => {
@@ -78,10 +78,13 @@ const synthNodeTypes = {
       },
       {
         id: 2,
-        displayName: 'Carrier Frequency',
-        intentId: synthNodeTerminalIntents.FREQUENCY.id,
-        exposed: false,
-        defaultValue: 1,
+        displayName: 'Carrier Pitch',
+        displayUnits: 'semitones',
+        intentId: synthNodeTerminalIntents.FREQUENCY_OCTAVES.id,
+        exposed: true,
+        isOffset: true, // modifies value
+        value: 0,
+        defaultValue: 0,
       },
       {
         id: 3,
@@ -108,6 +111,29 @@ const synthNodeTypes = {
       }
     ],
   },
+  NUMBER: {
+    id: 3,
+    name: 'Number',
+    inputs: [
+      {
+        id: 1,
+        displayName: 'Value',
+        intentId: synthNodeTerminalIntents.LEVEL.id,
+        exposed: false,
+        defaultValue: 0,
+      },
+    ],
+    outputs: [
+      {
+        id: 1,
+        displayName: 'Signal',
+        intentId: synthNodeTerminalIntents.LEVEL.id,
+        exposed: true,
+        defaultValue: 0,
+      }
+    ],
+  },
+    
 }
 
 const defaultSynthNode = {
@@ -153,7 +179,7 @@ const getItemById = (list, id) => {
     }
   }
   return foundItem;
-} 
+}
 
 const getNodeTypeById = id => getItemById(synthNodeTypes, id);
   
@@ -162,9 +188,11 @@ const getNodeTypeById = id => getItemById(synthNodeTypes, id);
 
 const generate = function (nodes, { sampleRate, duration, freq, gain }) {
   // test spec.
-  var samples = new Array();
-  var sampleFrames = sampleRate * duration;
-  var fNormalize = 2 * Math.PI * freq / sampleRate;
+  const samples = new Array();
+  const sampleFrames = sampleRate * duration;
+  const phaseIncNormalized = 2 * Math.PI / sampleRate;
+
+  const pitchUnit = 1 / 12;
 
   initPatch();
 
@@ -173,41 +201,64 @@ const generate = function (nodes, { sampleRate, duration, freq, gain }) {
     for (var n = 0; n < nodes.length; n++) {
       const node = nodes[n];
       switch (node.nodeTypeId) {
-        case synthNodeTypes.GEN_FM.id:
-          node.outputs[0].signal = Math.sin(i * fNormalize) * gain;
+        case synthNodeTypes.NUMBER.id:
+          node.outputs[0].signal = node.inputs[0].value || node.inputs[0].defaultValue;
           break;
+        case synthNodeTypes.GEN_FM.id:
+
+          const pitch = valueOfInput(node.inputs[1]);
+          const frequency = freq * Math.pow(2, pitch * pitchUnit);
+          const fm = valueOfInput(node.inputs[2]);
+
+          node.phase = (node.phase || 0) + phaseIncNormalized * frequency * (1 + fm);
+          node.outputs[0].signal = Math.sin(node.phase);
+
+          break;
+
         case synthNodeTypes.OUTPUT.id:
-          const signal = getSignalLinkedToInput(node.inputs[0]);
-          samples.push(signal); // Todo: a buffer per output node
+          const signal = valueOfInput(node.inputs[0]);
+          samples.push(signal * gain); // TODO: a buffer per output node
           break;
       }
     }
   }
+
+  finishPatch();
 
   return {
     sampleFrames,
     samples
   }
 
-  function getSignalLinkedToInput(input) {
-    return  (input && input.linkedOutput && input.linkedOutput.signal) || 0;
+  function valueOfInput(input) {
+    return input && input.link ?
+      (input.linkedOutput && input.linkedOutput.signal) || 0 :
+      (input.value || input.defaultValue);
   }
 
   function initPatch() { // resolve link Ids (non-serializable, mutates state, may be lost on next state update)
     for (let nodeIndex in nodes) {
       const node = nodes[nodeIndex];
+      // node.synthState = {};
       for (let inputIndex in node.inputs) {
-        // TODO: check input intent
         const input = node.inputs[inputIndex];
         if (input.link) {
           const signalInputLink = input && input.link;
           const outputNode = signalInputLink && nodes.find(n => n.id == signalInputLink.synthNodeId);
           input.linkedOutput = outputNode && outputNode.outputs.find(output => output.id == signalInputLink.outputId);
         }
-
       }
     }
+  }
 
+  function finishPatch() { // Remove extra properties created by initPatch()
+    for (let nodeIndex in nodes) {
+      const node = nodes[nodeIndex];
+      delete node.phase;
+      for (let inputIndex in node.inputs) {
+        delete node.inputs[inputIndex].linkedOutput;
+      }
+    }
   }
 }
 
