@@ -7,7 +7,7 @@ const defaultOutputSpec = {
   sampleRate: 44100, // sps
   duration: 0.1, // seconds
   channels: 1,
-  filename: 'FMC 2 - output.wav',
+  filenameRoot: 'FMC 2 - output',
   depth: BITDEPTH_16,
 
   freq: 440 * Math.pow(2, -9/12), // C below concert pitch A
@@ -334,7 +334,7 @@ const generateFile = function (nodes, spec) {
   );
 
   var audioBlob = new Blob([dataview], { type : 'audio/wav' });
-  saveAs(audioBlob, spec.filename);
+  saveAs(audioBlob, spec.filename + '.wav');
   
   function encodeWAV(buf, sr, ch) {
     var bytesPerSample = 2;
