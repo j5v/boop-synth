@@ -1,8 +1,11 @@
 import './SynthNodeLinks.css'
 import usePatchStore from '../../store/patchStore.jsx';
 import SynthNodeLink from './SynthNodeLink.jsx'
+import { nodeLayout } from '../../lib/nodeLayout.js'
 
 function SynthNodeLinks() {
+
+  const { nodeVSpacing, nodeVOffset, nodeVPadding } = nodeLayout;
 
   const nodes = usePatchStore(
     (state) => state.nodes
@@ -11,12 +14,12 @@ function SynthNodeLinks() {
 
   return (
     nodes.map(node => {
-      let py = 1;
+      let py = nodeVOffset;
 
       return (node.inputs.map(i => {
         const key=`${node.id}-${i.id}`;
 
-        if (i.exposed) py += 2;
+        if (i.exposed) py += nodeVSpacing;
 
         const inputPos = {
           x: node.x, 
@@ -34,12 +37,12 @@ function SynthNodeLinks() {
               break;
             }
             outputIndex++;
-            if (outputItem.exposed) py += 2;
+            if (outputItem.exposed) py += nodeVSpacing;
           }
         
           const outputPos = {
             x: outputNode.x + outputNode.w,
-            y: outputNode.y + outputIndex * 2 + 1
+            y: outputNode.y + outputIndex * nodeVSpacing + nodeVOffset
           };
 
           return (

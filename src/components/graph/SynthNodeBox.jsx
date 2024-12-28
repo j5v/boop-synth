@@ -1,6 +1,7 @@
 import './SynthNodeBox.css'
 import usePatchStore from '../../store/patchStore.jsx'
 import { asRem } from '../../lib/utils.js'
+import { nodeLayout } from '../../lib/nodeLayout.js'
 
 function SynthNodeBox(props) {
 
@@ -11,7 +12,9 @@ function SynthNodeBox(props) {
   const inputCount = (synthNode.inputs && synthNode.inputs.filter(i => i.exposed).length) || 0;
   const outputCount = (synthNode.outputs && synthNode.outputs.length) || 0;
   const maxTerminals = Math.max(inputCount, outputCount);
-  const nodeHeight = 2 + maxTerminals * 2.25;
+
+  const { nodeVSpacing, nodeVOffset, nodeVPadding } = nodeLayout;
+  const nodeHeight = nodeVOffset + maxTerminals * nodeVSpacing + nodeVPadding;
 
   // Selection: event, state, and CSS classes
 

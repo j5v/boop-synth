@@ -3,7 +3,7 @@ import { useState } from 'react'
 import usePatchStore from '../../store/patchStore.jsx'
 import SynthNodes from './SynthNodes.jsx'
 import SynthNodeLinks from './SynthNodeLinks.jsx'
-import { asRem, remAsPx, pxAsRem } from '../../lib/utils.js'
+import { pxAsRem } from '../../lib/utils.js'
 
 function SynthGraph() {
 

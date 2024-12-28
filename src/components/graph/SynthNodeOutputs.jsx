@@ -1,18 +1,20 @@
 import './SynthNodeInputs.css' // deliberately Inputs
 import { asRem, remAsPx } from '../../lib/utils.js'
 import { getSynthNodeTerminalIntentsById } from '../../lib/synth.js'
+import { nodeLayout } from '../../lib/nodeLayout.js'
 
 function SynthNodeOutputs(props) {
 
   const { synthNode } = props;
   const { outputs } = synthNode;
+  const { nodeVSpacing, nodeVOffset, nodeBottomPadding } = nodeLayout;
 
-  let py = 1;
+  let py = nodeVOffset;
 
   return (
     (outputs || []).map(i => {
       if (i.exposed) {
-        py += 2;
+        py += nodeVSpacing;
         const classCSS = getSynthNodeTerminalIntentsById(i.intentId).classCSS;
         const classCSSOutline = 'terminal-outline';
 
