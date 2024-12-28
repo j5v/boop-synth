@@ -21,9 +21,26 @@ const defaultPatchPerformance = {
 // Synth Node Parameter intents
 
 const synthNodeTerminalIntents = { // draft only
-  LEVEL: { id: 1, name: 'Level', classCSS: 'terminal-level', modulatable: true },
-  FREQUENCY_OCTAVES: { id: 2, name: 'Frequency (+octave)', classCSS: 'terminal-frequency', modulatable: true },
-  SOURCE: { id: 3, name: 'Source', classCSS: 'terminal-source', modulatable: false },
+  LEVEL: {
+    id: 1,
+    name: 'Level',
+    classCSS: 'terminal-level',
+    modulatable: true
+  },
+  FREQUENCY_OCTAVES: {
+    id: 2,
+    name: 'Frequency',
+    units: '+octave',
+    classCSS: 'terminal-frequency',
+    modulatable: true
+  },
+  SOURCE: {
+    id: 3,
+    name: 'Source',
+    units: 'choice',
+    classCSS: 'terminal-source',
+    modulatable: false
+  },
 }
 
 const getSynthNodeTerminalIntentsById = id => {
@@ -88,13 +105,23 @@ const synthNodeTypes = {
       },
       {
         id: 3,
+        displayName: 'Phase',
+        displayUnits: '...0..1...',
+        intentId: synthNodeTerminalIntents.LEVEL.id,
+        exposed: true,
+        isOffset: true, // modifies value
+        value: 0,
+        defaultValue: 0,
+      },
+      {
+        id: 4,
         displayName: 'Modulator',
         intentId: synthNodeTerminalIntents.LEVEL.id,
         exposed: true,
         defaultValue: 0,
       },
       {
-        id: 4,
+        id: 5,
         displayName: 'Post-mix',
         intentId: synthNodeTerminalIntents.LEVEL.id,
         exposed: true,
@@ -207,11 +234,13 @@ const generate = function (nodes, { sampleRate, duration, freq, gain }) {
         case synthNodeTypes.GEN_FM.id:
 
           const pitch = valueOfInput(node.inputs[1]);
-          const frequency = freq * Math.pow(2, pitch * pitchUnit);
-          const fm = valueOfInput(node.inputs[2]);
+          const frequency = freq * (pitch == 0 ? 1 : Math.pow(2, pitch * pitchUnit));
+          const phaseMod = valueOfInput(node.inputs[2]);
+          const freqMod = valueOfInput(node.inputs[3]);
+          const postMix = valueOfInput(node.inputs[4]);
 
-          node.phase = (node.phase || 0) + phaseIncNormalized * frequency * (1 + fm);
-          node.outputs[0].signal = Math.sin(node.phase);
+          node.phase = (node.phase || 0) + phaseIncNormalized * frequency * (1 + freqMod);
+          node.outputs[0].signal = Math.sin(node.phase + phaseMod) + postMix;
 
           break;
 
