@@ -41,6 +41,13 @@ const synthNodeTerminalIntents = { // draft only
     classCSS: 'terminal-source',
     modulatable: false
   },
+  ENUM: {
+    id: 4,
+    name: 'whole number',
+    units: 'choice',
+    classCSS: 'terminal-enum',
+    modulatable: false
+  },
 }
 
 const getSynthNodeTerminalIntentsById = id => {
@@ -91,6 +98,7 @@ const synthNodeTypes = {
         displayName: 'Carrier Source',
         intentId: synthNodeTerminalIntents.SOURCE.id,
         exposed: false,
+        placeholder: true,
         defaultValue: 1,
       },
       {
@@ -126,6 +134,32 @@ const synthNodeTypes = {
         intentId: synthNodeTerminalIntents.LEVEL.id,
         exposed: true,
         defaultValue: 0,
+      },
+      {
+        id: 6,
+        displayName: 'Unison count',
+        intentId: synthNodeTerminalIntents.ENUM.id,
+        range: [1, 7],
+        exposed: false,
+        placeholder: true,
+        defaultValue: 1,
+      },
+      {
+        id: 7,
+        displayName: 'Unison pitch',
+        intentId: synthNodeTerminalIntents.FREQUENCY_OCTAVES.id,
+        exposed: false,
+        placeholder: true,
+        defaultValue: 0.001,
+      },
+      {
+        id: 8,
+        displayName: 'Unison width',
+        intentId: synthNodeTerminalIntents.LEVEL.id,
+        range: [0, 1],
+        exposed: false,
+        placeholder: true,
+        defaultValue: 0.7071,
       },
     ],
     outputs: [

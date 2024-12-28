@@ -24,9 +24,13 @@ function FormPatchNodeInputItem(props) {
       title="Show terminal"
       readOnly></input>
   ) : <></>
+
+  const rowClassNames = ['form-input-row'];
+  if (inputItem.placeholder) rowClassNames.push('placeholder');
+
   
   return (
-    <div className="form-input-row" key={inputItem.id}>
+    <div className={rowClassNames.join(' ')} key={inputItem.id}>
       <div className="exposure">{exposureField}</div>
       <div className="label" title={name}>{inputItem.displayName}</div>
       {displayUnits}
