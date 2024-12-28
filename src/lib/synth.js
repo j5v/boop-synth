@@ -4,11 +4,14 @@ import saveAs from '../lib/FileSaver.js'
 const BITDEPTH_16 = 0;
 
 const defaultOutputSpec = {
-  sps: 44100,
+  sampleRate: 44100, // sps
+  duration: 0.1, // seconds
   channels: 1,
+  filename: 'FMC 2 - output.wav',
   depth: BITDEPTH_16,
-  length: 22050,
-  gain: Math.sqrt(2) * 0.5
+
+  freq: 440,
+  gain: Math.sqrt(2) * 0.5,
 }
 const defaultPatchPerformance = {
   baseFreq: 440 * Math.pow(2, -9/12), // C below concert pitch A
@@ -157,42 +160,67 @@ const getNodeTypeById = id => getItemById(synthNodeTypes, id);
 
 // processing
 
-const testSpec = {
-  sampleRate: 44100, // sps
-  duration: 0.25, // seconds
-  freq: 440,
-  gain: Math.sqrt(2) * 0.5,
-  channels: 1,
-  filename: 'FMC 2 - test 1.wav',
-}
-
-const generate = function ({ sampleRate, duration, freq, gain }) {
+const generate = function (nodes, { sampleRate, duration, freq, gain }) {
   // test spec.
   var samples = new Array();
   var sampleFrames = sampleRate * duration;
   var fNormalize = 2 * Math.PI * freq / sampleRate;
 
+  initPatch();
+
   // Generate audio, one channel.
   for (var i = 0; i < sampleFrames; i++) {
-    samples.push(Math.sin(i * fNormalize) * gain);
+    for (var n = 0; n < nodes.length; n++) {
+      const node = nodes[n];
+      switch (node.nodeTypeId) {
+        case synthNodeTypes.GEN_FM.id:
+          node.outputs[0].signal = Math.sin(i * fNormalize) * gain;
+          break;
+        case synthNodeTypes.OUTPUT.id:
+          const signal = getSignalLinkedToInput(node.inputs[0]);
+          samples.push(signal); // Todo: a buffer per output node
+          break;
+      }
+    }
   }
 
   return {
     sampleFrames,
     samples
   }
+
+  function getSignalLinkedToInput(input) {
+    return  (input && input.linkedOutput && input.linkedOutput.signal) || 0;
+  }
+
+  function initPatch() { // resolve link Ids (non-serializable, mutates state, may be lost on next state update)
+    for (let nodeIndex in nodes) {
+      const node = nodes[nodeIndex];
+      for (let inputIndex in node.inputs) {
+        // TODO: check input intent
+        const input = node.inputs[inputIndex];
+        if (input.link) {
+          const signalInputLink = input && input.link;
+          const outputNode = signalInputLink && nodes.find(n => n.id == signalInputLink.synthNodeId);
+          input.linkedOutput = outputNode && outputNode.outputs.find(output => output.id == signalInputLink.outputId);
+        }
+
+      }
+    }
+
+  }
 }
 
-const generateFile = function () {
+const generateFile = function (nodes, spec) {
 
   var dataview = encodeWAV(
-    generate(testSpec).samples,
-    testSpec.sampleRate,
-    testSpec.channels
+    generate(nodes, spec).samples,
+    spec.sampleRate,
+    spec.channels
   );
 
   var audioBlob = new Blob([dataview], { type : 'audio/wav' });
-  saveAs(audioBlob, testSpec.filename);
+  saveAs(audioBlob, spec.filename);
   
   function encodeWAV(buf, sr, ch) {
     var bytesPerSample = 2;
@@ -261,12 +289,12 @@ const generateFile = function () {
   }
 }
 
-const generateAndPlay = function () {
+const generateAndPlay = function (nodes, spec) {
   // TODO: use patch data.
-  const { duration, rate, channels, sampleRate } = testSpec;
+  const { duration, channels, sampleRate } = spec;
 
   // synthesize a buffer
-  const output = generate(testSpec).samples;
+  const output = generate(nodes, spec).samples;
 
   // allocate audio context
   const audioCtx = new AudioContext();
@@ -292,7 +320,6 @@ const generateAndPlay = function () {
   // TODO: check if context and buffers need async deallocation
 
 }
-
 
 
 export {

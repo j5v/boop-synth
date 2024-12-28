@@ -1,7 +1,6 @@
 import './SynthNodeBox.css'
 import usePatchStore from '../../store/patchStore.jsx'
-import { useState } from 'react'
-import { asRem, remAsPx, pxAsRem } from '../../lib/utils.js'
+import { asRem } from '../../lib/utils.js'
 
 function SynthNodeBox(props) {
 

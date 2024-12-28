@@ -1,25 +1,23 @@
 import './PerformancePropertiesForm.css'
 import usePatchStore from '../../store/patchStore.jsx';
 
-function PerformancePropertiesForm(props) {
+function PerformancePropertiesForm() {
 
-  const perf = usePatchStore(
-    (state) => state.perf
-  );
+  const perf = usePatchStore((state) => state.perf);
 
   return (
     <div className="PerformancePropertiesForm">
       <div className="form-input-row">
         <div className="label">Sample Rate</div>
-        <>{perf.sps}</>
+        <>{perf.sampleRate}</>
       </div>
       <div className="form-input-row">
         <div className="label">Channels</div>
         <>{perf.channels}</>
       </div>
       <div className="form-input-row">
-        <div className="label">Length</div>
-        <>{perf.length}</>
+        <div className="label">Duration</div>
+        <>{perf.duration}</>
       </div>
       <div className="form-input-row">
         <div className="label">Gain</div>
