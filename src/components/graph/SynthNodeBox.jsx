@@ -21,6 +21,8 @@ function SynthNodeBox(props) {
   const selectExclusiveNode = usePatchStore((state) => state.selectExclusiveNode)
   const selectNode = usePatchStore((state) => state.selectNode)
 
+  const highlightExclusiveNode = usePatchStore((state) => state.highlightExclusiveNode);
+
   const handleMouseDown = (event) => {
     if (!synthNode.selected) {
       if (event.ctrlKey) {
@@ -44,12 +46,24 @@ function SynthNodeBox(props) {
     }
   };
 
-  const classes = ['SynthNodeBox'];
-  if (synthNode.selected) classes.push('selected');
+  const handleMouseEnter = (event) => {
+    console.log('handleMouseEnter');
+    highlightExclusiveNode(synthNode.id);
+  };
+  
+  const handleMouseLeave = (event) => {
+    console.log('handleMouseLeave');
+    highlightExclusiveNode();
+  };
+  
+
+  const classNames = ['SynthNodeBox'];
+  if (synthNode.selected) classNames.push('selected');
+  if (synthNode.highlighted) classNames.push('highlighted');
 
   return (
     <rect
-      className={classes.join(' ')}
+      className={classNames.join(' ')}
       x={asRem(synthNode.x)}
       y={asRem(synthNode.y)}
       rx="0.6rem"
@@ -57,7 +71,9 @@ function SynthNodeBox(props) {
       height={asRem(nodeHeight)}
       onClick={handleClick}
       onMouseDown={handleMouseDown}
-    />
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+  />
   )
 }
 

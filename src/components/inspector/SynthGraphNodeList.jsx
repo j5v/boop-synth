@@ -8,6 +8,7 @@ function ParameterGroup(props) {
   const selectThisNode = usePatchStore((state) => state.selectExclusiveNode);
 
   const swapNodes = usePatchStore((state) => state.swapNodes);
+  const highlightExclusiveNode = usePatchStore((state) => state.highlightExclusiveNode);
 
   let itemIndex = 0;
 
@@ -21,12 +22,23 @@ function ParameterGroup(props) {
           selectThisNode(synthNode.id);
         };
         
+        const handleMouseEnter = (event) => {
+          console.log('handleMouseEnter');
+          highlightExclusiveNode(synthNode.id);
+        };
+        
+        const handleMouseLeave = (event) => {
+          console.log('handleMouseLeave');
+          highlightExclusiveNode();
+        };
+        
         // selected state
         const classNames = ['item'];
         if (synthNode.selected) classNames.push('selected');
+        if (synthNode.highlighted) classNames.push('highlighted');
 
         // buttons to change node order
-        // TODO: single handler outside map()
+        // TODO: move handlers outside `map()`
         synthNode.index = itemIndex;
 
         const moveNodeUp = (event) => {
@@ -48,6 +60,8 @@ function ParameterGroup(props) {
             className={classNames.join(' ')}
             key={synthNode.id}
             onClick={handleClick}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
           >
             <div>{`${synthNode.id}: ${displayName}`}</div>
             <div className="iconGroup">

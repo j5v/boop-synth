@@ -1,11 +1,16 @@
-import { create } from 'zustand'
-import { synthNodeTypes, defaultPatchNodes, defaultOutputSpec, newSynthNode } from '../lib/synth.js'
-import { swapItemsInArray } from '../lib/utils.js'
+import { create } from "zustand";
+import {
+  synthNodeTypes,
+  defaultPatchNodes,
+  defaultOutputSpec,
+  newSynthNode,
+} from "../lib/synth.js";
+import { swapItemsInArray } from "../lib/utils.js";
 
 const usePatchStore = create((set) => ({
   nodes: defaultPatchNodes, // non-clone is OK here
-  perf: {...defaultOutputSpec},
-  
+  perf: { ...defaultOutputSpec },
+
   addNode: () =>
     set((state) => ({
       ...state,
@@ -13,47 +18,56 @@ const usePatchStore = create((set) => ({
         ...state.nodes,
         newSynthNode.newObject({
           nodeTypeId: synthNodeTypes.GEN_FM.id,
-          x: 20
-        })
+          x: 20,
+        }),
       ],
     })),
 
   removeNode: (nodeId) =>
     set((state) => ({
       ...state,
-      nodes: state.nodes.filter(node => node.id !== nodeId),
+      nodes: state.nodes.filter((node) => node.id !== nodeId),
     })),
-  
+
   removeSelectedNodes: () =>
     set((state) => ({
       ...state,
-      nodes: state.nodes.filter(node => !node.selected),
+      nodes: state.nodes.filter((node) => !node.selected),
     })),
-    
+
   selectNode: (nodeId) =>
-    set(state => ({
+    set((state) => ({
       ...state,
       nodes: state.nodes.map((node) =>
-        node.id === nodeId ?
-          { ...node, selected: true } :
-          { ...node }
+        node.id === nodeId ? { ...node, selected: true } : { ...node }
       ),
     })),
 
   selectExclusiveNode: (nodeId) =>
     // Select node, and unselect other nodes.
-    set(state => ({
+    set((state) => ({
       ...state,
       nodes: state.nodes.map((node) =>
-        node.id === nodeId ?
-          { ...node, selected: true } :
-          { ...node, selected: false }
+        node.id === nodeId
+          ? { ...node, selected: true }
+          : { ...node, selected: false }
       ),
     })),
-  
-    // Update node properties with an object
+
+  highlightExclusiveNode: (nodeId) =>
+    // Select node, and unselect other nodes.
+    set((state) => ({
+      ...state,
+      nodes: state.nodes.map((node) =>
+        node.id === nodeId
+          ? { ...node, highlighted: true }
+          : { ...node, highlighted: false }
+      ),
+    })),
+
+  // Update node properties with an object
   updateNode: (nodeId, obj) =>
-    set(state => ({
+    set((state) => ({
       ...state,
       nodes: state.nodes.map((node) =>
         node.id === nodeId ? { ...node, ...obj } : node
@@ -61,27 +75,30 @@ const usePatchStore = create((set) => ({
     })),
 
   swapNodes: (index1, index2) =>
-    set(state => {
-      const nodesWithSwappedItems = swapItemsInArray(state.nodes, index1, index2);
+    set((state) => {
+      const nodesWithSwappedItems = swapItemsInArray(
+        state.nodes,
+        index1,
+        index2
+      );
 
       return {
-      ...state,
-      nodes: nodesWithSwappedItems,
-      }
+        ...state,
+        nodes: nodesWithSwappedItems,
+      };
     }),
 
   // Drag node
 
   dragSelectedNodes: (dx, dy) =>
-    set(state => ({
+    set((state) => ({
       ...state,
-      nodes: state.nodes.map(node =>
-        node.selected ?
-          { ...node, x: node.x + dx, y: node.y + dy } :
-          { ...node }
+      nodes: state.nodes.map((node) =>
+        node.selected
+          ? { ...node, x: node.x + dx, y: node.y + dy }
+          : { ...node }
       ),
     })),
-  
 }));
 
 export default usePatchStore;
