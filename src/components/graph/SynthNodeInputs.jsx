@@ -1,5 +1,5 @@
 import './SynthNodeInputs.css'
-import { asRem, remAsPx } from '../../lib/utils.js'
+import { asRem, pxAsRem, remAsPx } from '../../lib/utils.js'
 import { getSynthNodeTerminalIntentsById } from '../../lib/synth.js'
 import { nodeLayout } from '../../lib/nodeLayout.js'
 import usePatchStore from '../../store/patchStore.jsx'
@@ -10,12 +10,12 @@ function SynthNodeInputs(props) {
   const { inputs } = synthNode;
   const { nodeVSpacing, nodeVOffset, nodeBottomPadding } = nodeLayout;
 
-  const beginDragNewConnectorFromInput = usePatchStore((state) => state.beginDragNewConnectorFromInput);
+  const setConnectorDragFromInput = usePatchStore((state) => state.setConnectorDragFromInput);
 
   const handleMouseDown = (event, spec) => {
     event.stopPropagation();
     console.log('mouseDown');
-    beginDragNewConnectorFromInput(spec);
+    setConnectorDragFromInput(spec);
   }
 
   let py = nodeVOffset;
@@ -41,7 +41,14 @@ function SynthNodeInputs(props) {
             />
             <circle
               className={classCSS}
-              onMouseDown={(e) => handleMouseDown(e, {fromNode: synthNode, fromInput: i})}
+              onMouseDown={(e) => handleMouseDown(e, {
+                fromNode: synthNode,
+                fromInput: i,
+                loosePosX: synthNode.x,
+                loosePosY: synthNode.y + py,
+                prevPageX: pxAsRem(e.pageX),
+                prevPageY: pxAsRem(e.pageY),
+                        })}
               cx={asRem(synthNode.x)}
               cy={asRem(synthNode.y + py)}
               r={asRem(0.4)}

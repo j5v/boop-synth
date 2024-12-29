@@ -15,19 +15,34 @@ const usePatchStore = create((set) => ({
     draggingNewConnectorFromInput: undefined,
   },
 
-  beginDragNewConnectorFromInput: (spec) => 
+  setConnectorDragFromInput: (spec) => 
     set((state) => {
       const { fromNode, fromInput } = spec;
-      console.log(spec);
+      console.log('Store: beginDragNewConnectorFromInput()', spec);
 
       return {
         ...state,
         ui: {
           ...structuredClone(state.ui),
-          draggingNewConnectorFromInput: spec,
+          draggingConnectorFromInput: spec,
         }
       };
     }),
+
+  endDragConnectorFromInput: () => 
+    set((state) => {
+      console.log('Store: setEndDragNewConnectorFromInput()');
+
+      return {
+        ...state,
+        ui: {
+          ...structuredClone(state.ui),
+          draggingConnectorFromInput: {},
+        }
+      };
+    }),
+
+  
 
   addNode: (synthNodeTypeId) =>
     set((state) => {
