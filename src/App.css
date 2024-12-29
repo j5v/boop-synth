@@ -9,4 +9,9 @@
   display: flex;
   gap: 0.4rem;
   padding: 0.2rem;
+  align-items: baseline;
+}
+
+.button-bar select {
+  padding: 0.2rem 0.4rem;
 }

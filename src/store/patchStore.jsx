@@ -4,25 +4,44 @@ import {
   defaultPatchNodes,
   defaultOutputSpec,
   newSynthNode,
+  getNodeTypeById,
 } from "../lib/synth.js";
 import { swapItemsInArray } from "../lib/utils.js";
+
 
 const usePatchStore = create((set) => ({
   nodes: defaultPatchNodes, // non-clone is OK here
   perf: { ...defaultOutputSpec },
+  ui: {
+    draggingNewConnectorFrom: undefined
+  },
 
-  addNode: () =>
-    set((state) => ({
-      ...state,
-      nodes: [
-        ...state.nodes,
+  addNode: (synthNodeTypeId) =>
+    set((state) => {
+      const nodeType = getNodeTypeById(synthNodeTypeId);
+      const node = nodeType ?
+        newSynthNode.newObject({
+          nodeTypeId: synthNodeTypeId,
+          inputs: [...structuredClone(nodeType.inputs || [])],
+          outputs: [...structuredClone(nodeType.outputs || [])],
+          x: 20,
+        }) : 
         newSynthNode.newObject({
           nodeTypeId: synthNodeTypes.GEN_FM.id,
+          inputs: [...structuredClone(nodeType.inputs || [])],
+          outputs: [...structuredClone(nodeType.outputs || [])],
           x: 20,
-        }),
-      ],
-    })),
+        });
 
+      return {
+        ...state,
+        nodes: [
+          ...state.nodes,
+          node,
+        ],
+      }
+    }),
+  
   removeNode: (nodeId) =>
     set((state) => ({
       ...state,

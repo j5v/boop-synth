@@ -11,7 +11,7 @@
 } 
 
 .SynthNodeBox.highlighted {
-  fill: hsla(0, 0%, 100%, 0.2);
+  fill: hsla(0, 0%, 20%, 1);
   stroke: hsla(0, 0%, 100%, 0.8);
 }
 

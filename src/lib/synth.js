@@ -65,7 +65,7 @@ const getSynthNodeTerminalIntentsById = id => {
 
 const synthNodeTypes = {
   MOCK: {
-    id: 0,
+    id: 99,
     name: 'Test'
   },
   OUTPUT: {
@@ -214,13 +214,13 @@ const newSynthNode = newCreator(defaultSynthNode)
 // Default fragments for init state
 const defaultPatchNodes = [ 
   newSynthNode.newObject({
-    outputs: [ ...synthNodeTypes.GEN_FM.outputs ],
+    outputs: [ ...structuredClone(synthNodeTypes.GEN_FM.outputs || []) ],
   }),
   newSynthNode.newObject({
     nodeTypeId: synthNodeTypes.OUTPUT.id,
     x: 16,
     y: 9,
-    inputs: [ ...synthNodeTypes.OUTPUT.inputs ],
+    inputs: [ ...structuredClone(synthNodeTypes.OUTPUT.inputs || []) ],
     outputs: []
   }),
 ];
