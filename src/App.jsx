@@ -18,6 +18,8 @@ function App() {
     event.target.value = '';
   }
 
+  const noNodesSelected = nodes.filter(n => n.selected).length == 0;
+
   return (
     <div className="App">
       <Header>
@@ -25,17 +27,15 @@ function App() {
         <div className="button-bar">
           <button onClick={() => generateAndPlay(nodes, perf)}>Play</button>
           <button onClick={() => generateFile(nodes, perf)}>Download</button>
-          <button onClick={removeSelectedNodes}>&times;</button>
-          <a href="http://johnvalentine.co.uk?art=fmc2" target="_blank"><button>?</button></a>
-          <div>
-            <select onChange={handleSelect}>
-              <option value="" disabled selected hidden>Add Node</option>              
-              {Object.keys(synthNodeTypes).map(
-                (keyName, keyIndex) => <option key={synthNodeTypes[keyName].id} value={synthNodeTypes[keyName].id}>{synthNodeTypes[keyName].name}</option>
-              )}
-            </select>
-          </div>
+          <select onChange={handleSelect} title="Add node">
+            <option value="" disabled selected hidden>&nbsp;Add</option>              
+            {Object.keys(synthNodeTypes).map(
+              (keyName, keyIndex) => <option key={synthNodeTypes[keyName].id} value={synthNodeTypes[keyName].id}>{synthNodeTypes[keyName].name}</option>
+            )}
+          </select>
+          <button onClick={removeSelectedNodes} disabled={noNodesSelected} title="Remove selected nodes">&times;</button>
         </div>
+        <a href="http://johnvalentine.co.uk?art=fmc2" target="_blank" title="Help"><button>?</button></a>
       </Header>
       <Content />
       <Footer />

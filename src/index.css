@@ -38,6 +38,14 @@ h1 {
   line-height: 1.1;
 }
 
+select {
+  font-size: 1em;
+  height: 2.66rem;
+  background-color: #1a1a1a;
+  border-radius: 8px;
+  border: 1px solid transparent;
+}
+
 button {
   border-radius: 8px;
   border: 1px solid transparent;
