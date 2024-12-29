@@ -8,7 +8,6 @@ import {
 } from "../lib/synth.js";
 import { swapItemsInArray } from "../lib/utils.js";
 
-
 const usePatchStore = create((set) => ({
   nodes: defaultPatchNodes, // non-clone is OK here
   perf: { ...defaultOutputSpec },
@@ -18,16 +17,9 @@ const usePatchStore = create((set) => ({
 
   addNode: (synthNodeTypeId) =>
     set((state) => {
-      const nodeType = getNodeTypeById(synthNodeTypeId);
-      const node = nodeType ?
-        newSynthNode.newObject({
+      const nodeType = getNodeTypeById(synthNodeTypeId) || synthNodeTypes.GEN_FM.id;
+      const node = newSynthNode.newObject({
           nodeTypeId: synthNodeTypeId,
-          inputs: [...structuredClone(nodeType.inputs || [])],
-          outputs: [...structuredClone(nodeType.outputs || [])],
-          x: 20,
-        }) : 
-        newSynthNode.newObject({
-          nodeTypeId: synthNodeTypes.GEN_FM.id,
           inputs: [...structuredClone(nodeType.inputs || [])],
           outputs: [...structuredClone(nodeType.outputs || [])],
           x: 20,
