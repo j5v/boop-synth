@@ -23,12 +23,10 @@ function ParameterGroup(props) {
         };
         
         const handleMouseEnter = (event) => {
-          console.log('handleMouseEnter');
           highlightExclusiveNode(synthNode.id);
         };
         
         const handleMouseLeave = (event) => {
-          console.log('handleMouseLeave');
           highlightExclusiveNode();
         };
         
