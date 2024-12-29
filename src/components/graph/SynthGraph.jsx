@@ -13,58 +13,66 @@ function SynthGraph() {
     (state) => state.selectExclusiveNode
   );
 
-  const [posX, setPosX] = useState(0);
-  const [posY, setPosY] = useState(0);
-  const [dragging, setDragging] = useState(false);
-  const [showDragging, setShowDragging] = useState(false);
+  const [nodePosX, setNodePosX] = useState(0);
+  const [nodePosY, setNodePosY] = useState(0);
+  const [draggingNode, setDraggingNode] = useState(false);
+  const [showDraggingNode, setShowDraggingNode] = useState(false);
 
 
-  // begin drag
+  // Drag new connector
 
-  const selectNode = usePatchStore((state) => state.selectNode)
+  // ...
 
-  const handleMouseDown = (event) => {
-    setDragging(true);
 
-    setPosX(pxAsRem(event.pageX));
-    setPosY(pxAsRem(event.pageY));
+  // Drag node
+
+  const dragSelectedNodes = usePatchStore((state) => state.dragSelectedNodes)
+
+  const doDragNodeBegin = (event) => {
+    setDraggingNode(true);
+
+    setNodePosX(pxAsRem(event.pageX));
+    setNodePosY(pxAsRem(event.pageY));
     // console.log('mouseDown', posX, posY);
   };
 
-  // drag move
-
-  const dragSelectedNodes = usePatchStore((state) => state.dragSelectedNodes)
-  
-  const handleMouseMove = (event) => {
-    if (dragging) {
-      setShowDragging(true);
+  const doDragNode = (event) => {
+    if (draggingNode) {
+      setShowDraggingNode(true);
       event.stopPropagation();
 
-      const xDiffRem = pxAsRem(event.pageX) - posX;
-      const yDiffRem = pxAsRem(event.pageY) - posY;
+      const xDiffRem = pxAsRem(event.pageX) - nodePosX;
+      const yDiffRem = pxAsRem(event.pageY) - nodePosY;
 
       // console.log('mouseMove', { dragging, posX, posY, pageX: event.pageX, pageY: event.pageY, xDiffRem, yDiffRem } );
 
-      setPosX(pxAsRem(event.pageX));
-      setPosY(pxAsRem(event.pageY));
+      setNodePosX(pxAsRem(event.pageX));
+      setNodePosY(pxAsRem(event.pageY));
 
       dragSelectedNodes(xDiffRem, yDiffRem);
     }
   };
 
-  // end drag
-  
-  const handleMouseUp = (event) => {
-    setDragging(false);
-    setShowDragging(false);
+  const doDragNodeEnd = (event) => {
+    setDraggingNode(false);
+    setShowDraggingNode(false);
     // console.log('mouseUp', { dragging });
 
     event.stopPropagation();
   };
 
+
+  // mouse event handlers
+  const handleMouseDown = (event) => doDragNodeBegin(event);
+  const handleMouseMove = (event) => {
+    if (draggingNode) doDragNode(event);
+    // if (draggingNode) doDragNode(event);
+  }
+  const handleMouseUp = (event) => doDragNodeEnd(event);
+  
   return (
     <svg
-      className={'SynthGraph' + (showDragging ? ' dragging' : '')}
+      className={'SynthGraph' + (showDraggingNode ? ' dragging' : '')}
       onClick={selectThisNode /* unselects all */}
       onMouseDown={handleMouseDown}
       onMouseMove={handleMouseMove}

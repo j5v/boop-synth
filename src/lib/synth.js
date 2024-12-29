@@ -64,10 +64,6 @@ const getSynthNodeTerminalIntentsById = id => {
 // Synth Node Types
 
 const synthNodeTypes = {
-  MOCK: {
-    id: 99,
-    name: 'Test'
-  },
   OUTPUT: {
     id: 1,
     name: 'Output',

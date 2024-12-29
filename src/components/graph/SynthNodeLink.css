@@ -3,6 +3,7 @@
   fill: none;
   stroke: hsl(120, 80%, 40%);
   stroke-linecap: round;
+  pointer-events: none;
 }
 
 .synth-node-cable-outline {

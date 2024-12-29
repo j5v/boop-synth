@@ -11,7 +11,7 @@ function SynthNodeLink({ outputPos, inputPos }) {
   const hangOut = Math.min(1.4,
     Math.abs(inputPos.x - outputPos.x - 6) * 0.5 *
     Math.min(0.3, Math.abs(inputPos.y - outputPos.y) * 0.05)
-  ); // Straight line extent, near terminal.
+  ); // Straight line extent, near terminals.
 
   const path = `
     M ${remAsPx(outputPos.x)}, ${remAsPx(outputPos.y)}

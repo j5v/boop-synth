@@ -12,8 +12,22 @@ const usePatchStore = create((set) => ({
   nodes: defaultPatchNodes, // non-clone is OK here
   perf: { ...defaultOutputSpec },
   ui: {
-    draggingNewConnectorFrom: undefined
+    draggingNewConnectorFromInput: undefined,
   },
+
+  beginDragNewConnectorFromInput: (spec) => 
+    set((state) => {
+      const { fromNode, fromInput } = spec;
+      console.log(spec);
+
+      return {
+        ...state,
+        ui: {
+          ...structuredClone(state.ui),
+          draggingNewConnectorFromInput: spec,
+        }
+      };
+    }),
 
   addNode: (synthNodeTypeId) =>
     set((state) => {
