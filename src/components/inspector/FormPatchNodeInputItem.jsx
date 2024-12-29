@@ -8,8 +8,10 @@ function FormPatchNodeInputItem(props) {
   const { classCSS, name } = intent;
 
   const displayUnits = (inputItem.displayUnits) ? (
+    // not using this yet
     <div className="units">{inputItem.displayUnits}</div>
   ) : <></>
+
   const inputField = (!inputItem.exposed || inputItem.isOffset) ? (
     <input
       className="number"
@@ -17,6 +19,7 @@ function FormPatchNodeInputItem(props) {
       readOnly
     ></input>
   ) : <></>
+
   const exposureField = (intent.modulatable) ? (
     <input
       type="checkbox"
@@ -30,10 +33,9 @@ function FormPatchNodeInputItem(props) {
 
   
   return (
-    <div className={rowClassNames.join(' ')} key={inputItem.id}>
+    <div className={rowClassNames.join(' ')} key={inputItem.id} role='listitem'>
       <div className="exposure">{exposureField}</div>
       <div className="label" title={name}>{inputItem.displayName}</div>
-      {displayUnits}
       {inputField}
     </div>
   )

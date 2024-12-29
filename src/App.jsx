@@ -27,6 +27,8 @@ function App() {
         <div className="button-bar">
           <button onClick={() => generateAndPlay(nodes, perf)}>Play</button>
           <button onClick={() => generateFile(nodes, perf)}>Download</button>
+        </div>
+        <div className="button-bar">
           <select onChange={handleSelect} title="Add node" defaultValue="">
             <option value="" disabled hidden>&nbsp;Add</option>              
             {Object.keys(synthNodeTypes).map(

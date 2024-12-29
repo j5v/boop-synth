@@ -13,7 +13,7 @@ function ParameterGroup(props) {
   let itemIndex = 0;
 
   return (
-    <div className='SynthGraphNodeList'>
+    <div className='SynthGraphNodeList' role='list'>
       {nodes.map(synthNode => {
         const displayName = getNodeDisplayTitle(synthNode);
 
@@ -57,6 +57,7 @@ function ParameterGroup(props) {
           <div
             className={classNames.join(' ')}
             key={synthNode.id}
+            role='listitem'
             onClick={handleClick}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}

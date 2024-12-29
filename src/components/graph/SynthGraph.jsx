@@ -37,20 +37,18 @@ function SynthGraph() {
   };
 
   const doDragNode = (event) => {
-    if (draggingNode) {
-      setShowDraggingNode(true);
-      event.stopPropagation();
+    setShowDraggingNode(true);
+    event.stopPropagation();
 
-      const xDiffRem = pxAsRem(event.pageX) - nodePosX;
-      const yDiffRem = pxAsRem(event.pageY) - nodePosY;
+    const xDiffRem = pxAsRem(event.pageX) - nodePosX;
+    const yDiffRem = pxAsRem(event.pageY) - nodePosY;
 
-      // console.log('mouseMove', { dragging, posX, posY, pageX: event.pageX, pageY: event.pageY, xDiffRem, yDiffRem } );
+    // console.log('mouseMove', { dragging, posX, posY, pageX: event.pageX, pageY: event.pageY, xDiffRem, yDiffRem } );
 
-      setNodePosX(pxAsRem(event.pageX));
-      setNodePosY(pxAsRem(event.pageY));
+    setNodePosX(pxAsRem(event.pageX));
+    setNodePosY(pxAsRem(event.pageY));
 
-      dragSelectedNodes(xDiffRem, yDiffRem);
-    }
+    dragSelectedNodes(xDiffRem, yDiffRem);
   };
 
   const doDragNodeEnd = (event) => {
