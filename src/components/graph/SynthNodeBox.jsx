@@ -20,7 +20,6 @@ function SynthNodeBox(props) {
 
   const selectExclusiveNode = usePatchStore((state) => state.selectExclusiveNode)
   const selectNode = usePatchStore((state) => state.selectNode)
-
   const highlightExclusiveNode = usePatchStore((state) => state.highlightExclusiveNode);
 
   const handleMouseDown = (event) => {

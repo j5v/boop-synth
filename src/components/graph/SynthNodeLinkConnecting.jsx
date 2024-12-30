@@ -1,15 +1,11 @@
 import './SynthNodeLinks.css'
-import usePatchStore from '../../store/patchStore.jsx';
+import usePatchStore from '../../store/patchStore.jsx'
 import SynthNodeLink from './SynthNodeLink.jsx'
-import { nodeLayout } from '../../lib/nodeLayout.js'
+
 
 function SynthNodeLinks() {
 
-  const { nodeVSpacing, nodeVOffset, nodeVPadding } = nodeLayout;
-
-  const draggingLinkFromInput = usePatchStore(
-    (state) => state.ui.draggingLinkFromInput
-  );
+  const draggingLinkFromInput = usePatchStore.getState().ui.draggingLinkFromInput;
 
   if (draggingLinkFromInput &&
       draggingLinkFromInput.loosePosX &&

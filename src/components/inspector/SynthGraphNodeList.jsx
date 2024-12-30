@@ -4,9 +4,9 @@ import { getNodeDisplayTitle } from '../../lib/synth.js'
 
 function ParameterGroup(props) {
 
-  const nodes = usePatchStore((state) => state.nodes);
-  const selectThisNode = usePatchStore((state) => state.selectExclusiveNode);
+  const nodes = usePatchStore.getState().nodes;
 
+  const selectThisNode = usePatchStore((state) => state.selectExclusiveNode);
   const swapNodes = usePatchStore((state) => state.swapNodes);
   const highlightExclusiveNode = usePatchStore((state) => state.highlightExclusiveNode);
 

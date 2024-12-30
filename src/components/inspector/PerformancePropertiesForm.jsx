@@ -3,7 +3,7 @@ import usePatchStore from '../../store/patchStore.jsx';
 
 function PerformancePropertiesForm() {
 
-  const perf = usePatchStore((state) => state.perf);
+  const perf = usePatchStore.getState().perf;
 
   return (
     <div className="PerformancePropertiesForm">

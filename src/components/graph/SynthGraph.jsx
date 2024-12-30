@@ -94,7 +94,9 @@ function SynthGraph() {
     event.stopPropagation();
   };
 
+  
   // mouse event handlers
+
   const handleMouseDown = (event) => doDragNodeBegin(event);
   const handleMouseMove = (event) => {
     if (draggingNode) doDragNode(event);

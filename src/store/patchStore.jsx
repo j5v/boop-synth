@@ -78,6 +78,15 @@ const usePatchStore = create((set) => ({
     nodes: state.nodes.filter((node) => node.id !== nodeId),
   })),
 
+  reset: () => set((state) => ({
+    ...state,
+    nodes: defaultPatchNodes(),
+    perf: { ...defaultOutputSpec },
+    ui: {
+      draggingLinkFromInput: undefined,
+    },
+  })),
+
   removeSelectedNodes: () => set((state) => ({
     ...state,
     nodes: state.nodes.filter((node) => !node.selected),

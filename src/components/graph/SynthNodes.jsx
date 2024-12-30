@@ -5,9 +5,7 @@ import usePatchStore from '../../store/patchStore.jsx';
 
 function SynthNodes() {
 
-  const nodes = usePatchStore(
-    (state) => state.nodes
-  );
+  const nodes = usePatchStore.getState().nodes;
 
   return (
     nodes.map(node => (

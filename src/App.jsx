@@ -11,11 +11,12 @@ import usePatchStore from './store/patchStore.jsx'
 
 function App() {
 
-  const perf = usePatchStore((state) => state.perf);
-  const nodes = usePatchStore((state) => state.nodes);
+  const perf = usePatchStore.getState().perf;
+  const nodes = usePatchStore.getState().nodes;
 
   const addNode = usePatchStore((state) => state.addNode)
   const removeSelectedNodes = usePatchStore((state) => state.removeSelectedNodes)
+  const reset = usePatchStore((state) => state.reset)
 
   const handleSelect = (event) => {
     addNode(event.target.value);
@@ -55,6 +56,11 @@ function App() {
           ><IconDelete /></button>
         </div>
         <a href="http://johnvalentine.co.uk?art=fmc2" target="_blank" title="Help"><button className="text-as-icon">?</button></a>
+        <button
+            className="" 
+            onClick={reset}
+            title="Reset all nodes"
+          >Reset</button>
       </Header>
       <Content />
       <Footer />

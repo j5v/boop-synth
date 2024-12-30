@@ -7,10 +7,7 @@ function SynthNodeLinks() {
 
   const { nodeVSpacing, nodeVOffset, nodeVPadding } = nodeLayout;
 
-  const nodes = usePatchStore(
-    (state) => state.nodes
-  );
-
+  const nodes = usePatchStore.getState().nodes;
 
   return (
     nodes.map(node => {
