@@ -17,7 +17,7 @@ function PerformancePropertiesForm() {
       </div>
       <div className="form-input-row">
         <div className="label">Duration<span className="units">, s</span></div>
-        <>{perf.duration}</>
+        <>{perf.duration.toFixed(6)}</>
       </div>
       <div className="form-input-row">
         <div className="label">Root Frequency<span className="units">, Hz</span></div>

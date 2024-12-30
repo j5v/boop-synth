@@ -10,12 +10,11 @@ function SynthNodeInputs(props) {
   const { inputs } = synthNode;
   const { nodeVSpacing, nodeVOffset, nodeBottomPadding } = nodeLayout;
 
-  const setConnectorDragFromInput = usePatchStore((state) => state.setConnectorDragFromInput);
+  const setLinkDragFromInput = usePatchStore((state) => state.setLinkDragFromInput);
 
   const handleMouseDown = (event, spec) => {
     event.stopPropagation();
-    console.log('mouseDown');
-    setConnectorDragFromInput(spec);
+    setLinkDragFromInput(spec);
   }
 
   let py = nodeVOffset;
@@ -23,11 +22,13 @@ function SynthNodeInputs(props) {
   return (
     (inputs || []).map(i => {
       if (i.exposed) {
-        const classCSS = getSynthNodeTerminalIntentsById(i.intentId).classCSS;
-        const classCSSOutline = 'terminal-outline';
+        const classCSS = `terminal ${
+          getSynthNodeTerminalIntentsById(i.intentId).classCSS
+        }`;
+        const classCSSOutline = 'terminal outline';
         py += nodeVSpacing;
 
-        // cache positions for 'new connector dragging'
+        // cache positions for 'new Link dragging'
         i.posY = py;
         i.posX = synthNode.x;
 
@@ -45,10 +46,10 @@ function SynthNodeInputs(props) {
                 fromNode: synthNode,
                 fromInput: i,
                 loosePosX: synthNode.x,
-                loosePosY: synthNode.y + py,
+                loosePosY: synthNode.y + i.posY,
                 prevPageX: pxAsRem(e.pageX),
                 prevPageY: pxAsRem(e.pageY),
-                        })}
+              })}
               cx={asRem(synthNode.x)}
               cy={asRem(synthNode.y + py)}
               r={asRem(0.4)}

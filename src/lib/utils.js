@@ -10,9 +10,9 @@ const newCreator = ({ defaultObject }) => {
     }
 
     return {
-      ...defaultObject,
+      ...structuredClone(defaultObject),
       id,
-      ...options
+      ...structuredClone(options)
     }
   }
   return {

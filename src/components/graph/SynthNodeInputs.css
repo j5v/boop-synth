@@ -7,20 +7,24 @@
 .terminal-output-label {
   text-anchor: end;
 }
-
-.terminal-level {
+.terminal {
   stroke: none;
+}
+
+.terminal.level {
   fill: hsl(120, 70%, 50%);
 }
 
-.terminal-frequency {
-  stroke: none;
+.terminal.frequency {
   fill: hsl(220, 80%, 60%);
 }
 
-.terminal-outline {
-  stroke: none;
+.terminal.outline, .terminal.outline:hover {
   fill: #000;
+}
+
+.terminal:hover {
+  fill: #fff;
 }
 
 
@@ -29,10 +33,17 @@
     fill: black;
   }
 
-  .terminal-level {
+  .terminal.level {
     fill: #248311;
   } 
-  .terminal-frequency {
+  .terminal.frequency {
     fill: #008351;
   } 
+  .terminal.outline, .terminal.outline:hover {
+    fill: #fff;
+  }
+  .terminal:hover {
+    fill: #000;
+  }
+ 
 }

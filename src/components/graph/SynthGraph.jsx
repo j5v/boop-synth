@@ -7,7 +7,7 @@ import SynthNodeLinkConnecting from './SynthNodeLinkConnecting.jsx'
 import { pxAsRem } from '../../lib/utils.js'
 
 /* SynthGraph:
-  - Contains the node graph and connectors.
+  - Contains the node graph and Links.
   - Handles mouse events for moving nodes.
   - Handles some of the mouse events for connecting nodes.
 */
@@ -26,43 +26,39 @@ function SynthGraph() {
   const [showDraggingNode, setShowDraggingNode] = useState(false);
 
 
-  // Drag new connector
-  const setConnectorDragFromInput = usePatchStore(
-    (state) => state.setConnectorDragFromInput
+  // Drag new Link
+  const setLinkDragFromInput = usePatchStore(
+    (state) => state.setLinkDragFromInput
   );
-  const endDragConnectorFromInput = usePatchStore(
-    (state) => state.endDragConnectorFromInput
+  const endDragLinkFromInput = usePatchStore(
+    (state) => state.endDragLinkFromInput
   );
-  const dragConnectorState = usePatchStore(
-    (state) => state.ui.draggingConnectorFromInput
+  const dragLinkState = usePatchStore(
+    (state) => state.ui.draggingLinkFromInput
   );
 
-  const doDragConnectorFromInput = (event) => {
+  const doDragLinkFromInput = (event) => {
     // event.stopPropagation();
 
     const newPageX = pxAsRem(event.pageX);
     const newPageY = pxAsRem(event.pageY);
 
-    const xDiffRem = newPageX - dragConnectorState.prevPageX;
-    const yDiffRem = newPageY - dragConnectorState.prevPageY;
+    const xDiffRem = newPageX - dragLinkState.prevPageX;
+    const yDiffRem = newPageY - dragLinkState.prevPageY;
 
     const spec = {
-      ...dragConnectorState,
-      loosePosX: dragConnectorState.loosePosX + xDiffRem,  // change when implementing zoom and pan
-      loosePosY: dragConnectorState.loosePosY + yDiffRem,
+      ...structuredClone(dragLinkState),
+      loosePosX: dragLinkState.loosePosX + xDiffRem,  // change when implementing zoom and pan
+      loosePosY: dragLinkState.loosePosY + yDiffRem,
       prevPageX: newPageX,
       prevPageY: newPageY,
     }
-    console.log('SynthGraph: doDragConnectorFromInput()', { spec } );
 
-    setConnectorDragFromInput(spec);
+    setLinkDragFromInput(spec);
   };
   
-  const doEndDragConnectorFromInput = (event) => {
-    // TODO: if on an output node, make the connection
-    endDragConnectorFromInput();
-    console.log('endDragConnectorFromInput()');
-
+  const doEndDragLinkFromInput = (event) => {
+    endDragLinkFromInput();
     event.stopPropagation();
   };
 
@@ -86,8 +82,6 @@ function SynthGraph() {
     const xDiffRem = pxAsRem(event.pageX) - prevDragPosX;
     const yDiffRem = pxAsRem(event.pageY) - prevDragPosY;
 
-    // console.log('mouseMove', { dragging, posX, posY, pageX: event.pageX, pageY: event.pageY, xDiffRem, yDiffRem } );
-
     setPrevDragPosX(pxAsRem(event.pageX)); // change when implementing zoom and pan
     setPrevDragPosY(pxAsRem(event.pageY));
 
@@ -97,8 +91,6 @@ function SynthGraph() {
   const doDragNodeEnd = (event) => {
     setDraggingNode(false);
     setShowDraggingNode(false);
-    // console.log('mouseUp', { dragging });
-
     event.stopPropagation();
   };
 
@@ -106,11 +98,11 @@ function SynthGraph() {
   const handleMouseDown = (event) => doDragNodeBegin(event);
   const handleMouseMove = (event) => {
     if (draggingNode) doDragNode(event);
-    if (dragConnectorState && dragConnectorState.fromNode) doDragConnectorFromInput(event);
+    if (dragLinkState && dragLinkState.fromNode) doDragLinkFromInput(event);
   }
   const handleMouseUp = (event) => {
     if (draggingNode) doDragNodeEnd(event);
-    if (dragConnectorState && dragConnectorState.fromNode) doEndDragConnectorFromInput(event);
+    if (dragLinkState && dragLinkState.fromNode) doEndDragLinkFromInput(event);
   }
   return (
     <svg

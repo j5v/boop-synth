@@ -3,9 +3,20 @@ import saveAs from '../lib/FileSaver.js'
 
 const BITDEPTH_16 = 0;
 
+const getItemById = (list, id) => { // find property by id, in object
+  let foundItem;
+  for (let key in list) {
+    if (list[key].id == id) {
+      foundItem = list[key];
+      break;
+    }
+  }
+  return foundItem;
+}
+
 const defaultOutputSpec = {
   sampleRate: 44100, // sps
-  duration: 0.1, // seconds
+  duration: 0.25, // seconds
   channels: 1,
   filenameRoot: 'FMC 2 - output',
   depth: BITDEPTH_16,
@@ -18,34 +29,49 @@ const defaultPatchPerformance = {
   baseNoteMIDI: 60
 }
 
+const defaultPatchNodes = () => {
+  const nodes = [];
+  nodes.push(newSynthNode(nodes, synthNodeTypes.GEN_FM.id));
+  nodes.push(newSynthNode(nodes, synthNodeTypes.OUTPUT.id));
+
+  nodes[1].x = 18;
+
+  // add a link
+  nodes[1].inputs[0].link = {
+    synthNodeId: nodes[0].id,
+    outputId: 1
+  }
+  return nodes;
+}
+
 // Synth Node Parameter intents
 
 const synthNodeTerminalIntents = { // draft only
   LEVEL: {
     id: 1,
     name: 'Level',
-    classCSS: 'terminal-level',
+    classCSS: 'level',
     modulatable: true
   },
   FREQUENCY_OCTAVES: {
     id: 2,
     name: 'Frequency',
     units: '+octave',
-    classCSS: 'terminal-frequency',
+    classCSS: 'frequency',
     modulatable: true
   },
   SOURCE: {
     id: 3,
     name: 'Source',
     units: 'choice',
-    classCSS: 'terminal-source',
+    classCSS: 'source',
     modulatable: false
   },
   ENUM: {
     id: 4,
     name: 'whole number',
     units: 'choice',
-    classCSS: 'terminal-enum',
+    classCSS: 'enum',
     modulatable: false
   },
 }
@@ -192,54 +218,63 @@ const synthNodeTypes = {
   },
     
 }
+const getNodeTypeById = id => getItemById(synthNodeTypes, id);
 
-const defaultSynthNode = {
-  defaultObject: {
-    x: 2, // rem
-    y: 1, // rem
-    w: 11, // rem
-    nodeTypeId: synthNodeTypes.GEN_FM.id,
-    displayName: '',
-    inputs: [ ...synthNodeTypes.GEN_FM.inputs ],
-    outputs: [ ...synthNodeTypes.GEN_FM.outputs ]
+
+// Links 
+const assignLink = (nodes, spec) => {
+  const newNodes = [ ...structuredClone(nodes) ];
+
+  const { inputNodeId, inputId, targetNodeId, targetOutputId } = spec;
+  
+  const link = {
+    synthNodeId: targetNodeId,
+    outputId: targetOutputId,
+    debug: spec
   }
+
+  // Set input.link to the new link
+  let input;
+
+  const node = newNodes.find(n => n.id == inputNodeId);
+  if (node) {
+    input = node.inputs.find(i => i.id == inputId);
+  }
+  if (input) {
+    input.link = link;
+  }
+  return newNodes;
 }
 
-const newSynthNode = newCreator(defaultSynthNode)
-
-// Default fragments for init state
-const defaultPatchNodes = [ 
-  newSynthNode.newObject({
-    outputs: [ ...structuredClone(synthNodeTypes.GEN_FM.outputs || []) ],
-  }),
-  newSynthNode.newObject({
-    nodeTypeId: synthNodeTypes.OUTPUT.id,
-    x: 16,
-    y: 9,
-    inputs: [ ...structuredClone(synthNodeTypes.OUTPUT.inputs || []) ],
-    outputs: []
-  }),
-];
-
-// add a link
-defaultPatchNodes[1].inputs[0].link = {
-  synthNodeId: defaultPatchNodes[0].id,
-  outputId: 1
+// const newSynthNode = newCreator(defaultSynthNode)
+const newSynthNode = (nodes = [], nodeTypeId, overrides) => {
+  const nodeType = getNodeTypeById(nodeTypeId);
+  let id = 1;
+  if (nodes.length > 0) {
+    const max = Math.max(...nodes.map((item) => item.id));
+    if (max < 0) {
+      id = 1;
+    } else {
+      id = max + 1;
+    }
+  }
+  
+  if (nodeType) {
+    return {
+      id,
+      nodeTypeId,
+      x: 2, // rem
+      y: 1, // rem
+      w: 11, // rem
+      displayName: '',
+      inputs: structuredClone(nodeType.inputs),
+      outputs: structuredClone(nodeType.outputs),
+      ...overrides,
+    }
+  }
 }
 
 // query functons
-const getItemById = (list, id) => {
-  let foundItem;
-  for (let key in list) {
-    if (list[key].id == id) {
-      foundItem = list[key];
-      break;
-    }
-  }
-  return foundItem;
-}
-
-const getNodeTypeById = id => getItemById(synthNodeTypes, id);
   
 const getNodeDisplayTitle = node => {
   const nodeType = getNodeTypeById(node.nodeTypeId);
@@ -260,34 +295,36 @@ const generate = function (nodes, { sampleRate, duration, freq, gain }) {
 
   const pitchUnit = 1 / 12;
 
-  initPatch();
+  console.log('generate()');
+  console.table(nodes);
+  // initPatch(nodes);
 
   // Generate audio, one channel.
-  for (var i = 0; i < sampleFrames; i++) {
-    for (var n = 0; n < nodes.length; n++) {
+  for (let i = 0; i < sampleFrames; i++) {
+    for (let n in nodes) {
       const node = nodes[n];
-      switch (node.nodeTypeId) {
-        case synthNodeTypes.NUMBER.id:
-          node.outputs[0].signal = node.inputs[0].value || node.inputs[0].defaultValue;
-          break;
-        case synthNodeTypes.GEN_FM.id:
 
-          const pitch = valueOfInput(node.inputs[1]);
-          const frequency = freq * (pitch == 0 ? 1 : Math.pow(2, pitch * pitchUnit));
-          const phaseMod = valueOfInput(node.inputs[2]);
-          const freqMod = valueOfInput(node.inputs[3]);
-          const postMix = valueOfInput(node.inputs[4]);
+      // note: `switch (node.nodeTypeId) {}` doesn't work
+      if (node.nodeTypeId == synthNodeTypes.GEN_FM.id) {
+        const pitch = valueOfInput(node.inputs[1]);
+        const frequency = freq * (pitch == 0 ? 1 : Math.pow(2, pitch * pitchUnit));
+        const phaseMod = valueOfInput(node.inputs[2]);
+        const freqMod = valueOfInput(node.inputs[3]);
+        //console.log(`node ${node.id} freqMod`, freqMod, node.inputs[3]);
+        const postMix = valueOfInput(node.inputs[4]);
 
-          node.phase = (node.phase || 0) + phaseIncNormalized * frequency * (1 + freqMod);
-          node.outputs[0].signal = Math.sin(node.phase + phaseMod) + postMix;
+        node.phase = (node.phase || 0) + phaseIncNormalized * frequency * (1 + freqMod);
+        node.outputs[0].signal = Math.sin(node.phase + phaseMod) + postMix;
 
-          break;
+      } else if (node.nodeTypeId == synthNodeTypes.NUMBER.id) {
+        node.outputs[0].signal = valueOfInput(node.inputs[0]);
 
-        case synthNodeTypes.OUTPUT.id:
-          const signal = valueOfInput(node.inputs[0]);
-          samples.push(signal * gain); // TODO: a buffer per output node
-          break;
+      } else if (node.nodeTypeId == synthNodeTypes.OUTPUT.id) {
+        const signal = valueOfInput(node.inputs[0]);
+        samples.push(signal * gain); // TODO: a buffer per output node
+
       }
+
     }
   }
 
@@ -299,25 +336,26 @@ const generate = function (nodes, { sampleRate, duration, freq, gain }) {
   }
 
   function valueOfInput(input) {
-    return input && input.link ?
-      (input.linkedOutput && input.linkedOutput.signal) || 0 :
-      (input.value || input.defaultValue);
-  }
-
-  function initPatch() { // resolve link Ids (non-serializable, mutates state, may be lost on next state update)
-    for (let nodeIndex in nodes) {
-      const node = nodes[nodeIndex];
-      // node.synthState = {};
-      for (let inputIndex in node.inputs) {
-        const input = node.inputs[inputIndex];
-        if (input.link) {
-          const signalInputLink = input && input.link;
-          const outputNode = signalInputLink && nodes.find(n => n.id == signalInputLink.synthNodeId);
-          input.linkedOutput = outputNode && outputNode.outputs.find(output => output.id == signalInputLink.outputId);
+    if (input && input.link) {
+      const link = input.link; // alias
+      if (!link.resolvedOutput) {
+        // cache a direct link as resolvedOutput, so we don't need to look up next time.
+        const outputSynthNode = nodes.find(n => n.id == link.synthNodeId);
+        if (outputSynthNode) {
+          link.resolvedOutput = outputSynthNode && outputSynthNode.outputs.find(output => output.id == link.outputId);
         }
+      }        
+      if (link.resolvedOutput) {
+        return link.resolvedOutput.signal || 0;
+      } else {
+        console.warn('Link failed to resolve, from input:', input);
+        return 0;
       }
+    } else {
+    return input.value || input.defaultValue;
     }
   }
+
 
   function finishPatch() { // Remove extra properties created by initPatch()
     for (let nodeIndex in nodes) {
@@ -447,11 +485,11 @@ export {
   getNodeTypeById,
   getNodeDisplayTitle,
   newSynthNode,
-  defaultSynthNode,
   defaultPatchNodes,
   defaultOutputSpec,
   defaultPatchPerformance,
   getItemById,
+  assignLink,
 
   generateFile,
   generateAndPlay,

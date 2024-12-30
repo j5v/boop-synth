@@ -7,23 +7,25 @@ function SynthNodeLinks() {
 
   const { nodeVSpacing, nodeVOffset, nodeVPadding } = nodeLayout;
 
-  const draggingConnectorFromInput = usePatchStore(
-    (state) => state.ui.draggingConnectorFromInput
+  const draggingLinkFromInput = usePatchStore(
+    (state) => state.ui.draggingLinkFromInput
   );
 
-  if (draggingConnectorFromInput && draggingConnectorFromInput.loosePosX) {
+  if (draggingLinkFromInput &&
+      draggingLinkFromInput.loosePosX &&
+      draggingLinkFromInput.fromInput) {
 
     const loosePos = {
-      x: draggingConnectorFromInput.loosePosX,
-      y: draggingConnectorFromInput.loosePosY
+      x: draggingLinkFromInput.loosePosX,
+      y: draggingLinkFromInput.loosePosY
     }
     const inputPos = {
-      x: draggingConnectorFromInput.fromInput.posX,
-      y: draggingConnectorFromInput.fromInput.posY + draggingConnectorFromInput.fromNode.y
+      x: draggingLinkFromInput.fromInput.posX,
+      y: draggingLinkFromInput.fromInput.posY + draggingLinkFromInput.fromNode.y
     }
     
     return (
-      draggingConnectorFromInput && draggingConnectorFromInput.loosePosX ?
+      draggingLinkFromInput && draggingLinkFromInput.loosePosX ?
         <SynthNodeLink
           key={-2}
           outputPos={loosePos}
