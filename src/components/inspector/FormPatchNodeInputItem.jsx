@@ -1,11 +1,12 @@
 import './FormPatchNodeInputItem.css'
+import { joinItems } from '../../lib/utils.js'
 import { getSynthNodeTerminalIntentsById } from '../../lib/synth.js'
 
 function FormPatchNodeInputItem(props) {
 
   const { inputItem } = props;
   const intent = getSynthNodeTerminalIntentsById(inputItem.intentId);
-  const { classCSS, name } = intent;
+  const { name } = intent;
 
   const displayUnits = (inputItem.displayUnits) ? (
     // not using this yet
@@ -17,6 +18,7 @@ function FormPatchNodeInputItem(props) {
       className="number"
       value={inputItem.value || inputItem.defaultValue}
       readOnly
+      title={name}      
     ></input>
   ) : <></>
 
@@ -35,7 +37,7 @@ function FormPatchNodeInputItem(props) {
   return (
     <div className={rowClassNames.join(' ')} key={inputItem.id} role='listitem'>
       <div className="exposure">{exposureField}</div>
-      <div className="label" title={name}>{inputItem.displayName}</div>
+      <div className="label" title={inputItem.description}>{inputItem.displayName}</div>
       {inputField}
     </div>
   )

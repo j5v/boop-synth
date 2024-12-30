@@ -39,6 +39,8 @@ function swapItemsInArray(items, firstIndex, secondIndex) {
   return results;
 }
 
+const joinItems = (arr, separator = ', ') => arr.filter(i => i > '').join(' - ');
+
 
 export {
   newCreator,
@@ -46,4 +48,5 @@ export {
   remAsPx,
   pxAsRem,
   swapItemsInArray,
+  joinItems,
 }

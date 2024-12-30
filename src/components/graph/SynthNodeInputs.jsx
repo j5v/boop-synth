@@ -26,6 +26,7 @@ function SynthNodeInputs(props) {
           getSynthNodeTerminalIntentsById(i.intentId).classCSS
         }`;
         const classCSSOutline = 'terminal outline';
+
         py += nodeVSpacing;
 
         // cache positions for 'new Link dragging'
@@ -34,6 +35,7 @@ function SynthNodeInputs(props) {
 
         return (
           <g key={i.id}>
+            <title>{i.description}</title>
             <circle
               className={classCSSOutline}
               cx={asRem(synthNode.x)}
@@ -57,7 +59,7 @@ function SynthNodeInputs(props) {
             <text
               className="terminal-input-label"
               x={asRem(synthNode.x + 1)}
-              y={asRem(synthNode.y + py + 0.06)}
+              y={asRem(synthNode.y + py + 0.06)}              
             >{i.displayName}</text>
           </g>
         )

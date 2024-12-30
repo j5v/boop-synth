@@ -1,4 +1,4 @@
-import { newCreator } from '../lib/utils.js'
+import { joinItems } from '../lib/utils.js'
 import saveAs from '../lib/FileSaver.js'
 
 const BITDEPTH_16 = 0;
@@ -110,14 +110,16 @@ const synthNodeTypes = {
       }
     ],
     outputs: [],
+    description: 'Collects a signal to be the output for the graph',
   },
   GEN_FM: {
     id: 2,
-    name: 'FM',
+    name: 'Osc',
     inputs: [
       {
         id: 1,
-        displayName: 'Carrier Source',
+        displayName: 'Source',
+        description: 'A waveform or sample',
         intentId: synthNodeTerminalIntents.SOURCE.id,
         exposed: false,
         placeholder: true,
@@ -125,10 +127,12 @@ const synthNodeTypes = {
       },
       {
         id: 2,
-        displayName: 'Carrier Pitch',
+        displayName: 'Source Pitch',
+        description: 'Amount of change to the reference frequency (octaves)',
         displayUnits: 'semitones',
         intentId: synthNodeTerminalIntents.FREQUENCY_OCTAVES.id,
         exposed: true,
+        placeholder: true,
         isOffset: true, // modifies value
         value: 0,
         defaultValue: 0,
@@ -136,6 +140,7 @@ const synthNodeTypes = {
       {
         id: 3,
         displayName: 'Phase',
+        description: 'Amount of phase shift (cycles, at reference frequency)', // todo: with pitch
         displayUnits: '...0..1...',
         intentId: synthNodeTerminalIntents.LEVEL.id,
         exposed: true,
@@ -145,7 +150,8 @@ const synthNodeTypes = {
       },
       {
         id: 4,
-        displayName: 'Modulator',
+        displayName: 'Frequency',
+        description: 'Modulates the pitch, like FM (frequency modulation)',
         intentId: synthNodeTerminalIntents.LEVEL.id,
         exposed: true,
         defaultValue: 0,
@@ -153,35 +159,10 @@ const synthNodeTypes = {
       {
         id: 5,
         displayName: 'Post-mix',
+        description: 'Mixes directly before node output',
         intentId: synthNodeTerminalIntents.LEVEL.id,
         exposed: true,
         defaultValue: 0,
-      },
-      {
-        id: 6,
-        displayName: 'Unison count',
-        intentId: synthNodeTerminalIntents.ENUM.id,
-        range: [1, 7],
-        exposed: false,
-        placeholder: true,
-        defaultValue: 1,
-      },
-      {
-        id: 7,
-        displayName: 'Unison pitch',
-        intentId: synthNodeTerminalIntents.FREQUENCY_OCTAVES.id,
-        exposed: false,
-        placeholder: true,
-        defaultValue: 0.001,
-      },
-      {
-        id: 8,
-        displayName: 'Unison width',
-        intentId: synthNodeTerminalIntents.LEVEL.id,
-        range: [0, 1],
-        exposed: false,
-        placeholder: true,
-        defaultValue: 0.7071,
       },
     ],
     outputs: [
@@ -193,6 +174,7 @@ const synthNodeTypes = {
         defaultValue: 0,
       }
     ],
+    description: 'Generates from a wave source, with optional FM (frequency modulation) and PM (phase modulation)',
   },
   NUMBER: {
     id: 3,
@@ -215,6 +197,7 @@ const synthNodeTypes = {
         defaultValue: 0,
       }
     ],
+    description: 'A constant number',
   },
     
 }
@@ -279,10 +262,7 @@ const newSynthNode = (nodes = [], nodeTypeId, overrides) => {
 const getNodeDisplayTitle = node => {
   const nodeType = getNodeTypeById(node.nodeTypeId);
   const displayTypeName = nodeType ? `${nodeType.name}` : '';
-  return [
-    node.displayName,
-    displayTypeName
-  ].filter(i => i > '').join(' - ');
+  return joinItems([ node.displayName, displayTypeName ], ' - ');
 }
 
 // processing
