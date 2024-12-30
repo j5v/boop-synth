@@ -5,9 +5,3 @@
   flex-direction: column;
 }
 
-.button-bar {
-  display: flex;
-  gap: 0.4rem;
-  padding: 0.2rem;
-  align-items: baseline;
-}

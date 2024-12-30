@@ -46,6 +46,14 @@ select {
   border: 1px solid transparent;
 }
 
+
+.button-bar {
+  display: flex;
+  gap: 0.4rem;
+  padding: 0rem 0.1rem 0.1rem 0.1rem;
+  align-items: baseline;
+}
+
 button {
   border-radius: 8px;
   border: 1px solid transparent;
@@ -63,6 +71,24 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+button.icon {
+  padding: 0.2rem 0.5rem;
+  height: 2.65rem;
+  top: 0.2rem;
+  position: relative;
+}
+
+.icon.filled {
+  fill: hsla(0, 0%, 100%, 0.8);
+  stroke: none;
+}
+
+.text-as-icon {
+  color: hsla(0, 0%, 100%, 0.8);
+  font-weight: 700;
+}
+
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
@@ -74,4 +100,8 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+  .icon.filled {
+    fill: hsla(0, 0%, 100%, 0.8);
+  }
+  
 }

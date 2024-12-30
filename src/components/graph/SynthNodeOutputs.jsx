@@ -43,6 +43,7 @@ function SynthNodeOutputs(props) {
 
         return (
           <g key={i.id}>
+            <title>{i.description}</title>
             <circle
               className={classCSSOutline}
               cx={asRem(synthNode.x + synthNode.w)}

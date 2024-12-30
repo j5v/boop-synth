@@ -22,7 +22,6 @@ const defaultOutputSpec = {
   depth: BITDEPTH_16,
 
   freq: 440 * Math.pow(2, -9/12), // C below concert pitch A
-  gain: Math.sqrt(2) * 0.5,
 }
 const defaultPatchPerformance = {
   baseFreq: 440 * Math.pow(2, -9/12), // C below concert pitch A
@@ -104,6 +103,7 @@ const synthNodeTypes = {
       {
         id: 2,
         displayName: 'Gain',
+        description: 'Less than 1.0 is quieter, more than 1.0 is louder',
         intentId: synthNodeTerminalIntents.LEVEL.id,
         exposed: false,
         defaultValue: 1.0,
@@ -169,6 +169,7 @@ const synthNodeTypes = {
       {
         id: 1,
         displayName: 'Signal',
+        description: 'Link inputs to this output',
         intentId: synthNodeTerminalIntents.LEVEL.id,
         exposed: true,
         defaultValue: 0,
@@ -183,6 +184,7 @@ const synthNodeTypes = {
       {
         id: 1,
         displayName: 'Value',
+        description: 'A number',
         intentId: synthNodeTerminalIntents.LEVEL.id,
         exposed: false,
         defaultValue: 0,
@@ -192,6 +194,7 @@ const synthNodeTypes = {
       {
         id: 1,
         displayName: 'Signal',
+        description: 'Link inputs to use this number',
         intentId: synthNodeTerminalIntents.LEVEL.id,
         exposed: true,
         defaultValue: 0,
@@ -267,7 +270,7 @@ const getNodeDisplayTitle = node => {
 
 // processing
 
-const generate = function (nodes, { sampleRate, duration, freq, gain }) {
+const generate = function (nodes, { sampleRate, duration, freq }) {
   // test spec.
   const samples = new Array();
   const sampleFrames = sampleRate * duration;
@@ -275,8 +278,8 @@ const generate = function (nodes, { sampleRate, duration, freq, gain }) {
 
   const pitchUnit = 1 / 12;
 
-  console.log('generate()');
-  console.table(nodes);
+  // console.log('generate()');
+  // console.table(nodes);
   // initPatch(nodes);
 
   // Generate audio, one channel.
@@ -301,8 +304,8 @@ const generate = function (nodes, { sampleRate, duration, freq, gain }) {
 
       } else if (node.nodeTypeId == synthNodeTypes.OUTPUT.id) {
         const signal = valueOfInput(node.inputs[0]);
+        const gain = valueOfInput(node.inputs[1]);
         samples.push(signal * gain); // TODO: a buffer per output node
-
       }
 
     }

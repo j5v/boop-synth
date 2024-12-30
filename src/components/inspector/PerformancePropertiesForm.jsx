@@ -23,10 +23,6 @@ function PerformancePropertiesForm() {
         <div className="label">Root Frequency<span className="units">, Hz</span></div>
         <>{perf.freq.toFixed(4)}</>
       </div>
-      <div className="form-input-row">
-        <div className="label">Gain</div>
-        <>{perf.gain.toFixed(4)}</>
-      </div>
     </div>
   )
 }
