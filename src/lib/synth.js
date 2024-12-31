@@ -176,8 +176,65 @@ const synthNodeTypes = {
     ],
     description: 'Generates from a wave source, with optional FM (frequency modulation) and PM (phase modulation)',
   },
-  NUMBER: {
+  RING: {
     id: 3,
+    name: 'Ring',
+    inputs: [
+      {
+        id: 1,
+        displayName: 'Source 1',
+        description: 'A waveform or sample',
+        intentId: synthNodeTerminalIntents.LEVEL.id,
+        exposed: true,
+        defaultValue: 1,
+      },
+      {
+        id: 2,
+        displayName: 'Source 2',
+        description: 'A waveform or sample',
+        intentId: synthNodeTerminalIntents.LEVEL.id,
+        exposed: true,
+        defaultValue: 1,
+      },
+      {
+        id: 3,
+        displayName: 'Source 3',
+        description: 'A waveform or sample',
+        intentId: synthNodeTerminalIntents.LEVEL.id,
+        exposed: false,
+        defaultValue: 1,
+      },
+      {
+        id: 4,
+        displayName: 'Source 4',
+        description: 'A waveform or sample',
+        intentId: synthNodeTerminalIntents.LEVEL.id,
+        exposed: false,
+        defaultValue: 1,
+      },
+      {
+        id: 5,
+        displayName: 'Post-mix',
+        description: 'Mixes directly before node output',
+        intentId: synthNodeTerminalIntents.LEVEL.id,
+        exposed: false,
+        defaultValue: 0,
+      },
+    ],
+    outputs: [
+      {
+        id: 1,
+        displayName: 'Signal',
+        description: 'Link inputs to this output',
+        intentId: synthNodeTerminalIntents.LEVEL.id,
+        exposed: true,
+        defaultValue: 0,
+      }
+    ],
+    description: 'Generates from a wave source, with optional FM (frequency modulation) and PM (phase modulation)',
+  },
+  NUMBER: {
+    id: 4,
     name: 'Number',
     inputs: [
       {
@@ -298,6 +355,15 @@ const generate = function (nodes, { sampleRate, duration, freq }) {
 
         node.phase = (node.phase || 0) + phaseIncNormalized * frequency * (1 + freqMod);
         node.outputs[0].signal = Math.sin(node.phase + phaseMod) + postMix;
+
+      } else if (node.nodeTypeId == synthNodeTypes.RING.id) {
+        const signal1 = valueOfInput(node.inputs[0]);
+        const signal2 = valueOfInput(node.inputs[1]);
+        const signal3 = valueOfInput(node.inputs[2]);
+        const signal4 = valueOfInput(node.inputs[3]);
+        const postMix = valueOfInput(node.inputs[4]);
+
+        node.outputs[0].signal = signal1 * signal2 * signal3 * signal4 + postMix;
 
       } else if (node.nodeTypeId == synthNodeTypes.NUMBER.id) {
         node.outputs[0].signal = valueOfInput(node.inputs[0]);
