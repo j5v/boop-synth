@@ -8,7 +8,7 @@ function SynthNodeInputs(props) {
 
   const { synthNode } = props;
   const { inputs } = synthNode;
-  const { nodeVSpacing, nodeVOffset, nodeBottomPadding } = nodeLayout;
+  const { nodeVSpacing, nodeVOffset, labelPadding } = nodeLayout;
 
   const setLinkDragFromInput = usePatchStore((state) => state.setLinkDragFromInput);
   
@@ -18,21 +18,20 @@ function SynthNodeInputs(props) {
 
 
   const handleMouseDown = (event, spec) => {
-    // begin dragging a link from this Input to an Output
+    // Begin dragging a link from this Input to an Output
     event.stopPropagation();
     setLinkDragFromInput(spec);
   }
 
   const handleMouseMove = (event, spec) => {
-    // New: continue dragging a link from an Input to this Output
+    // Continue dragging a link from an Input to this Output
     // TODO: check logic - is this needed? Snaps to node?
     // event.stopPropagation();
     setLinkDragFromOutput(spec);
   }
 
   const handleMouseUp = (event, spec) => {
-    // New
-    // stop dragging a link from an Output to this Input
+    // Stop dragging a link from an Output to this Input
     // event.stopPropagation();
     setNewLinkFromOutput(spec);
     endDragLinkFromOutput();
@@ -103,7 +102,7 @@ function SynthNodeInputs(props) {
             />
             <text
               className="terminal-input-label"
-              x={asRem(synthNode.x + 1)}
+              x={asRem(synthNode.x + labelPadding)}
               y={asRem(synthNode.y + py + 0.06)}              
             >{i.displayName}</text>
           </g>

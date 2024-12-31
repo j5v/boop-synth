@@ -11,7 +11,6 @@ import {
 import { swapItemsInArray, cleanNodeLinks } from "../lib/utils.js";
 
 
-
 const usePatchStore = create(
   persist(
     (set, get) => ({
@@ -19,6 +18,7 @@ const usePatchStore = create(
       perf: { ...defaultOutputSpec },
       ui: {
         draggingLinkFromInput: undefined,
+        draggingLinkFromOutput: undefined,
       },
 
       setLinkDragFromInput: (spec) => set((state) => {

@@ -1,6 +1,8 @@
 import './SynthGraphNodeList.css'
 import usePatchStore from '../../store/patchStore.jsx'
 import { getNodeDisplayTitle } from '../../lib/synth.js'
+import IconMoveUp from '../generic/IconMoveUp.jsx';
+import IconMoveDown from '../generic/IconMoveDown.jsx';
 
 function ParameterGroup(props) {
 
@@ -64,8 +66,16 @@ function ParameterGroup(props) {
           >
             <div>{`${synthNode.id}: ${displayName}`}</div>
             <div className="iconGroup">
-              <button className={hideUpOption} onClick={moveNodeUp}>Up</button>
-              <button className={hideDownOption} onClick={moveNodeDown}>Down</button>
+              <button 
+                className={hideUpOption} 
+                onClick={moveNodeUp} 
+                title="Move up"
+              ><IconMoveUp /></button>
+              <button 
+                className={hideDownOption} 
+                onClick={moveNodeDown} 
+                title="Move down"
+              ><IconMoveDown /></button>
             </div>
           </div>
         );

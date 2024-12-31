@@ -83,6 +83,12 @@ button.icon {
   stroke: none;
 }
 
+.icon.line {
+  stroke: hsla(0, 0%, 100%, 0.8);
+  stroke-width: 0.15;
+  fill: none;
+}
+
 .text-as-icon {
   color: hsla(0, 0%, 100%, 0.8);
   font-weight: 700;
