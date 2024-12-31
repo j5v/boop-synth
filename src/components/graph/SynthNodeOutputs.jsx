@@ -11,16 +11,28 @@ function SynthNodeOutputs(props) {
   const { nodeVSpacing, nodeVOffset, nodeBottomPadding } = nodeLayout;
 
   const setLinkDragFromInput = usePatchStore((state) => state.setLinkDragFromInput);
-  const setNewLink = usePatchStore((state) => state.setNewLink);
+  const setNewLinkFromInput = usePatchStore((state) => state.setNewLinkFromInput);
   const endDragLinkFromInput = usePatchStore((state) => state.endDragLinkFromInput);
 
+  const setLinkDragFromOutput = usePatchStore((state) => state.setLinkDragFromOutput);
+
+
+  const handleMouseDown = (event, spec) => {
+    // New: begin dragging a link from this Output to an Input
+    event.stopPropagation();
+    setLinkDragFromOutput(spec);
+  }
+
   const handleMouseMove = (event, spec) => {
+    // continue dragging a link from an Input to this Output
+    // TODO: check logic - is this needed? Snaps to node?
     // event.stopPropagation();
     setLinkDragFromInput(spec);
   }
   const handleMouseUp = (event, spec) => {
+    // stop dragging a link from an Input to this Output
     // event.stopPropagation();
-    setNewLink(spec);
+    setNewLinkFromInput(spec);
     endDragLinkFromInput();
   }
 
@@ -29,14 +41,16 @@ function SynthNodeOutputs(props) {
   return (
     (outputs || []).map(i => {
       if (i.exposed) {
-        py += nodeVSpacing;
-
         const classCSS = `terminal ${
           getSynthNodeTerminalIntentsById(i.intentId).classCSS
         }`;
-
-        // highlight node if hovered over
         const classCSSOutline = `terminal outline`;
+
+        py += nodeVSpacing;
+
+        // cache positions for 'new Link dragging'
+        i.posY = py;
+        i.posX = synthNode.x;
 
         const loosePosX = synthNode.x;
         const loosePosY = synthNode.y + i.posY;
@@ -61,12 +75,22 @@ function SynthNodeOutputs(props) {
                 prevPageY: pxAsRem(loosePosX),
               })}
               onMouseUp={(e) => handleMouseUp(e, {
+                // stop dragging a link from an Input to this Output
                 targetNode: synthNode,
                 targetOutput: i,
                 loosePosX,
                 loosePosY,
                 prevPageX: pxAsRem(loosePosX),
                 prevPageY: pxAsRem(loosePosX),
+              })}
+              onMouseDown={(e) => handleMouseDown(e, {
+                // New: begin dragging a link from this Output to an Input
+                fromNode: synthNode,
+                fromOutput: i,
+                loosePosX: synthNode.x + synthNode.w,
+                loosePosY: synthNode.y + i.posY,
+                prevPageX: pxAsRem(e.pageX),
+                prevPageY: pxAsRem(e.pageY),
               })}
               cx={asRem(synthNode.x + synthNode.w)}
               cy={asRem(synthNode.y + py)}

@@ -26,14 +26,15 @@ function SynthGraph() {
   const [showDraggingNode, setShowDraggingNode] = useState(false);
 
 
-  // Drag new Link
+  // Drag Link from Input
+
   const setLinkDragFromInput = usePatchStore(
     (state) => state.setLinkDragFromInput
   );
   const endDragLinkFromInput = usePatchStore(
     (state) => state.endDragLinkFromInput
   );
-  const dragLinkState = usePatchStore(
+  const dragLinkFromInputState = usePatchStore(
     (state) => state.ui.draggingLinkFromInput
   );
 
@@ -43,13 +44,13 @@ function SynthGraph() {
     const newPageX = pxAsRem(event.pageX);
     const newPageY = pxAsRem(event.pageY);
 
-    const xDiffRem = newPageX - dragLinkState.prevPageX;
-    const yDiffRem = newPageY - dragLinkState.prevPageY;
+    const xDiffRem = newPageX - dragLinkFromInputState.prevPageX;
+    const yDiffRem = newPageY - dragLinkFromInputState.prevPageY;
 
     const spec = {
-      ...structuredClone(dragLinkState),
-      loosePosX: dragLinkState.loosePosX + xDiffRem,  // change when implementing zoom and pan
-      loosePosY: dragLinkState.loosePosY + yDiffRem,
+      ...structuredClone(dragLinkFromInputState),
+      loosePosX: dragLinkFromInputState.loosePosX + xDiffRem,  // change when implementing zoom and pan
+      loosePosY: dragLinkFromInputState.loosePosY + yDiffRem,
       prevPageX: newPageX,
       prevPageY: newPageY,
     }
@@ -61,6 +62,45 @@ function SynthGraph() {
     endDragLinkFromInput();
     event.stopPropagation();
   };
+
+
+  // Drag Link from Output
+
+  const setLinkDragFromOutput = usePatchStore(
+    (state) => state.setLinkDragFromOutput
+  );
+  const endDragLinkFromOutput = usePatchStore(
+    (state) => state.endDragLinkFromOutput
+  );
+  const dragLinkFromOutputState = usePatchStore(
+    (state) => state.ui.draggingLinkFromOutput
+  );
+
+  const doDragLinkFromOutput = (event) => {
+    // event.stopPropagation();
+
+    const newPageX = pxAsRem(event.pageX);
+    const newPageY = pxAsRem(event.pageY);
+
+    const xDiffRem = newPageX - dragLinkFromOutputState.prevPageX;
+    const yDiffRem = newPageY - dragLinkFromOutputState.prevPageY;
+
+    const spec = {
+      ...structuredClone(dragLinkFromOutputState),
+      loosePosX: dragLinkFromOutputState.loosePosX + xDiffRem,  // change when implementing zoom and pan
+      loosePosY: dragLinkFromOutputState.loosePosY + yDiffRem,
+      prevPageX: newPageX,
+      prevPageY: newPageY,
+    }
+
+    setLinkDragFromOutput(spec);
+  };
+  
+  const doEndDragLinkFromOutput = (event) => {
+    endDragLinkFromOutput();
+    event.stopPropagation();
+  };
+
 
 
   // Drag node
@@ -100,11 +140,13 @@ function SynthGraph() {
   const handleMouseDown = (event) => doDragNodeBegin(event);
   const handleMouseMove = (event) => {
     if (draggingNode) doDragNode(event);
-    if (dragLinkState && dragLinkState.fromNode) doDragLinkFromInput(event);
+    if (dragLinkFromInputState && dragLinkFromInputState.fromNode) doDragLinkFromInput(event);
+    if (dragLinkFromOutputState && dragLinkFromOutputState.fromNode) doDragLinkFromOutput(event);
   }
   const handleMouseUp = (event) => {
     if (draggingNode) doDragNodeEnd(event);
-    if (dragLinkState && dragLinkState.fromNode) doEndDragLinkFromInput(event);
+    if (dragLinkFromInputState && dragLinkFromInputState.fromNode) doEndDragLinkFromInput(event);
+    if (dragLinkFromOutputState && dragLinkFromOutputState.fromNode) doEndDragLinkFromOutput(event);
   }
   return (
     <svg

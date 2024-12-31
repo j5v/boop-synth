@@ -48,14 +48,65 @@ const usePatchStore = create(
         };
       }),
 
-      setNewLink: (spec) => set((state) => {
+      setLinkDragFromOutput: (spec) => set((state) => {
+        // New
+        // console.log('usePatchStore: setLinkDragFromOutput()', spec);
+
+        const newDraggingLinkFromOutput = structuredClone(state.ui.draggingLinkFromOutput);
+
+        return {
+          ...state,
+          ui: {
+            ...structuredClone(state.ui),
+            draggingLinkFromOutput: {
+              ...newDraggingLinkFromOutput,
+              ...spec
+            },
+          }
+        };
+      }),
+
+      endDragLinkFromOutput: () => set((state) => {
+        // New
+        return {
+          ...state,
+          ui: {
+            ...structuredClone(state.ui),
+            draggingLinkFromOutput: {},
+          }
+        };
+      }),
+
+      setNewLinkFromInput: (spec) => set((state) => {
         const { fromInput, fromNode } = state.ui.draggingLinkFromInput;
 
+        if (fromNode && fromInput) {
+          const newNodes = assignLink(state.nodes, {
+            inputNodeId: fromNode.id,
+            inputId: fromInput.id,
+            targetNodeId: spec.targetNode.id,
+            targetOutputId: spec.targetOutput.id,
+          });
+
+          return {
+            ...state,
+            nodes: newNodes,
+          }
+        } else {
+          // failed; do not modify
+          return { ...state }
+        }
+      }),
+          
+      setNewLinkFromOutput: (spec) => set((state) => {
+        // New
+        const { fromOutput, fromNode } = state.ui.draggingLinkFromOutput;
+
         const newNodes = assignLink(state.nodes, {
-          inputNodeId: fromNode.id,
-          inputId: fromInput.id,
-          targetNodeId: spec.targetNode.id,
-          targetOutputId: spec.targetOutput.id,
+          inputNodeId: spec.targetNode.id,
+          inputId: spec.targetInput.id,
+          targetNodeId: fromNode.id,
+          targetOutputId: fromOutput.id,
         });
 
         return {
