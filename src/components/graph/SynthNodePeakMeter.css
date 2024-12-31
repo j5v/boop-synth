@@ -2,12 +2,13 @@
   font-size: 0.8rem;
   fill: hsla(0, 10%, 100%, 0.7);
   text-anchor: end;
+  pointer-events: none;
 }
 .peakMeter-text.clipped {
   fill: hsla(0, 50%, 50%, 1);
 }
 .peakMeter-text.warn {
-  fill: hsla(60, 40%, 50%, 0.8);
+  fill: hsla(60, 40%, 50%, 0.9);
 }
 
 @media (prefers-color-scheme: light) {

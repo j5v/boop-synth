@@ -12,7 +12,7 @@ function SynthNodePeakMeter(props) {
   let dBText = '';
   if (synthNode.peakMeter) {
     const dB = signalToDecibelsFS(synthNode.peakMeter);
-    dBText = `${dB < 0 ? '' : '+'}${dB.toFixed(2)} dBFS`;
+    dBText = `${dB < 0 ? '−' : '+'}${Math.abs(dB).toFixed(2)} dBFS`;
     if (dB > 0) { 
       classes.push('clipped');
     } else if (dB > -3.01) {
