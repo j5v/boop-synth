@@ -132,7 +132,6 @@ const synthNodeTypes = {
         displayUnits: 'semitones',
         intentId: synthNodeTerminalIntents.FREQUENCY_OCTAVES.id,
         exposed: true,
-        placeholder: true,
         isOffset: true, // modifies value
         value: 0,
         defaultValue: 0,
@@ -328,7 +327,7 @@ const generate = function (nodes, { sampleRate, duration, freq }) {
   }
 
   function valueOfInput(input) {
-    if (input && input.link) {
+    if (input && input.link && input.link.synthNodeId) {
       const link = input.link; // alias
       if (!link.resolvedOutput) {
         // cache a direct link as resolvedOutput, so we don't need to look up next time.
@@ -336,7 +335,7 @@ const generate = function (nodes, { sampleRate, duration, freq }) {
         if (outputSynthNode) {
           link.resolvedOutput = outputSynthNode && outputSynthNode.outputs.find(output => output.id == link.outputId);
         }
-      }        
+      }  
       if (link.resolvedOutput) {
         return link.resolvedOutput.signal || 0;
       } else {

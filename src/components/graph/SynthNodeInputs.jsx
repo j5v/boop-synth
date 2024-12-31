@@ -15,6 +15,8 @@ function SynthNodeInputs(props) {
   const setLinkDragFromOutput = usePatchStore((state) => state.setLinkDragFromOutput);
   const setNewLinkFromOutput = usePatchStore((state) => state.setNewLinkFromOutput);
   const endDragLinkFromOutput = usePatchStore((state) => state.endDragLinkFromOutput);
+  
+  const removeLinkFromInput = usePatchStore((state) => state.removeLinkFromInput);
 
 
   const handleMouseDown = (event, spec) => {
@@ -35,6 +37,13 @@ function SynthNodeInputs(props) {
     // event.stopPropagation();
     setNewLinkFromOutput(spec);
     endDragLinkFromOutput();
+  }
+
+  const handleDoubleClick = (targetInput) => {
+    // Remove a node link
+    console.log('handleDblClick', targetInput);
+    // event.stopPropagation();
+    removeLinkFromInput(targetInput);
   }
 
 
@@ -68,6 +77,7 @@ function SynthNodeInputs(props) {
             />
             <circle
               className={classCSS}
+              onDoubleClick={(e) => handleDoubleClick(i)}
               onMouseDown={(e) => handleMouseDown(e, {
                 // begin dragging a link from this Input to an Output
                 fromNode: synthNode,

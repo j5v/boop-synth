@@ -21,6 +21,36 @@ const usePatchStore = create(
         draggingLinkFromOutput: undefined,
       },
 
+      // Node input field changes
+      setInputField: (input, value) => set((state) => {
+        console.log('setInputField: ', input, value);
+        input.value = value;
+
+        return {
+          ...state,
+        };
+      }),
+
+      // Remove link from input
+
+      removeLinkFromInput: (targetInput) => set((state) => {
+        // console.log('usePatchStore: setLinkDragFromInput()', spec);
+        
+        return {
+          ...state,
+          nodes: state.nodes.map(node => ({
+            ...node,
+            inputs: node.inputs.map(input => ({
+              ...input,
+              link: (input == targetInput) ? {} : { ...input.link }
+            }))
+          }))
+        }
+
+      }),
+
+      // Drag new links
+
       setLinkDragFromInput: (spec) => set((state) => {
         // console.log('usePatchStore: setLinkDragFromInput()', spec);
 
@@ -102,20 +132,26 @@ const usePatchStore = create(
         // New
         const { fromOutput, fromNode } = state.ui.draggingLinkFromOutput;
 
-        const newNodes = assignLink(state.nodes, {
-          inputNodeId: spec.targetNode.id,
-          inputId: spec.targetInput.id,
-          targetNodeId: fromNode.id,
-          targetOutputId: fromOutput.id,
-        });
+        if (fromNode && fromOutput) {
 
-        return {
-          ...state,
-          nodes: newNodes,
-        };
+          const newNodes = assignLink(state.nodes, {
+            inputNodeId: spec.targetNode.id,
+            inputId: spec.targetInput.id,
+            targetNodeId: fromNode.id,
+            targetOutputId: fromOutput.id,
+          });
+
+          return {
+            ...state,
+            nodes: newNodes,
+          };
+        } else {
+          // failed; do not modify
+          return { ...state }
+        }
       }),
           
-      
+      // Node management
 
       addNode: (synthNodeTypeId) => set((state) => {
         const node = newSynthNode(state.nodes, synthNodeTypeId, { x: 16, y: 3 });

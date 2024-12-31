@@ -1,12 +1,22 @@
 import './FormPatchNodeInputItem.css'
 import { joinItems } from '../../lib/utils.js'
 import { getSynthNodeTerminalIntentsById } from '../../lib/synth.js'
+import usePatchStore from '../../store/patchStore.jsx'
 
 function FormPatchNodeInputItem(props) {
+
+  const setInputField = usePatchStore((state) => state.setInputField);
 
   const { inputItem } = props;
   const intent = getSynthNodeTerminalIntentsById(inputItem.intentId);
   const { name } = intent;
+
+  setInputField
+
+  const changeInput = (event) => {
+    console.log('changeInput()', inputItem, event.target.value);
+    setInputField(inputItem, event.target.value);
+  }
 
   const displayUnits = (inputItem.displayUnits) ? (
     // not using this yet
@@ -16,8 +26,8 @@ function FormPatchNodeInputItem(props) {
   const inputField = (!inputItem.exposed || inputItem.isOffset) ? (
     <input
       className="number"
-      value={inputItem.value || inputItem.defaultValue}
-      readOnly
+      onBlur={changeInput}
+      defaultValue={inputItem.value || inputItem.defaultValue}
       title={name}      
     ></input>
   ) : <></>
