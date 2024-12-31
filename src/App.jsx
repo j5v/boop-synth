@@ -12,8 +12,8 @@ import usePatchStore from './store/patchStore.jsx'
 function App() {
 
   const perf = usePatchStore.getState().perf;
-  const nodes = usePatchStore.getState().nodes;
-
+  const nodes = usePatchStore((state) => state.nodes)
+  
   const addNode = usePatchStore((state) => state.addNode)
   const removeSelectedNodes = usePatchStore((state) => state.removeSelectedNodes)
   const reset = usePatchStore((state) => state.reset)

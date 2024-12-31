@@ -16,6 +16,8 @@ function SynthNodeBox(props) {
   const { nodeVSpacing, nodeVOffset, nodeVPadding } = nodeLayout;
   const nodeHeight = nodeVOffset + maxTerminals * nodeVSpacing + nodeVPadding;
 
+  synthNode.h = nodeHeight; // cache for other components
+
   // Selection: event, state, and CSS classes
 
   const selectExclusiveNode = usePatchStore((state) => state.selectExclusiveNode)

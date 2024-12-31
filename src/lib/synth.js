@@ -281,6 +281,7 @@ const generate = function (nodes, { sampleRate, duration, freq }) {
   // console.log('generate()');
   // console.table(nodes);
   // initPatch(nodes);
+  clearPeakMeters();
 
   // Generate audio, one channel.
   for (let i = 0; i < sampleFrames; i++) {
@@ -305,7 +306,9 @@ const generate = function (nodes, { sampleRate, duration, freq }) {
       } else if (node.nodeTypeId == synthNodeTypes.OUTPUT.id) {
         const signal = valueOfInput(node.inputs[0]);
         const gain = valueOfInput(node.inputs[1]);
-        samples.push(signal * gain); // TODO: a buffer per output node
+        const output = signal * gain;
+        node.peakMeter = Math.max(node.peakMeter || -Infinity, Math.abs(output));
+        samples.push(output); // TODO: a buffer per output node
       }
 
     }
@@ -316,6 +319,12 @@ const generate = function (nodes, { sampleRate, duration, freq }) {
   return {
     sampleFrames,
     samples
+  }
+
+  function clearPeakMeters() {
+    nodes.forEach(n => {
+      delete n.peakMeter;
+    });
   }
 
   function valueOfInput(input) {
