@@ -26,6 +26,10 @@ a:hover {
   color: hsl(30,80%,90%);
 }
 
+.explained {
+  border-bottom: 1px dotted hsl(30,80%,70%);
+}
+
 body {
   margin: 0;
   display: flex;

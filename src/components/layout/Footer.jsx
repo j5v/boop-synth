@@ -3,16 +3,17 @@ import FooterItem from './FooterItem.jsx'
 
 function Footer() {
 
-  const version = '0.0.0';
+  const build = '0.0.1.001';
+  const buildDate = '2025-01-01';
 
   return (
     <div className="Footer">
       <>
-      <FooterItem>
+        <FooterItem>
           <a href="http://johnvalentine.co.uk" target="_blank">j5v</a>
         </FooterItem>
         <FooterItem>
-          Early access version {version}, no patch saving, no output paramters, some bugs known.
+          <span class="explained" title="Limited accessibility, no patch saving, no output parameter editing, some bugs known">Early access</span> version {build}, {buildDate}.
         </FooterItem>
       </>
     </div>

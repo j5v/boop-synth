@@ -62,6 +62,7 @@ function SynthNodeBox(props) {
 
   return (
     <rect
+      role="list-item"
       className={classNames.join(' ')}
       x={asRem(synthNode.x)}
       y={asRem(synthNode.y)}

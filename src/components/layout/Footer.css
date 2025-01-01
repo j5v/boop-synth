@@ -6,6 +6,10 @@
   flex-direction: row;
 }
 
+.Footer a {
+  border-bottom: 1px solid hsl(30,50%,50%);
+}
+
 @media (prefers-color-scheme: light) {
   .Footer {
     color: hsl(0, 10%, 10%);

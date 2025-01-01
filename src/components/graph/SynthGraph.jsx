@@ -150,6 +150,7 @@ function SynthGraph() {
   }
   return (
     <svg
+      role="list"
       className={'SynthGraph' + (showDraggingNode ? ' dragging' : '')}
       onClick={selectThisNode /* unselects all */}
       onMouseDown={handleMouseDown}
