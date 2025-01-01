@@ -176,12 +176,11 @@ const synthNodeTypes = {
   },
   RING: {
     id: 3,
-    name: 'Ring',
+    name: 'Ring/Multiply',
     inputs: [
       {
         id: 1,
         displayName: 'Source 1',
-        description: 'A waveform or sample',
         intentId: synthNodeTerminalIntents.LEVEL.id,
         exposed: true,
         defaultValue: 1,
@@ -189,7 +188,6 @@ const synthNodeTypes = {
       {
         id: 2,
         displayName: 'Source 2',
-        description: 'A waveform or sample',
         intentId: synthNodeTerminalIntents.LEVEL.id,
         exposed: true,
         defaultValue: 1,
@@ -197,7 +195,6 @@ const synthNodeTypes = {
       {
         id: 3,
         displayName: 'Source 3',
-        description: 'A waveform or sample',
         intentId: synthNodeTerminalIntents.LEVEL.id,
         exposed: false,
         defaultValue: 1,
@@ -205,7 +202,6 @@ const synthNodeTypes = {
       {
         id: 4,
         displayName: 'Source 4',
-        description: 'A waveform or sample',
         intentId: synthNodeTerminalIntents.LEVEL.id,
         exposed: false,
         defaultValue: 1,
@@ -238,7 +234,6 @@ const synthNodeTypes = {
       {
         id: 1,
         displayName: 'Source 1',
-        description: 'A waveform or sample',
         intentId: synthNodeTerminalIntents.LEVEL.id,
         exposed: true,
         defaultValue: 0,
@@ -246,7 +241,6 @@ const synthNodeTypes = {
       {
         id: 2,
         displayName: 'Source 2',
-        description: 'A waveform or sample',
         intentId: synthNodeTerminalIntents.LEVEL.id,
         exposed: true,
         defaultValue: 0,
@@ -254,7 +248,6 @@ const synthNodeTypes = {
       {
         id: 3,
         displayName: 'Source 3',
-        description: 'A waveform or sample',
         intentId: synthNodeTerminalIntents.LEVEL.id,
         exposed: false,
         defaultValue: 0,
@@ -262,7 +255,6 @@ const synthNodeTypes = {
       {
         id: 4,
         displayName: 'Source 4',
-        description: 'A waveform or sample',
         intentId: synthNodeTerminalIntents.LEVEL.id,
         exposed: false,
         defaultValue: 0,
@@ -297,7 +289,6 @@ const synthNodeTypes = {
       {
         id: 2,
         displayName: 'Source 1',
-        description: 'A waveform or sample',
         intentId: synthNodeTerminalIntents.LEVEL.id,
         exposed: true,
         defaultValue: -0.5,
@@ -305,7 +296,6 @@ const synthNodeTypes = {
       {
         id: 3,
         displayName: 'Source 2',
-        description: 'A waveform or sample',
         intentId: synthNodeTerminalIntents.LEVEL.id,
         exposed: true,
         defaultValue: 0.5,
@@ -313,7 +303,7 @@ const synthNodeTypes = {
       {
         id: 4,
         displayName: 'Switch phase',
-        description: 'A waveform or sample',
+        description: 'Switches from Source 1 to Source 2 at this phase of the wave cycle',
         intentId: synthNodeTerminalIntents.LEVEL.id,
         exposed: true,
         value: 0,
@@ -432,11 +422,11 @@ const generate = function (nodes, { sampleRate, duration, freq }) {
   const phaseIncNormalized = 2 * Math.PI / sampleRate;
   const tau = Math.PI * 2;
 
-  const pitchUnit = 1 / 12;
+  const pitchUnit = 1; // 1 = octaves. Semitones would be 1/12
 
   // console.log('generate()');
   // console.table(nodes);
-  // initPatch(nodes);
+  initPatch(nodes);
   clearPeakMeters();
 
   // Generate audio, one channel.
@@ -514,7 +504,7 @@ const generate = function (nodes, { sampleRate, duration, freq }) {
         return 0;
       }
     } else {
-    return input.value || input.defaultValue;
+    return input.value || input.defaultValue || 0;
     }
   }
 
@@ -522,16 +512,27 @@ const generate = function (nodes, { sampleRate, duration, freq }) {
     return node.inputs.map(i => valueOfInput(i));
   }
 
-
-  function finishPatch() { // Remove extra properties created by initPatch()
+  function cleanPatch() {  // Remove extra properties and direct object refs
     for (let nodeIndex in nodes) {
       const node = nodes[nodeIndex];
+      node.nodeTypeId = parseInt(node.nodeTypeId); // TODO: test if needed
       delete node.phase;
       for (let inputIndex in node.inputs) {
-        delete node.inputs[inputIndex].linkedOutput;
+        const input = node.inputs[inputIndex];
+        if (input.link) {
+          delete input.link.resolvedOutput;
+        }
       }
     }
   }
+
+  function initPatch() {
+    cleanPatch();
+  }
+
+  function finishPatch() {
+    cleanPatch();
+  } 
 }
 
 const generateFile = function (nodes, spec) {

@@ -6,6 +6,7 @@ import {
   defaultOutputSpec,
   newSynthNode,
   assignLink,
+  synthNodeTerminalIntents,
 } from "../lib/synth.js";
 
 import { swapItemsInArray, cleanNodeLinks } from "../lib/utils.js";
@@ -22,17 +23,61 @@ const usePatchStore = create(
       },
 
       // Node input field changes
-      setInputValue: (input, value) => set((state) => {
-        console.log('setInputField: ', input, value);
-        input.value = value;
+      setInputValue: (targetInput, value) => set((state) => {
+        targetInput.userValue = value; // re-displayed in form input, for editing again
+
+        // interpret input
+        // TODO: move into parse function if DRY needed
+
+        let writeValue = value || 0; // best guess so far
+        const trimmed = value.toString().trim().toLowerCase();
+
+        if (targetInput.intentId == synthNodeTerminalIntents.FREQUENCY_OCTAVES.id) {
+          if (trimmed.slice(-1) == 'c') { // cents
+            writeValue = parseFloat(trimmed.slice(0,-1)) / 1200;
+
+          } else if (trimmed.slice(-1) == 'd') { // ET12 notes
+            writeValue = parseFloat(trimmed.slice(0,-1)) / 12;
+
+          } else if (trimmed.indexOf('/') > -1) { // fraction of numbers (slash divide)
+            const parts = trimmed.split('/').map(n => parseFloat(n));
+            if (parts[1] !== 0) writeValue = Math.log( parts[0] / parts[1]) / Math.log(2);
+
+          } else if (trimmed.indexOf(':') > -1) { // fraction of numbers (colon ratio)
+            const parts = trimmed.split(':').map(n => parseFloat(n));
+            if (parts[1] !== 0) writeValue = Math.log( parts[0] / parts[1]) / Math.log(2);
+
+          }
+
+        } else if (targetInput.intentId == synthNodeTerminalIntents.LEVEL.id) {
+          if (trimmed.slice(-2) == 'db') { // dB
+            const dB = parseFloat(trimmed.slice(0,-2));
+            writeValue = Math.pow(10, dB * 0.1);
+
+          } else if (trimmed.indexOf('/') > -1) { // fraction of numbers (slash divide)
+            const parts = trimmed.split('/').map(n => parseFloat(n));
+            if (parts[1] !== 0) writeValue = parts[0] / parts[1];
+
+          } else if (trimmed.indexOf(':') > -1) { // fraction of numbers (colon ratio)
+            const parts = trimmed.split(':').map(n => parseFloat(n));
+            if (parts[1] !== 0) writeValue = parts[0] / parts[1];
+
+          }
+        }
 
         return {
           ...state,
-        };
+          nodes: state.nodes.map(node => ({
+            ...node,
+            inputs: node.inputs.map(input => ({
+              ...input,
+              value: (input == targetInput) ? parseFloat(writeValue) : input.value
+            }))
+          }))
+        }
       }),
 
       setInputExposed: (targetInput, value) => set((state) => {
-        console.log('setInputField: ', targetInput, value);
 
         return {
           ...state,

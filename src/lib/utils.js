@@ -46,6 +46,7 @@ function swapItemsInArray(items, firstIndex, secondIndex) {
 // Conversions: audio
 
 const signalToDecibelsFS = (signal) => (10 * Math.log10(signal));
+const DecibelsFSToSignal = (dB) => (Math.pow(10, dB * 0.1));
 
 
 // Node operations
@@ -76,6 +77,7 @@ export {
   pxAsRem,
 
   signalToDecibelsFS,
+  DecibelsFSToSignal,
 
   swapItemsInArray,
   joinItems,

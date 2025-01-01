@@ -13,12 +13,10 @@ function FormPatchNodeInputItem(props) {
   const { name } = intent;
 
   const handleChangeValue = (event) => {
-    console.log('changeInput()', inputItem, event.target.value);
-    setInputValue(inputItem, parseFloat(event.target.value));
+    setInputValue(inputItem, event.target.value);
   }
 
   const handleChangeExposure = (event) => {
-    console.log('handleChangeExposure()', inputItem, event.target.checked);
     setInputExposed(inputItem, event.target.checked);
   }
 
@@ -31,7 +29,7 @@ function FormPatchNodeInputItem(props) {
     <input
       className="number"
       onBlur={handleChangeValue}
-      defaultValue={inputItem.value || inputItem.defaultValue}
+      defaultValue={inputItem.userValue || inputItem.value || inputItem.defaultValue}
       title={name}      
     ></input>
   ) : <></>
@@ -48,13 +46,22 @@ function FormPatchNodeInputItem(props) {
   const rowClassNames = ['form-input-row'];
   if (inputItem.placeholder) rowClassNames.push('placeholder');
 
+  const trueValue = (
+    inputItem.userValue &&
+    (inputItem.value || inputItem.defaultValue) &&
+    (parseFloat(inputItem.userValue) !== (inputItem.value || inputItem.defaultValue)))
+  ? <div className="true-value">{(inputItem.value || inputItem.defaultValue).toFixed(4)}</div>
+  : <></>
   
   return (
-    <div className={rowClassNames.join(' ')} key={inputItem.id} role='listitem'>
-      <div className="exposure">{exposureField}</div>
-      <div className="label" title={inputItem.description}>{inputItem.displayName}</div>
-      {inputField}
-    </div>
+    <>
+      <div className={rowClassNames.join(' ')} key={inputItem.id} role='listitem'>
+        <div className="exposure">{exposureField}</div>
+        <div className="label" title={inputItem.description}>{inputItem.displayName}</div>
+        {inputField}
+      </div>
+      {trueValue}
+    </>
   )
 }
 
