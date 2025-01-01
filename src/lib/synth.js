@@ -133,7 +133,6 @@ const synthNodeTypes = {
         intentId: synthNodeTerminalIntents.FREQUENCY_OCTAVES.id,
         exposed: true,
         isOffset: true, // modifies value
-        value: 0,
         defaultValue: 0,
       },
       {
@@ -144,7 +143,6 @@ const synthNodeTypes = {
         intentId: synthNodeTerminalIntents.LEVEL.id,
         exposed: true,
         isOffset: true, // modifies value
-        value: 0,
         defaultValue: 0,
       },
       {
@@ -160,7 +158,7 @@ const synthNodeTypes = {
         displayName: 'Post-mix',
         description: 'Mixes directly before node output',
         intentId: synthNodeTerminalIntents.LEVEL.id,
-        exposed: true,
+        exposed: false,
         defaultValue: 0,
       },
     ],
@@ -231,10 +229,111 @@ const synthNodeTypes = {
         defaultValue: 0,
       }
     ],
-    description: 'Generates from a wave source, with optional FM (frequency modulation) and PM (phase modulation)',
+    description: 'Multiplies all signals, like digital ring modulation',
+  },
+  ADD: {
+    id: 4,
+    name: 'Add',
+    inputs: [
+      {
+        id: 1,
+        displayName: 'Source 1',
+        description: 'A waveform or sample',
+        intentId: synthNodeTerminalIntents.LEVEL.id,
+        exposed: true,
+        defaultValue: 0,
+      },
+      {
+        id: 2,
+        displayName: 'Source 2',
+        description: 'A waveform or sample',
+        intentId: synthNodeTerminalIntents.LEVEL.id,
+        exposed: true,
+        defaultValue: 0,
+      },
+      {
+        id: 3,
+        displayName: 'Source 3',
+        description: 'A waveform or sample',
+        intentId: synthNodeTerminalIntents.LEVEL.id,
+        exposed: false,
+        defaultValue: 0,
+      },
+      {
+        id: 4,
+        displayName: 'Source 4',
+        description: 'A waveform or sample',
+        intentId: synthNodeTerminalIntents.LEVEL.id,
+        exposed: false,
+        defaultValue: 0,
+      },
+    ],
+    outputs: [
+      {
+        id: 1,
+        displayName: 'Signal',
+        description: 'Link inputs to this output',
+        intentId: synthNodeTerminalIntents.LEVEL.id,
+        exposed: true,
+        defaultValue: 0,
+      }
+    ],
+    description: 'Adds all signals',
+  },
+  SPLICE: {
+    id: 5,
+    name: 'Splice',
+    inputs: [
+      {
+        id: 1,
+        displayName: 'Source Pitch',
+        description: 'Amount of change to the reference frequency (octaves)',
+        displayUnits: 'semitones',
+        intentId: synthNodeTerminalIntents.FREQUENCY_OCTAVES.id,
+        exposed: true,
+        isOffset: true, // modifies value
+        defaultValue: 0,
+      },
+      {
+        id: 2,
+        displayName: 'Source 1',
+        description: 'A waveform or sample',
+        intentId: synthNodeTerminalIntents.LEVEL.id,
+        exposed: true,
+        defaultValue: -0.5,
+      },
+      {
+        id: 3,
+        displayName: 'Source 2',
+        description: 'A waveform or sample',
+        intentId: synthNodeTerminalIntents.LEVEL.id,
+        exposed: true,
+        defaultValue: 0.5,
+      },
+      {
+        id: 4,
+        displayName: 'Switch phase',
+        description: 'A waveform or sample',
+        intentId: synthNodeTerminalIntents.LEVEL.id,
+        exposed: true,
+        value: 0,
+        defaultValue: 0,
+      },
+    ],
+    outputs: [
+      {
+        id: 1,
+        displayName: 'Signal',
+        description: 'Link inputs to this output',
+        intentId: synthNodeTerminalIntents.LEVEL.id,
+        exposed: true,
+        defaultValue: 0,
+      }
+    ],
+    description: 'Switches between Source 1 and Source 2, using a switch point at Switch phase (-1 to 1), every cycle at Pitch',
   },
   NUMBER: {
-    id: 4,
+    id: 6,
     name: 'Number',
     inputs: [
       {
@@ -331,6 +430,7 @@ const generate = function (nodes, { sampleRate, duration, freq }) {
   const samples = new Array();
   const sampleFrames = sampleRate * duration;
   const phaseIncNormalized = 2 * Math.PI / sampleRate;
+  const tau = Math.PI * 2;
 
   const pitchUnit = 1 / 12;
 
@@ -343,37 +443,42 @@ const generate = function (nodes, { sampleRate, duration, freq }) {
   for (let i = 0; i < sampleFrames; i++) {
     for (let n in nodes) {
       const node = nodes[n];
+      const inputSignals = valuesOfInputs(node);
 
       // note: `switch (node.nodeTypeId) {}` doesn't work
       if (node.nodeTypeId == synthNodeTypes.GEN_FM.id) {
-        const pitch = valueOfInput(node.inputs[1]);
+        const [ source, pitch, phaseMod, freqMod, postMix ] = inputSignals;
         const frequency = freq * (pitch == 0 ? 1 : Math.pow(2, pitch * pitchUnit));
-        const phaseMod = valueOfInput(node.inputs[2]);
-        const freqMod = valueOfInput(node.inputs[3]);
-        //console.log(`node ${node.id} freqMod`, freqMod, node.inputs[3]);
-        const postMix = valueOfInput(node.inputs[4]);
 
         node.phase = (node.phase || 0) + phaseIncNormalized * frequency * (1 + freqMod);
-        node.outputs[0].signal = Math.sin(node.phase + phaseMod) + postMix;
-
-      } else if (node.nodeTypeId == synthNodeTypes.RING.id) {
-        const signal1 = valueOfInput(node.inputs[0]);
-        const signal2 = valueOfInput(node.inputs[1]);
-        const signal3 = valueOfInput(node.inputs[2]);
-        const signal4 = valueOfInput(node.inputs[3]);
-        const postMix = valueOfInput(node.inputs[4]);
-
-        node.outputs[0].signal = signal1 * signal2 * signal3 * signal4 + postMix;
+        node.outputs[0].signal = Math.sin(node.phase + phaseMod * tau) + postMix;
 
       } else if (node.nodeTypeId == synthNodeTypes.NUMBER.id) {
         node.outputs[0].signal = valueOfInput(node.inputs[0]);
 
+      } else if (node.nodeTypeId == synthNodeTypes.RING.id) {
+        const [ signal1, signal2, signal3, signal4, postMix ] = inputSignals;
+        node.outputs[0].signal = signal1 * signal2 * signal3 * signal4 + postMix;
+
+      } else if (node.nodeTypeId == synthNodeTypes.ADD.id) {
+        const [ signal1, signal2, signal3, signal4 ] = inputSignals;
+        node.outputs[0].signal = signal1 + signal2 + signal3 + signal4;
+
+      } else if (node.nodeTypeId == synthNodeTypes.SPLICE.id) {
+        const [ pitch, signal1, signal2, switchPhase ] = inputSignals;
+        
+        const frequency = freq * (pitch == 0 ? 1 : Math.pow(2, pitch * pitchUnit));
+        node.phase = (node.phase || 0) + (phaseIncNormalized * frequency);
+        const phasePos = node.phase % (phaseIncNormalized * frequency);
+
+        node.outputs[0].signal = (switchPhase > phasePos) ? signal1 : signal2;
+
       } else if (node.nodeTypeId == synthNodeTypes.OUTPUT.id) {
-        const signal = valueOfInput(node.inputs[0]);
-        const gain = valueOfInput(node.inputs[1]);
+        const [ signal, gain ] = inputSignals;
         const output = signal * gain;
         node.peakMeter = Math.max(node.peakMeter || -Infinity, Math.abs(output));
         samples.push(output); // TODO: a buffer per output node
+
       }
 
     }
@@ -411,6 +516,10 @@ const generate = function (nodes, { sampleRate, duration, freq }) {
     } else {
     return input.value || input.defaultValue;
     }
+  }
+
+  function valuesOfInputs(node) {
+    return node.inputs.map(i => valueOfInput(i));
   }
 
 

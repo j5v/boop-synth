@@ -5,17 +5,21 @@ import usePatchStore from '../../store/patchStore.jsx'
 
 function FormPatchNodeInputItem(props) {
 
-  const setInputField = usePatchStore((state) => state.setInputField);
+  const setInputValue = usePatchStore((state) => state.setInputValue);
+  const setInputExposed = usePatchStore((state) => state.setInputExposed);
 
   const { inputItem } = props;
   const intent = getSynthNodeTerminalIntentsById(inputItem.intentId);
   const { name } = intent;
 
-  setInputField
-
-  const changeInput = (event) => {
+  const handleChangeValue = (event) => {
     console.log('changeInput()', inputItem, event.target.value);
-    setInputField(inputItem, event.target.value);
+    setInputValue(inputItem, parseFloat(event.target.value));
+  }
+
+  const handleChangeExposure = (event) => {
+    console.log('handleChangeExposure()', inputItem, event.target.checked);
+    setInputExposed(inputItem, event.target.checked);
   }
 
   const displayUnits = (inputItem.displayUnits) ? (
@@ -26,7 +30,7 @@ function FormPatchNodeInputItem(props) {
   const inputField = (!inputItem.exposed || inputItem.isOffset) ? (
     <input
       className="number"
-      onBlur={changeInput}
+      onBlur={handleChangeValue}
       defaultValue={inputItem.value || inputItem.defaultValue}
       title={name}      
     ></input>
@@ -36,8 +40,9 @@ function FormPatchNodeInputItem(props) {
     <input
       type="checkbox"
       checked={inputItem.exposed}
+      onChange={handleChangeExposure}
       title="Show terminal"
-      readOnly></input>
+    ></input>
   ) : <></>
 
   const rowClassNames = ['form-input-row'];

@@ -22,13 +22,28 @@ const usePatchStore = create(
       },
 
       // Node input field changes
-      setInputField: (input, value) => set((state) => {
+      setInputValue: (input, value) => set((state) => {
         console.log('setInputField: ', input, value);
         input.value = value;
 
         return {
           ...state,
         };
+      }),
+
+      setInputExposed: (targetInput, value) => set((state) => {
+        console.log('setInputField: ', targetInput, value);
+
+        return {
+          ...state,
+          nodes: state.nodes.map(node => ({
+            ...node,
+            inputs: node.inputs.map(input => ({
+              ...input,
+              exposed: (input == targetInput) ? value : input.exposed
+            }))
+          }))
+        }
       }),
 
       // Remove link from input
