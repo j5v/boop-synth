@@ -19,6 +19,14 @@
   padding: 0.2rem 0.6rem;
 }
 
+.SynthNodeProperties p {
+  max-width: 14rem;
+  color: hsl(45, 10%, 80%);
+  font-size: 0.9rem;
+  line-height: 1.4;
+  margin: 0.2rem 0 0.6rem 0;
+}
+
 @media (prefers-color-scheme: light) {
   .SynthNodeProperties {
     background-color: hsl(240, 2%, 90%);

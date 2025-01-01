@@ -3,7 +3,7 @@ import FooterItem from './FooterItem.jsx'
 
 function Footer() {
 
-  const build = '0.0.1.001';
+  const build = '0.0.1.002';
   const buildDate = '2025-01-01';
 
   return (
@@ -13,7 +13,7 @@ function Footer() {
           <a href="http://johnvalentine.co.uk" target="_blank">j5v</a>
         </FooterItem>
         <FooterItem>
-          <span class="explained" title="Limited accessibility, no patch saving, no output parameter editing, some bugs known">Early access</span> version {build}, {buildDate}.
+          <span className="explained" title="Limited accessibility, no patch saving, no output parameter editing, some bugs known">Early access</span> version {build}, {buildDate}.
         </FooterItem>
       </>
     </div>
