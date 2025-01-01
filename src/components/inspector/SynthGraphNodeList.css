@@ -44,15 +44,15 @@
 }
 
 @media (prefers-color-scheme: light) {
-  .SynthGraphNodeList .item{
+  .SynthGraphNodeList .item {
     margin-bottom: 0.2rem;
     background-color: hsla(0, 0%, 0%, 0.05);
     border: 1px solid hsla(0, 0%, 0%, 0.3);
   }
 
-  .SynthGraphNodeList .item .highlighted {
-    background-color: hsla(0, 0%, 0%, 0.2);
-    border-color: hsla(0, 0%, 100%, 0.3);
+  .SynthGraphNodeList .item.highlighted {
+    background-color: hsl(0, 0%, 0%, 0.2);
+    border-color: hsla(0, 0%, 0%, 0.8);
   }
   .grab-handle-icon {
     fill: hsla(0, 0%, 0%, 0.2);

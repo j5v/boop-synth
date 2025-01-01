@@ -1,6 +1,14 @@
 .Footer {
+  color: hsl(0, 10%, 80%);
   height: 2rem;
-  margin: 0 0.6rem;
+  padding: 0 0.8rem;
   display: flex;
   flex-direction: row;
+}
+
+@media (prefers-color-scheme: light) {
+  .Footer {
+    color: hsl(0, 10%, 10%);
+    background-color: hsl(0, 0%, 85%);
+  }
 }

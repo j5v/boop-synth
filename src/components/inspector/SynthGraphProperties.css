@@ -23,6 +23,13 @@
 
 @media (prefers-color-scheme: light) {
   .SynthGraphProperties {
-    background-color: #f0f0f8;
+    background-color: hsl(240, 2%, 90%);
+    border-color: hsl(240, 2%, 100%);
   }
+  
+  .SynthGraphProperties .group-title {
+    font-weight: 400;
+    color: hsl(240, 15%, 0%);
+  }
+  
 }

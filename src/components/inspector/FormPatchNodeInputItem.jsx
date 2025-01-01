@@ -25,15 +25,14 @@ function FormPatchNodeInputItem(props) {
     <div className="units">{inputItem.displayUnits}</div>
   ) : <></>
 
-  const inputField = (!inputItem.exposed || inputItem.isOffset) ? (
-    <input
-      className="number"
+  const inputFieldVisible = (!inputItem.exposed || inputItem.isOffset)
+  const inputField = <input
+      className={`number ${inputFieldVisible ? '' : ' invisible'}`}
       onBlur={handleChangeValue}
       defaultValue={inputItem.userValue || inputItem.value || inputItem.defaultValue}
       title={name}      
     ></input>
-  ) : <></>
-
+  
   const exposureField = (intent.modulatable) ? (
     <input
       type="checkbox"

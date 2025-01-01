@@ -94,20 +94,43 @@ button.icon {
   font-weight: 700;
 }
 
+.link-cursor {
+  cursor: pointer;
+}
+
 
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
     background-color: #ffffff;
   }
-  a:hover {
-    color: #747bff;
+  a {
+    font-weight: 500;
+    color: hsl(30,100%,20%);
+    text-decoration: inherit;
   }
+  a:hover {
+    color: hsl(30,100%,0%);
+  }
+
   button {
     background-color: #f9f9f9;
   }
   .icon.filled {
-    fill: hsla(0, 0%, 100%, 0.8);
+    fill: hsla(0, 0%, 0%, 0.8);
+  }
+
+  .icon.line {
+    stroke: hsla(0, 0%, 0%, 0.8);
   }
   
+  select {
+    background-color: hsl(0, 0%, 100%);
+  }
+  
+  .text-as-icon {
+    color: hsl(0, 0%, 0%, 0.9);
+  }
+  
+    
 }

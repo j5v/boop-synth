@@ -1,12 +1,15 @@
+.SynthNodeProperties {
+  border-left: black 2px solid;
+}
+
 .SynthNodeProperties .parameters {
   display: flex;
   flex-direction: column;
   padding: 0.2rem 0.6rem;
-  border-left: black 2px solid;
 }
 
 .SynthNodeProperties .node-title {
-  color: #fc0;
+  color: hsl(45, 100%, 50%);
 }
 
 .SynthNodeProperties .parameter-row {
@@ -17,8 +20,14 @@
 }
 
 @media (prefers-color-scheme: light) {
+  .SynthNodeProperties {
+    background-color: hsl(240, 2%, 90%);
+    border-color: hsl(240, 2%, 100%);
+  }
+
   .SynthNodeProperties .node-title {
-    color: #640;
+    font-weight: 400;
+    color: hsl(240, 15%, 0%);
   }
  
 }

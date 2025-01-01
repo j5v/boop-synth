@@ -19,6 +19,10 @@
   opacity: 0.8;
 }
 
+.invisible {
+  visibility: hidden;
+}
+
 .form-input-row .exposure {
   flex-basis: 1rem;
   width: 1rem;

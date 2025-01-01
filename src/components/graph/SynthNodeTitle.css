@@ -1,12 +1,12 @@
 .SynthNodeTitle {
-  fill: #fc0;
+  fill: hsl(45, 100%, 50%);
   cursor: pointer;
   pointer-events: none;
 } 
 
 @media (prefers-color-scheme: light) {
   .SynthNodeTitle {
-    fill: #640;
+    fill: hsl(45, 100%, 20%);
     font-weight: bold;
   }
 }

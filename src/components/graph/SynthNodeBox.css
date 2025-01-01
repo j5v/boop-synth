@@ -11,8 +11,8 @@
 } 
 
 .SynthNodeBox.highlighted {
-  fill: hsla(0, 0%, 20%, 1);
-  stroke: hsla(0, 0%, 100%, 0.8);
+  fill: hsl(0, 0%, 20%);
+  stroke: hsl(0, 0%, 80%);
 }
 
 
@@ -29,8 +29,8 @@
   } 
 
   .SynthNodeBox.highlighted {
-    fill: hsla(0, 0%, 0%, 0.2);
-    stroke: hsla(0, 0%, 100%, 0.8);
+    fill: hsl(0, 0%, 80%);
+    stroke: hsl(0, 0%, 20%);
   }
     
 }
