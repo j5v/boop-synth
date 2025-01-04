@@ -29,7 +29,7 @@ function AppHeader() {
 
   return (
     <Header>
-      <div className="title">FMC 2</div>
+      <div className="title">boop</div>
       <div className="button-bar">
         <button 
           className="icon" 
@@ -56,7 +56,7 @@ function AppHeader() {
           title="Remove selected nodes"
         ><IconDelete /></button>
       </div>
-      <a href="http://johnvalentine.co.uk?art=fmc2" target="_blank" title="Help"><button className="text-as-icon link-cursor">?</button></a>
+      <a href="http://johnvalentine.co.uk?art=boop" target="_blank" title="Help"><button className="text-as-icon link-cursor">?</button></a>
       <button
           onClick={handleReset}
           title="Reset all nodes"

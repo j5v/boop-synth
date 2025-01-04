@@ -19,7 +19,7 @@ const defaultOutputSpec = {
   sampleRate: 44100, // sps
   duration: 1.0, // seconds
   channels: 1,
-  filenameRoot: 'FMC 2 - output',
+  filenameRoot: 'boop - output',
   sustainReleaseTime: 400, // ms
   depth: BITDEPTH_16,
 
@@ -418,7 +418,7 @@ const synthNodeTypes = {
         description: 'Time (millisceonds) the envelope takes to reach a value of 1',
         intentId: synthNodeTerminalIntents.TIME_SPAN.id,
         exposed: true,
-        defaultValue: 0,
+        defaultValue: 0.1,
       },
       {
         id: 4,

@@ -312,7 +312,7 @@ const usePatchStore = create(
   
   ),
   {
-    name: 'fmc2', // name of the item in the storage (must be unique)
+    name: 'boop', // name of the item in the storage (must be unique)
     storage: createJSONStorage(() => localStorage), // (optional) by default, 'localStorage' is used
   }
 );
