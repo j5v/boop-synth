@@ -5,7 +5,7 @@ import FooterItem from './FooterItem.jsx'
 
 const Footer = memo(function Footer(props) {
 
-  const build = '0.0.1.005';
+  const build = '0.0.1.006';
   const buildDate = '2025-01-04';
 
   return (

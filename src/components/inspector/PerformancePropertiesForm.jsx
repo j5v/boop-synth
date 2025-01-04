@@ -2,6 +2,7 @@ import { memo } from 'react';
 
 import './PerformancePropertiesForm.css'
 import usePatchStore from '../../store/patchStore.jsx';
+import { defaultOutputSpec } from '../../lib/synth.js';
 
 const PerformancePropertiesForm = memo(function PerformancePropertiesForm(props) {
 
@@ -11,19 +12,19 @@ const PerformancePropertiesForm = memo(function PerformancePropertiesForm(props)
     <div className="PerformancePropertiesForm">
       <div className="form-input-row">
         <div className="label">Sample rate<span className="units">, sps</span></div>
-        <>{perf.sampleRate}</>
+        <>{(perf.sampleRate || defaultOutputSpec.sampleRate)}</>
       </div>
       <div className="form-input-row">
         <div className="label">Channels</div>
-        <>{perf.channels}</>
+        <>{(perf.channels || defaultOutputSpec.channels)}</>
       </div>
       <div className="form-input-row">
         <div className="label">Duration<span className="units">, s</span></div>
-        <>{perf.duration.toFixed(6)}</>
+        <>{(perf.duration || defaultOutputSpec.duration).toFixed(2)}</>
       </div>
       <div className="form-input-row">
         <div className="label">Sustain time<span className="units">, ms</span></div>
-        <>{perf.sustainReleaseTime.toFixed(2)}</>
+        <>{(perf.sustainReleaseTime || defaultOutputSpec.sustainReleaseTime).toFixed(2)}</>
       </div>
       <div className="form-input-row">
         <div className="label">Root frequency<span className="units">, Hz</span></div>

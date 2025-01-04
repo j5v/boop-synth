@@ -561,7 +561,7 @@ const stagesWAHDSR = {
 
 const generate = function (
   nodes,
-  { sampleRate, duration, freq, sustainReleaseTime }
+  { sampleRate, duration, freq, sustainReleaseTime = 0 }
 ) {
   const samples = new Array();
   const sampleFrames = sampleRate * duration;
@@ -604,6 +604,8 @@ const generate = function (
       } else if (node.nodeTypeId == synthNodeTypes.ENVELOPE_WAHDSR.id) {
         const [ signal, waitTime, attackTime, holdTime, decayTime, sustainLevel, releaseTime, retrigger, amp ] = inputSignals;
 
+        if (i==0) console.log({signal, waitTime, attackTime, holdTime, decayTime, sustainLevel, releaseTime, retrigger, amp});
+
         node.env = node.env || {
           stage: stagesWAHDSR.WAIT,
           timeMs: 0,
@@ -628,6 +630,7 @@ const generate = function (
             if (env.timeMs >= waitTime) {
               env.stage = stagesWAHDSR.ATTACK;
               env.startAttackTimeMs = env.timeMs;
+              env.previousEnvOutValue = Math.min(1, env.previousEnvOutValue);
             } else break;
 
           case stagesWAHDSR.ATTACK:
@@ -638,7 +641,7 @@ const generate = function (
               const attackTimeAsSamples = attackTime * msToSampleCount;
               const logOf2 = Math.log(2);
               const attackFactor = logOf2 / attackTimeAsSamples;
-              env.outValue = env.previousEnvOutValue + (1 - env.previousEnvOutValue) * attackFactor * 8;
+              env.outValue = Math.min(1, env.previousEnvOutValue + (1 - env.previousEnvOutValue) * attackFactor * 8);
               break;
             }
 
