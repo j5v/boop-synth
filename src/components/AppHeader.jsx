@@ -16,6 +16,10 @@ function AppHeader() {
   const removeSelectedNodes = usePatchStore((state) => state.removeSelectedNodes)
   const reset = usePatchStore((state) => state.reset)
 
+  const handleReset = (event) => {
+    if (window.confirm('Continue to reset? This will load the default starting patch.')) reset();
+  }
+
   const handleSelect = (event) => {
     addNode(event.target.value);
     event.target.value = '';
@@ -54,7 +58,7 @@ function AppHeader() {
       </div>
       <a href="http://johnvalentine.co.uk?art=fmc2" target="_blank" title="Help"><button className="text-as-icon link-cursor">?</button></a>
       <button
-          onClick={reset}
+          onClick={handleReset}
           title="Reset all nodes"
         >Reset</button>
     </Header>

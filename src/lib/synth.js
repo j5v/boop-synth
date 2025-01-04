@@ -165,7 +165,7 @@ const synthNodeTypes = {
       },
       {
         id: 3,
-        displayName: 'Phase Mod',
+        displayName: 'Phase mod',
         displayNameShort: 'PM',
         description: 'Amount of phase shift (cycles, at reference frequency)', // todo: with pitch
         displayUnits: '...0..1...',
@@ -176,7 +176,7 @@ const synthNodeTypes = {
       },
       {
         id: 4,
-        displayName: 'Frequency Mod',
+        displayName: 'FM',
         displayNameShort: 'FM',
         description: 'Modulates the pitch, like FM (frequency modulation)',
         intentId: synthNodeTerminalIntents.LEVEL.id,
