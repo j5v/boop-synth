@@ -10,7 +10,8 @@ function FormPatchNodeInputItem(props) {
 
   const { inputItem } = props;
   const intent = getSynthNodeTerminalIntentsById(inputItem.intentId);
-  const { name } = intent;
+  const { name, description } = intent;
+  const hint = joinItems([name, description], ': ');;
 
   const handleChangeValue = (event) => {
     setInputValue(inputItem, event.target.value);
@@ -29,8 +30,12 @@ function FormPatchNodeInputItem(props) {
   const inputField = <input
       className={`number ${inputFieldVisible ? '' : ' invisible'}`}
       onBlur={handleChangeValue}
-      defaultValue={inputItem.userValue || inputItem.value || inputItem.defaultValue}
-      title={name}      
+      defaultValue={
+        (inputItem.userValue !== undefined) ? inputItem.userValue :
+        (inputItem.value !== undefined) ? inputItem.value :
+        inputItem.defaultValue
+      }
+      title={hint}
     ></input>
   
   const exposureField = (intent.modulatable) ? (
@@ -45,11 +50,12 @@ function FormPatchNodeInputItem(props) {
   const rowClassNames = ['form-input-row'];
   if (inputItem.placeholder) rowClassNames.push('placeholder');
 
+  const effectiveStateValue = inputItem.value !== undefined ? inputItem.value : inputItem.defaultValue;
   const trueValue = (
-    inputItem.userValue &&
+    inputItem.userValue &&    
     (inputItem.value || inputItem.defaultValue) &&
-    (parseFloat(inputItem.userValue) !== (inputItem.value || inputItem.defaultValue)))
-  ? <div className="true-value">{(inputItem.value || inputItem.defaultValue).toFixed(4)}</div>
+    (parseFloat(inputItem.userValue) != effectiveStateValue))
+  ? <div className="true-value">{effectiveStateValue.toFixed(4)}</div>
   : <></>
   
   return (

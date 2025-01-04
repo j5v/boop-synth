@@ -1,3 +1,5 @@
+import { memo } from 'react';
+
 import './SynthNode.css'
 import SynthNodeTitle from './SynthNodeTitle.jsx'
 import SynthNodeBox from './SynthNodeBox.jsx'
@@ -5,7 +7,7 @@ import SynthNodeInputs from './SynthNodeInputs.jsx'
 import SynthNodeOutputs from './SynthNodeOutputs.jsx'
 import SynthNodePeakMeter from './SynthNodePeakMeter.jsx'
 
-function SynthNode(props) {
+const SynthNode = memo(function SynthNode(props) {
 
   const { synthNode } = props;
 
@@ -19,6 +21,6 @@ function SynthNode(props) {
     </g>
 
   )
-}
+})
 
 export default SynthNode

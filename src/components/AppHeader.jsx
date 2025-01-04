@@ -1,10 +1,10 @@
-import Header from './Header.jsx'
-import IconPlay from '../generic/IconPlay.jsx'
-import IconDownload from '../generic/IconDownload.jsx'
-import IconDelete from '../generic/IconDelete.jsx'
+import Header from './layout/Header.jsx'
+import IconPlay from './generic/IconPlay.jsx'
+import IconDownload from './generic/IconDownload.jsx'
+import IconDelete from './generic/IconDelete.jsx'
 
-import { generateAndPlay, generateFile, synthNodeTypes } from '../../lib/synth.js'
-import usePatchStore from '../../store/patchStore.jsx'
+import { generateAndPlay, generateFile, synthNodeTypes } from '../lib/synth.js'
+import usePatchStore from '../store/patchStore.jsx'
 
 function AppHeader() {
 

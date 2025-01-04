@@ -1,14 +1,16 @@
+import { memo } from 'react';
+
 import './PerformancePropertiesForm.css'
 import usePatchStore from '../../store/patchStore.jsx';
 
-function PerformancePropertiesForm() {
+const PerformancePropertiesForm = memo(function PerformancePropertiesForm(props) {
 
   const perf = usePatchStore.getState().perf;
 
   return (
     <div className="PerformancePropertiesForm">
       <div className="form-input-row">
-        <div className="label">Sample Rate<span className="units">, sps</span></div>
+        <div className="label">Sample rate<span className="units">, sps</span></div>
         <>{perf.sampleRate}</>
       </div>
       <div className="form-input-row">
@@ -20,11 +22,15 @@ function PerformancePropertiesForm() {
         <>{perf.duration.toFixed(6)}</>
       </div>
       <div className="form-input-row">
-        <div className="label">Root Frequency<span className="units">, Hz</span></div>
+        <div className="label">Sustain time<span className="units">, ms</span></div>
+        <>{perf.sustainReleaseTime.toFixed(2)}</>
+      </div>
+      <div className="form-input-row">
+        <div className="label">Root frequency<span className="units">, Hz</span></div>
         <>{perf.freq.toFixed(4)}</>
       </div>
     </div>
   )
-}
+})
 
 export default PerformancePropertiesForm

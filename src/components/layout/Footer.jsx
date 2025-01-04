@@ -1,9 +1,11 @@
+import { memo } from 'react';
+
 import './Footer.css'
 import FooterItem from './FooterItem.jsx'
 
-function Footer() {
+const Footer = memo(function Footer(props) {
 
-  const build = '0.0.1.002';
+  const build = '0.0.1.004';
   const buildDate = '2025-01-01';
 
   return (
@@ -18,6 +20,6 @@ function Footer() {
       </>
     </div>
   )
-}
+})
 
 export default Footer

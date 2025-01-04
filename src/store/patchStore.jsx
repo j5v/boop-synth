@@ -29,10 +29,11 @@ const usePatchStore = create(
         // interpret input
         // TODO: move into parse function if DRY needed
 
-        let writeValue = value || 0; // best guess so far
+        let writeValue = value !== undefined ? value : 0; // best guess so far; improve below with parsing
+
         const trimmed = value.toString().trim().toLowerCase();
 
-        if (targetInput.intentId == synthNodeTerminalIntents.FREQUENCY_OCTAVES.id) {
+        if (targetInput.intentId == synthNodeTerminalIntents.PITCH_OFFSET_OCTAVES.id) {
           if (trimmed.slice(-1) == 'c') { // cents
             writeValue = parseFloat(trimmed.slice(0,-1)) / 1200;
 
@@ -41,12 +42,11 @@ const usePatchStore = create(
 
           } else if (trimmed.indexOf('/') > -1) { // fraction of numbers (slash divide)
             const parts = trimmed.split('/').map(n => parseFloat(n));
-            if (parts[1] !== 0) writeValue = Math.log( parts[0] / parts[1]) / Math.log(2);
+            if (parts[1] !== 0) writeValue = Math.log(parts[0] / parts[1]) / Math.log(2);
 
           } else if (trimmed.indexOf(':') > -1) { // fraction of numbers (colon ratio)
             const parts = trimmed.split(':').map(n => parseFloat(n));
-            if (parts[1] !== 0) writeValue = Math.log( parts[0] / parts[1]) / Math.log(2);
-
+            if (parts[1] !== 0) writeValue = Math.log(parts[0] / parts[1]) / Math.log(2);
           }
 
         } else if (targetInput.intentId == synthNodeTerminalIntents.LEVEL.id) {
@@ -61,8 +61,8 @@ const usePatchStore = create(
           } else if (trimmed.indexOf(':') > -1) { // fraction of numbers (colon ratio)
             const parts = trimmed.split(':').map(n => parseFloat(n));
             if (parts[1] !== 0) writeValue = parts[0] / parts[1];
-
           }
+
         }
 
         return {

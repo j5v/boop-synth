@@ -19,6 +19,22 @@
   fill: hsl(220, 80%, 60%);
 }
 
+.terminal.enum {
+  fill: hsl(220, 80%, 60%);
+}
+
+.terminal.time-span {
+  fill: hsl(220, 80%, 60%);
+}
+
+.terminal.decay-rate {
+  fill: hsl(300, 100%, 40%);
+}
+
+.terminal.trigger {
+  fill: hsl(0, 80%, 60%);
+}
+
 .terminal.outline, .terminal.outline:hover {
   fill: #000;
 }
@@ -36,9 +52,23 @@
   .terminal.level {
     fill: #248311;
   } 
+
   .terminal.frequency {
     fill: #008351;
   } 
+
+  .terminal.enum {
+    fill: hsl(220, 80%, 40%);
+  }
+  
+  .terminal.time-span {
+    fill: hsl(220, 80%, 40%);
+  }
+  
+  .terminal.trigger {
+    fill: hsl(0, 80%, 40%);
+  }
+  
   .terminal.outline, .terminal.outline:hover {
     fill: #fff;
   }

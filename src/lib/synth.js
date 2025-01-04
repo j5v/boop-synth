@@ -15,10 +15,12 @@ const getItemById = (list, id) => { // find property by id, in object
 }
 
 const defaultOutputSpec = {
+  // TODO: refactor these into Output node and Performance parmaters
   sampleRate: 44100, // sps
-  duration: 0.25, // seconds
+  duration: 1.0, // seconds
   channels: 1,
   filenameRoot: 'FMC 2 - output',
+  sustainReleaseTime: 400, // ms
   depth: BITDEPTH_16,
 
   freq: 440 * Math.pow(2, -9/12), // C below concert pitch A
@@ -52,11 +54,12 @@ const synthNodeTerminalIntents = { // draft only
     classCSS: 'level',
     modulatable: true
   },
-  FREQUENCY_OCTAVES: {
+  PITCH_OFFSET_OCTAVES: {
     id: 2,
-    name: 'Frequency',
+    name: 'Pitch offset',
     units: '+octave',
     classCSS: 'frequency',
+    description: 'A pitch change in octaves, relative to the reference frequency. You can enter units here, like 10c for 10 cents, 2d for 2 semitones (12ET), 3:2 or 3/2 for harmonic ratios.',
     modulatable: true
   },
   SOURCE: {
@@ -72,6 +75,27 @@ const synthNodeTerminalIntents = { // draft only
     units: 'choice',
     classCSS: 'enum',
     modulatable: false
+  },
+  TIME_SPAN: {
+    id: 5,
+    name: 'time span',
+    units: 'milliseconds',
+    classCSS: 'time-span',
+    modulatable: true
+  },
+  DECAY_RATE: {
+    id: 6,
+    name: 'time span',
+    units: 'milliseconds',
+    classCSS: 'decay-rate',
+    modulatable: true
+  },
+  TRIGGER: {
+    id: 6,
+    name: 'trigger',
+    units: 'above 0',
+    classCSS: 'trigger',
+    modulatable: true
   },
 }
 
@@ -96,6 +120,7 @@ const synthNodeTypes = {
       {
         id: 1,
         displayName: 'Signal',
+        displayNameShort: 'In',
         intentId: synthNodeTerminalIntents.LEVEL.id,
         exposed: true,
         defaultValue: 0,
@@ -114,11 +139,13 @@ const synthNodeTypes = {
   },
   GEN_FM: {
     id: 2,
-    name: 'Osc',
+    nameShort: 'Osc',
+    name: 'Oscillator',
     inputs: [
       {
         id: 1,
         displayName: 'Source',
+        displayNameShort: 'Src',
         description: 'A waveform or sample',
         intentId: synthNodeTerminalIntents.SOURCE.id,
         exposed: false,
@@ -127,17 +154,19 @@ const synthNodeTypes = {
       },
       {
         id: 2,
-        displayName: 'Source Pitch',
+        displayName: 'Pitch offset',
+        displayNameShort: 'Pit±',
         description: 'Amount of change to the reference frequency (octaves)',
         displayUnits: 'semitones',
-        intentId: synthNodeTerminalIntents.FREQUENCY_OCTAVES.id,
+        intentId: synthNodeTerminalIntents.PITCH_OFFSET_OCTAVES.id,
         exposed: true,
         isOffset: true, // modifies value
         defaultValue: 0,
       },
       {
         id: 3,
-        displayName: 'Phase',
+        displayName: 'Phase Mod',
+        displayNameShort: 'PM',
         description: 'Amount of phase shift (cycles, at reference frequency)', // todo: with pitch
         displayUnits: '...0..1...',
         intentId: synthNodeTerminalIntents.LEVEL.id,
@@ -147,7 +176,8 @@ const synthNodeTypes = {
       },
       {
         id: 4,
-        displayName: 'Frequency',
+        displayName: 'Frequency Mod',
+        displayNameShort: 'FM',
         description: 'Modulates the pitch, like FM (frequency modulation)',
         intentId: synthNodeTerminalIntents.LEVEL.id,
         exposed: true,
@@ -156,6 +186,7 @@ const synthNodeTypes = {
       {
         id: 5,
         displayName: 'Post-mix',
+        displayNameShort: '+',
         description: 'Mixes directly before node output',
         intentId: synthNodeTerminalIntents.LEVEL.id,
         exposed: false,
@@ -166,6 +197,7 @@ const synthNodeTypes = {
       {
         id: 1,
         displayName: 'Signal',
+        displayNameShort: 'Out',
         description: 'Link inputs to this output',
         intentId: synthNodeTerminalIntents.LEVEL.id,
         exposed: true,
@@ -176,11 +208,13 @@ const synthNodeTypes = {
   },
   RING: {
     id: 3,
-    name: 'Ring/Multiply',
+    nameShort: '×',
+    name: 'Multiply/Ring',
     inputs: [
       {
         id: 1,
         displayName: 'Source 1',
+        displayNameShort: 'In 1',
         intentId: synthNodeTerminalIntents.LEVEL.id,
         exposed: true,
         defaultValue: 1,
@@ -188,6 +222,7 @@ const synthNodeTypes = {
       {
         id: 2,
         displayName: 'Source 2',
+        displayNameShort: 'In 2',
         intentId: synthNodeTerminalIntents.LEVEL.id,
         exposed: true,
         defaultValue: 1,
@@ -195,6 +230,7 @@ const synthNodeTypes = {
       {
         id: 3,
         displayName: 'Source 3',
+        displayNameShort: 'In 3',
         intentId: synthNodeTerminalIntents.LEVEL.id,
         exposed: false,
         defaultValue: 1,
@@ -202,6 +238,7 @@ const synthNodeTypes = {
       {
         id: 4,
         displayName: 'Source 4',
+        displayNameShort: 'In 4',
         intentId: synthNodeTerminalIntents.LEVEL.id,
         exposed: false,
         defaultValue: 1,
@@ -209,6 +246,7 @@ const synthNodeTypes = {
       {
         id: 5,
         displayName: 'Post-mix',
+        displayNameShort: '+',
         description: 'Mixes directly before node output',
         intentId: synthNodeTerminalIntents.LEVEL.id,
         exposed: false,
@@ -219,6 +257,7 @@ const synthNodeTypes = {
       {
         id: 1,
         displayName: 'Signal',
+        displayNameShort: 'Out',
         description: 'Link inputs to this output',
         intentId: synthNodeTerminalIntents.LEVEL.id,
         exposed: true,
@@ -229,11 +268,13 @@ const synthNodeTypes = {
   },
   ADD: {
     id: 4,
+    nameShort: '+',
     name: 'Add',
     inputs: [
       {
         id: 1,
         displayName: 'Source 1',
+        displayNameShort: 'In 1',
         intentId: synthNodeTerminalIntents.LEVEL.id,
         exposed: true,
         defaultValue: 0,
@@ -241,6 +282,7 @@ const synthNodeTypes = {
       {
         id: 2,
         displayName: 'Source 2',
+        displayNameShort: 'In 2',
         intentId: synthNodeTerminalIntents.LEVEL.id,
         exposed: true,
         defaultValue: 0,
@@ -248,6 +290,7 @@ const synthNodeTypes = {
       {
         id: 3,
         displayName: 'Source 3',
+        displayNameShort: 'In 3',
         intentId: synthNodeTerminalIntents.LEVEL.id,
         exposed: false,
         defaultValue: 0,
@@ -255,6 +298,7 @@ const synthNodeTypes = {
       {
         id: 4,
         displayName: 'Source 4',
+        displayNameShort: 'In 4',
         intentId: synthNodeTerminalIntents.LEVEL.id,
         exposed: false,
         defaultValue: 0,
@@ -264,6 +308,7 @@ const synthNodeTypes = {
       {
         id: 1,
         displayName: 'Signal',
+        displayNameShort: 'Out',
         description: 'Link inputs to this output',
         intentId: synthNodeTerminalIntents.LEVEL.id,
         exposed: true,
@@ -278,10 +323,10 @@ const synthNodeTypes = {
     inputs: [
       {
         id: 1,
-        displayName: 'Source Pitch',
+        displayName: 'Source pitch',
         description: 'Amount of change to the reference frequency (octaves)',
         displayUnits: 'semitones',
-        intentId: synthNodeTerminalIntents.FREQUENCY_OCTAVES.id,
+        intentId: synthNodeTerminalIntents.PITCH_OFFSET_OCTAVES.id,
         exposed: true,
         isOffset: true, // modifies value
         defaultValue: 0,
@@ -345,7 +390,97 @@ const synthNodeTypes = {
         defaultValue: 0,
       }
     ],
-    description: 'A constant number',
+    description: 'A constant number. For most inputs on other nodes, you can enter a number instead of linking. Use this Number node if you want to use the same number more than one input',
+  },
+  ENVELOPE_WAHDSR: {
+    id: 7,
+    name: 'Envelope: analog',
+    inputs: [
+      {
+        id: 1,
+        displayName: 'Signal',
+        description: 'Signal that the envelope scales',
+        intentId: synthNodeTerminalIntents.LEVEL.id,
+        exposed: true,
+        defaultValue: 1,
+      },
+      {
+        id: 2,
+        displayName: 'Wait time',
+        description: 'Time (millisceonds) the envelope remains at its starting value',
+        intentId: synthNodeTerminalIntents.TIME_SPAN.id,
+        exposed: false,
+        defaultValue: 0,
+      },
+      {
+        id: 3,
+        displayName: 'Attack time',
+        description: 'Time (millisceonds) the envelope takes to reach a value of 1',
+        intentId: synthNodeTerminalIntents.TIME_SPAN.id,
+        exposed: true,
+        defaultValue: 0,
+      },
+      {
+        id: 4,
+        displayName: 'Hold time',
+        description: 'Time (millisceonds) the envelope remains at a value of 1',
+        intentId: synthNodeTerminalIntents.TIME_SPAN.id,
+        exposed: false,
+        defaultValue: 0,
+      },
+      {
+        id: 5,
+        displayName: 'Decay time',
+        description: 'Time (millisceonds) the envelope takes to reach halfway towards its Sustain value',
+        intentId: synthNodeTerminalIntents.DECAY_RATE.id,
+        exposed: true,
+        defaultValue: 200,
+      },
+      {
+        id: 6,
+        displayName: 'Sustain level',
+        description: 'Signal level for Sustain.',
+        intentId: synthNodeTerminalIntents.LEVEL.id,
+        exposed: true,
+        defaultValue: 1,
+      },
+      {
+        id: 7,
+        displayName: 'Release time',
+        description: 'Time (millisceonds) the envelope takes to reach halfway towards zero',
+        intentId: synthNodeTerminalIntents.DECAY_RATE.id,
+        exposed: true,
+        defaultValue: 200,
+      },
+      {
+        id: 8,
+        displayName: 'Retrigger',
+        description: 'Restarts at the attack phase, when Retrigger becomes positive',
+        intentId: synthNodeTerminalIntents.TRIGGER.id,
+        exposed: false,
+        defaultValue: 0,
+        placeholder: true,
+      },
+      {
+        id: 9,
+        displayName: 'Amp',
+        description: 'Scales the node output, same effect as Signal',
+        intentId: synthNodeTerminalIntents.LEVEL.id,
+        exposed: false,
+        defaultValue: 1,
+      },
+    ],
+    outputs: [
+      {
+        id: 1,
+        displayName: 'Signal',
+        description: 'Envelope output',
+        intentId: synthNodeTerminalIntents.LEVEL.id,
+        exposed: true,
+        defaultValue: 0,
+      }
+    ],
+    description: 'An analog-style envelope, using \'Sustain time\' in Performance properties',
   },
     
 }
@@ -415,12 +550,30 @@ const getNodeDisplayTitle = node => {
 
 // processing
 
-const generate = function (nodes, { sampleRate, duration, freq }) {
-  // test spec.
+const stagesWAHDSR = {
+  WAIT: 1,
+  ATTACK: 2,
+  HOLD: 3,
+  DECAY: 4,
+  SUSTAIN: 5,
+  RELEASE: 6
+}
+
+const generate = function (
+  nodes,
+  { sampleRate, duration, freq, sustainReleaseTime }
+) {
   const samples = new Array();
   const sampleFrames = sampleRate * duration;
+  const PI = Math.PI;
+  const TAU = PI * 2;
+
   const phaseIncNormalized = 2 * Math.PI / sampleRate;
-  const tau = Math.PI * 2;
+  const sampleCountToSeconds = 1 / sampleRate;
+  const AttackNormalize = 1 + sampleRate / 44100;
+  const sampleCountToS = 1 / sampleRate;
+  const sampleCountToMs = 1000 / sampleRate;
+  const msToSampleCount = sampleRate * 0.001;
 
   const pitchUnit = 1; // 1 = octaves. Semitones would be 1/12
 
@@ -428,6 +581,8 @@ const generate = function (nodes, { sampleRate, duration, freq }) {
   // console.table(nodes);
   initPatch(nodes);
   clearPeakMeters();
+
+  const debugEnv = [];
 
   // Generate audio, one channel.
   for (let i = 0; i < sampleFrames; i++) {
@@ -441,10 +596,88 @@ const generate = function (nodes, { sampleRate, duration, freq }) {
         const frequency = freq * (pitch == 0 ? 1 : Math.pow(2, pitch * pitchUnit));
 
         node.phase = (node.phase || 0) + phaseIncNormalized * frequency * (1 + freqMod);
-        node.outputs[0].signal = Math.sin(node.phase + phaseMod * tau) + postMix;
+        node.outputs[0].signal = Math.sin(node.phase + phaseMod * TAU) + postMix;
 
       } else if (node.nodeTypeId == synthNodeTypes.NUMBER.id) {
         node.outputs[0].signal = valueOfInput(node.inputs[0]);
+
+      } else if (node.nodeTypeId == synthNodeTypes.ENVELOPE_WAHDSR.id) {
+        const [ signal, waitTime, attackTime, holdTime, decayTime, sustainLevel, releaseTime, retrigger, amp ] = inputSignals;
+
+        node.env = node.env || {
+          stage: stagesWAHDSR.WAIT,
+          timeMs: 0,
+          startTime: 0,
+          previousEnvOutValue: 0,
+        };
+        const env = node.env;
+
+        env.outValue = 0;
+
+        env.previousTrigger = env.previousTrigger || 0;
+        if (env.previousTrigger <= 0 && retrigger > 0) {
+          env.startTime = env.timeMs;
+          env.stage = stagesWAHDSR.WAIT;
+        }
+
+        switch (env.stage) {
+          // For zero-duration stages, flow can slip into the next stage on the same iteration.
+          // Note selective use of `break`
+
+          case stagesWAHDSR.WAIT:
+            if (env.timeMs >= waitTime) {
+              env.stage = stagesWAHDSR.ATTACK;
+              env.startAttackTimeMs = env.timeMs;
+            } else break;
+
+          case stagesWAHDSR.ATTACK:
+            if (env.timeMs >= env.startAttackTimeMs + attackTime || env.timeMs >= sustainReleaseTime) {
+              env.stage = stagesWAHDSR.HOLD;
+              env.startHoldTimeMs = env.timeMs;
+            } else {
+              const attackTimeAsSamples = attackTime * msToSampleCount;
+              const logOf2 = Math.log(2);
+              const attackFactor = logOf2 / attackTimeAsSamples;
+              env.outValue = env.previousEnvOutValue + (1 - env.previousEnvOutValue) * attackFactor * 8;
+              break;
+            }
+
+          case stagesWAHDSR.HOLD:
+            env.outValue = 1;
+            if (env.timeMs >= env.startHoldTimeMs + holdTime || env.timeMs >= sustainReleaseTime) {
+              env.stage = stagesWAHDSR.DECAY;
+              env.startDecayTimeMs = env.timeMs;
+            } else {
+              break;
+            }
+
+          case stagesWAHDSR.DECAY:
+            // `decayTime`: Time (millisceonds) the envelope takes to reach halfway towards `sustainLevel`.
+            // The envelope converges on, but does not reach, `sustainLevel`, so there is no SUSTAIN stage.
+            if (env.timeMs >= sustainReleaseTime) {
+              env.stage = stagesWAHDSR.RELEASE;
+            } else {
+              const decayTimeAsSamples = decayTime * msToSampleCount;
+              const decayFactor = 1 - Math.pow(0.5, 1 / decayTimeAsSamples);
+              env.outValue = env.previousEnvOutValue - (env.previousEnvOutValue - sustainLevel) * decayFactor;
+              break;
+            }
+
+          case stagesWAHDSR.RELEASE:
+            const releaseTimeAsSamples = releaseTime * msToSampleCount;
+            const releaseFactor = Math.pow(0.5, 1 / releaseTimeAsSamples);
+            env.outValue = env.previousEnvOutValue * releaseFactor;
+            break;
+        }
+
+        env.previousEnvOutValue = env.outValue;
+
+        env.outValue *= signal * amp;
+
+        env.previousTrigger = env.retrigger;
+        env.timeMs += sampleCountToMs;
+
+        node.outputs[0].signal = env.outValue;
 
       } else if (node.nodeTypeId == synthNodeTypes.RING.id) {
         const [ signal1, signal2, signal3, signal4, postMix ] = inputSignals;
@@ -468,7 +701,6 @@ const generate = function (nodes, { sampleRate, duration, freq }) {
         const output = signal * gain;
         node.peakMeter = Math.max(node.peakMeter || -Infinity, Math.abs(output));
         samples.push(output); // TODO: a buffer per output node
-
       }
 
     }
@@ -496,7 +728,7 @@ const generate = function (nodes, { sampleRate, duration, freq }) {
         if (outputSynthNode) {
           link.resolvedOutput = outputSynthNode && outputSynthNode.outputs.find(output => output.id == link.outputId);
         }
-      }  
+      }
       if (link.resolvedOutput) {
         return link.resolvedOutput.signal || 0;
       } else {
@@ -504,7 +736,8 @@ const generate = function (nodes, { sampleRate, duration, freq }) {
         return 0;
       }
     } else {
-    return input.value || input.defaultValue || 0;
+    return input.value != undefined ? input.value : 
+      input.defaultValue != undefined ? input.defaultValue : 0;
     }
   }
 
@@ -516,7 +749,7 @@ const generate = function (nodes, { sampleRate, duration, freq }) {
     for (let nodeIndex in nodes) {
       const node = nodes[nodeIndex];
       node.nodeTypeId = parseInt(node.nodeTypeId); // TODO: test if needed
-      delete node.phase;
+      delete node.env;
       for (let inputIndex in node.inputs) {
         const input = node.inputs[inputIndex];
         if (input.link) {
@@ -544,7 +777,7 @@ const generateFile = function (nodes, spec) {
   );
 
   var audioBlob = new Blob([dataview], { type : 'audio/wav' });
-  saveAs(audioBlob, spec.filename + '.wav');
+  saveAs(audioBlob, spec.filenameRoot + '.wav');
   
   function encodeWAV(buf, sr, ch) {
     var bytesPerSample = 2;

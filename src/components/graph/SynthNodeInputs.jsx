@@ -1,10 +1,12 @@
+import { memo } from 'react';
+
 import './SynthNodeInputs.css'
 import { asRem, pxAsRem, remAsPx } from '../../lib/utils.js'
 import { getSynthNodeTerminalIntentsById } from '../../lib/synth.js'
 import { nodeLayout } from '../../lib/nodeLayout.js'
 import usePatchStore from '../../store/patchStore.jsx'
 
-function SynthNodeInputs(props) {
+const SynthNodeInputs = memo(function SynthNodeInputs(props) {
 
   const { synthNode } = props;
   const { inputs } = synthNode;
@@ -120,6 +122,6 @@ function SynthNodeInputs(props) {
       }
     })
   )
-}
+});
 
 export default SynthNodeInputs
