@@ -43,7 +43,6 @@ const SynthNodeInputs = memo(function SynthNodeInputs(props) {
 
   const handleDoubleClick = (targetInput) => {
     // Remove a node link
-    console.log('handleDblClick', targetInput);
     // event.stopPropagation();
     removeLinkFromInput(targetInput);
   }

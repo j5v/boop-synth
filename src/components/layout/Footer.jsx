@@ -5,8 +5,8 @@ import FooterItem from './FooterItem.jsx'
 
 const Footer = memo(function Footer(props) {
 
-  const build = '0.0.1.004';
-  const buildDate = '2025-01-01';
+  const build = '0.0.1.005';
+  const buildDate = '2025-01-04';
 
   return (
     <div className="Footer">
