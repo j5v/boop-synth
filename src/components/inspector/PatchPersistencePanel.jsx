@@ -27,6 +27,7 @@ function SynthGraphProperties() {
         className="" 
         onClick={handleImport}
         title="Import patch"
+        disabled
       >Import</button>
     </div>
   )
