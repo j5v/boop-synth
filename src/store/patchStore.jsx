@@ -298,6 +298,24 @@ const usePatchStore = create(
         ),
       })),
 
+      toggleSelectNode: (nodeId) => set((state) => ({
+        ...state,
+        nodes: state.nodes.map((node) => {
+          const newSelectionState = !node.selected;
+          if (node.id === nodeId) 
+            console.log(newSelectionState);
+          
+          return (
+            node.id === nodeId ? { ...node, selected: newSelectionState } : { ...node }
+          );
+        }),
+      })),
+
+      selectAllNodes: (nodeId) => set((state) => ({
+        ...state,
+        nodes: state.nodes.map((node) => ({ ...node, selected: true }))
+      })),
+
       selectExclusiveNode: (nodeId) => set((state) => ({
         // Select node, and unselect other nodes.
         ...state,

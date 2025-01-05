@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import './SynthNodeBox.css'
 import usePatchStore from '../../store/patchStore.jsx'
 import { asRem } from '../../lib/utils.js'
@@ -18,33 +19,27 @@ function SynthNodeBox(props) {
 
   synthNode.h = nodeHeight; // cache for other components
 
-  // Selection: event, state, and CSS classes
+  // Selection
 
   const selectExclusiveNode = usePatchStore((state) => state.selectExclusiveNode)
   const selectNode = usePatchStore((state) => state.selectNode)
+  const toggleSelectNode = usePatchStore((state) => state.toggleSelectNode)
   const highlightExclusiveNode = usePatchStore((state) => state.highlightExclusiveNode);
 
-  const handleMouseDown = (event) => {
-    if (!synthNode.selected) {
-      if (event.ctrlKey) {
-        selectNode(synthNode.id);
-      } else {
-        selectExclusiveNode(synthNode.id);
-      }
+  const handleMouseUp = (event) => {
+    console.log('SynthNodeBox:handleMouseUp()')
+    if (event.ctrlKey) {
+      toggleSelectNode(synthNode.id);
+    } else {
+      if (!synthNode.selected) selectExclusiveNode(synthNode.id);
     }
-  };
 
+  };
+  
   const handleClick = (event) => {
     // Prevent a click on parent/background from unselecting all nodes
-    // console.log('click');
+    console.log('SynthNodeBox:handleClick()')
     event.stopPropagation();
-    if (!synthNode.selected) {
-      if (event.ctrlKey) {
-        selectNode(synthNode.id);
-      } else {
-        selectExclusiveNode(synthNode.id);
-      }
-    }
   };
 
   const handleMouseEnter = (event) => {
@@ -70,7 +65,7 @@ function SynthNodeBox(props) {
       width={asRem(synthNode.w)}
       height={asRem(nodeHeight)}
       onClick={handleClick}
-      onMouseDown={handleMouseDown}
+      onMouseDown={handleMouseUp}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
   />

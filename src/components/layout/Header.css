@@ -7,6 +7,15 @@
   background-color: hsl(0, 0%, 18%);
 }
 
+.Header.minor {
+  background-color: hsl(0, 0%, 12%);
+  padding-top: 0.2rem;
+}
+
+.Header.vertical {
+  flex-direction: column;
+}
+
 .Header.property-sheet {
   padding: 0.15rem 0.6rem 0rem 0.6rem;
   background-color: hsl(0, 0%, 14%);

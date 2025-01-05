@@ -1,5 +1,6 @@
 import saveAs from '../../lib/FileSaver.js'
 import usePatchStore from '../../store/patchStore.jsx'
+import Header from '../layout/Header.jsx'
 
 function SynthGraphProperties() {
 
@@ -16,7 +17,7 @@ function SynthGraphProperties() {
   }
 
   return (
-    <div className="button-bar">
+    <div className="button-bar-compact">
       <button 
         className="" 
         onClick={handleExport} 

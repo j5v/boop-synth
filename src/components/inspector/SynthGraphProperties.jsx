@@ -12,11 +12,8 @@ function SynthGraphProperties() {
     <div className="SynthGraphProperties">
       <Header context="property-sheet">
         <div>Patch</div>
-      </Header>
-
-      <ParameterGroup>
         <PatchPersistencePanel />
-      </ParameterGroup>
+      </Header>
 
       <ParameterGroup>
         <Header context="property-sheet-subheading">

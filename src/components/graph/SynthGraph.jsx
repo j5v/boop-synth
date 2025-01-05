@@ -75,6 +75,11 @@ function SynthGraph() {
     (state) => state.ui.draggingLinkFromOutput
   );
 
+  const handleOnClick = (event) => {
+    // console.log('SynthNodeBox:handleClick() to unselect all nodes')
+    selectThisNode();
+  }
+
   const doDragLinkFromOutput = (event) => {
     // event.stopPropagation();
 
@@ -135,12 +140,42 @@ function SynthGraph() {
 
 
   // Keyboard shortcuts
-  
+
   const removeSelectedNodes = usePatchStore((state) => state.removeSelectedNodes)
+  const duplicateSelectedNodes = usePatchStore((state) => state.duplicateSelectedNodes)
+  const selectAllNodes = usePatchStore((state) => state.selectAllNodes)
+
   const handleKeyDown = (event) => {
-    if (event.key == 'Delete') {
+    const k = event.key.toLowerCase();
+    // console.log(event);
+
+    // TODO: remove unnecessary event blockers.
+
+    if (k == 'delete' || k == 'x') {
       removeSelectedNodes();
+      event.stopPropagation();
+      event.preventDefault();
+
+    } else if (k == 'v') {
+      duplicateSelectedNodes();
+      event.stopPropagation();
+      event.preventDefault();
+
+    } else if (k == 'a' && event.ctrlKey == true) {
+      selectAllNodes();
+      event.preventDefault();
+
+    } else if (k == 'insert' || k == 'a') {
+      event.preventDefault();
+      document.getElementById('addNodeSelect').focus();
+
+    } else if (k == 'enter') {
+      document.getElementById('playAudioButton').click();
+      event.stopPropagation();
+      event.preventDefault();
+
     }
+    
   };
 
 
@@ -161,7 +196,7 @@ function SynthGraph() {
     <svg
       role="list"
       className={'SynthGraph' + (showDraggingNode ? ' dragging' : '')}
-      onClick={selectThisNode /* unselects all */}
+      onClick={handleOnClick /* unselects all */}
       onMouseDown={handleMouseDown}
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}

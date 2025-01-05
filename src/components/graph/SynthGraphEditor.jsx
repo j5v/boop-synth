@@ -8,12 +8,13 @@ import usePatchStore from '../../store/patchStore.jsx';
 function SynthGraphEditor() {
 
   const nodes = usePatchStore((state) => state.nodes);
+  const selectedNodeCount = nodes.filter(n => n.selected).length;
   const selectedNode = nodes.find(n => n.selected);
 
   return (
     <div className="SynthGraphEditor">
       <SynthGraph />
-      {selectedNode ?
+      {selectedNodeCount == 1 ?
         <SynthNodeProperties synthNode={selectedNode}/> :
         <SynthGraphProperties />
       }
