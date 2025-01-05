@@ -13,6 +13,8 @@ function SynthNodeLinks() {
     nodes.map(node => {
       let py = nodeVOffset;
 
+      if (!node.inputs || node.inputs.length == 0) return;
+
       return (node.inputs.map(i => {
         const key=`${node.id}-${i.id}`;
 

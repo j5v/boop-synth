@@ -2,6 +2,7 @@ import Header from './layout/Header.jsx'
 import IconPlay from './generic/IconPlay.jsx'
 import IconDownload from './generic/IconDownload.jsx'
 import IconDelete from './generic/IconDelete.jsx'
+import IconDuplicate from './generic/IconDuplicate.jsx'
 
 import { generateAndPlay, generateFile, synthNodeTypes } from '../lib/synth.js'
 import usePatchStore from '../store/patchStore.jsx'
@@ -14,6 +15,7 @@ function AppHeader() {
   
   const addNode = usePatchStore((state) => state.addNode)
   const removeSelectedNodes = usePatchStore((state) => state.removeSelectedNodes)
+  const duplicateSelectedNodes = usePatchStore((state) => state.duplicateSelectedNodes)
   const reset = usePatchStore((state) => state.reset)
 
   const handleReset = (event) => {
@@ -49,6 +51,12 @@ function AppHeader() {
             (keyName, keyIndex) => <option key={synthNodeTypes[keyName].id} value={synthNodeTypes[keyName].id} title={synthNodeTypes[keyName].description || ''}>{synthNodeTypes[keyName].name}</option>
           )}
         </select>
+        <button
+          className="icon" 
+          onClick={duplicateSelectedNodes}
+          disabled={noNodesSelected}
+          title="Duplicate selected nodes"
+        ><IconDuplicate /></button>
         <button
           className="icon" 
           onClick={removeSelectedNodes}

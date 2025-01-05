@@ -225,6 +225,48 @@ const usePatchStore = create(
         }
       }),
       
+      duplicateSelectedNodes: () => set((state) => {
+        let newId = Math.max(0, ...state.nodes.map((item) => item.id)) + 1;
+
+        const nodeClones = state.nodes.filter(node => node.selected).map(
+          n => {
+            const newNode = {
+              ...structuredClone(n), 
+              x: n.x + 1, 
+              y: n.y + 1, 
+              id: newId++,
+            };
+            n.clonedToId = newNode.id; // used to remap inputs
+            n.selected = false;
+            return newNode;
+          }
+        );
+
+        // if any input links in new nodes point to cloned nodes, link instead to their clones.
+        nodeClones.forEach(n => {
+          n.inputs.forEach(i => {
+            const existingOutputNode = i.link && state.nodes.find(sn => sn.id == i.link.synthNodeId);
+            if (existingOutputNode && existingOutputNode.clonedToId) {
+              i.link.synthNodeId = existingOutputNode.clonedToId;
+            }
+          })
+        })
+
+        const newNodes = [
+          ...nodeClones, // insert at start of list, before the output node.
+          ...structuredClone(state.nodes),
+        ];
+
+        newNodes.forEach(n => {
+          delete n.clonedTo;
+        })
+
+        return {
+          ...state,
+          nodes: newNodes,
+        }
+      }),
+      
       removeNode: (nodeId) => set((state) => ({
         ...state,
         nodes: state.nodes.filter((node) => node.id !== nodeId),

@@ -417,7 +417,7 @@ const synthNodeTypes = {
         displayName: 'Attack time',
         description: 'Time (millisceonds) the envelope takes to reach a value of 1',
         intentId: synthNodeTerminalIntents.TIME_SPAN.id,
-        exposed: true,
+        exposed: false,
         defaultValue: 0.1,
       },
       {
@@ -433,7 +433,7 @@ const synthNodeTypes = {
         displayName: 'Decay time',
         description: 'Time (millisceonds) the envelope takes to reach halfway towards its Sustain value',
         intentId: synthNodeTerminalIntents.DECAY_RATE.id,
-        exposed: true,
+        exposed: false,
         defaultValue: 200,
       },
       {
@@ -441,7 +441,7 @@ const synthNodeTypes = {
         displayName: 'Sustain level',
         description: 'Signal level for Sustain.',
         intentId: synthNodeTerminalIntents.LEVEL.id,
-        exposed: true,
+        exposed: false,
         defaultValue: 1,
       },
       {
@@ -449,7 +449,7 @@ const synthNodeTypes = {
         displayName: 'Release time',
         description: 'Time (millisceonds) the envelope takes to reach halfway towards zero',
         intentId: synthNodeTerminalIntents.DECAY_RATE.id,
-        exposed: true,
+        exposed: false,
         defaultValue: 200,
       },
       {
@@ -604,7 +604,10 @@ const generate = function (
       } else if (node.nodeTypeId == synthNodeTypes.ENVELOPE_WAHDSR.id) {
         const [ signal, waitTime, attackTime, holdTime, decayTime, sustainLevel, releaseTime, retrigger, amp ] = inputSignals;
 
-        if (i==0) console.log({signal, waitTime, attackTime, holdTime, decayTime, sustainLevel, releaseTime, retrigger, amp});
+        if (i==0) {
+          console.log({sustainReleaseTime});
+          console.log({signal, waitTime, attackTime, holdTime, decayTime, sustainLevel, releaseTime, retrigger, amp});
+        }
 
         node.env = node.env || {
           stage: stagesWAHDSR.WAIT,
