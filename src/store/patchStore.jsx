@@ -109,6 +109,26 @@ const usePatchStore = create(
 
       }),
 
+      removeLinksFromOutput: (outputNodeId, outputId) => set((state) => {
+        // console.log('usePatchStore: setLinkDragFromInput()', spec);
+        
+        return {
+          ...state,
+          nodes: state.nodes.map(node => ({
+            ...node,
+            inputs: node.inputs.map(input => ({
+              ...input,
+              link: (
+                input.link &&
+                input.link.synthNodeId == outputNodeId &&
+                input.link.outputId == outputId
+              ) ? {} : { ...input.link }
+            }))
+          }))
+        }
+
+      }),
+
       // Drag new links
 
       setLinkDragFromInput: (spec) => set((state) => {
@@ -304,7 +324,7 @@ const usePatchStore = create(
           const newSelectionState = !node.selected;
           if (node.id === nodeId) 
             console.log(newSelectionState);
-          
+
           return (
             node.id === nodeId ? { ...node, selected: newSelectionState } : { ...node }
           );

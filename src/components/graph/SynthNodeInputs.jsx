@@ -10,7 +10,7 @@ const SynthNodeInputs = memo(function SynthNodeInputs(props) {
 
   const { synthNode } = props;
   const { inputs } = synthNode;
-  const { nodeVSpacing, nodeVOffset, labelPadding } = nodeLayout;
+  const { nodeVSpacing, nodeVOffset, labelPadding, dragLeft, dragRight, dragTop, dragBottom } = nodeLayout;
 
   const setLinkDragFromInput = usePatchStore((state) => state.setLinkDragFromInput);
   
@@ -67,17 +67,20 @@ const SynthNodeInputs = memo(function SynthNodeInputs(props) {
         const loosePosX = synthNode.x;
         const loosePosY = synthNode.y + i.posY;
 
+        const activeXLeft = 1;
+        const activeXRight = 1;
+        const activeYTop = 0.6;
+        const activeYBottom = 0.6;
+
         return (
-          <g key={i.id}>
+          <g key={i.id} className="terminal-group">
             <title>{i.description}</title>
-            <circle
-              className={classCSSOutline}
-              cx={asRem(synthNode.x)}
-              cy={asRem(synthNode.y + py)}
-              r={remAsPx(0.4) + 2}
-            />
-            <circle
-              className={classCSS}
+            <rect
+              className="drag-zone"
+              x={asRem(synthNode.x - dragLeft)}
+              y={asRem(synthNode.y + py - dragTop)}
+              width={asRem(dragLeft + dragRight)}
+              height={asRem(dragTop + dragBottom)}
               onDoubleClick={(e) => handleDoubleClick(i)}
               onMouseDown={(e) => handleMouseDown(e, {
                 // begin dragging a link from this Input to an Output
@@ -107,6 +110,15 @@ const SynthNodeInputs = memo(function SynthNodeInputs(props) {
                 prevPageX: pxAsRem(loosePosX),
                 prevPageY: pxAsRem(loosePosX),
               })}
+            />
+            <circle
+              className={classCSSOutline}
+              cx={asRem(synthNode.x)}
+              cy={asRem(synthNode.y + py)}
+              r={remAsPx(0.4) + 2}
+            />
+            <circle
+              className={classCSS}
               cx={asRem(synthNode.x)}
               cy={asRem(synthNode.y + py)}
               r={asRem(0.4)}

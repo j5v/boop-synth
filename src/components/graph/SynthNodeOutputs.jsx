@@ -9,7 +9,9 @@ const SynthNodeOutputs = memo(function SynthNodeOutputs(props) {
 
   const { synthNode } = props;
   const { outputs } = synthNode;
-  const { nodeVSpacing, nodeVOffset, labelPadding } = nodeLayout;
+  const { nodeVSpacing, nodeVOffset, labelPadding, dragLeft, dragRight, dragTop, dragBottom } = nodeLayout;
+
+  const removeLinksFromOutput = usePatchStore((state) => state.removeLinksFromOutput);
 
   const setLinkDragFromInput = usePatchStore((state) => state.setLinkDragFromInput);
   const setNewLinkFromInput = usePatchStore((state) => state.setNewLinkFromInput);
@@ -36,6 +38,12 @@ const SynthNodeOutputs = memo(function SynthNodeOutputs(props) {
     setNewLinkFromInput(spec);
     endDragLinkFromInput();
   }
+  
+  const handleDoubleClick = (outputNodeId, outputId) => {
+    // Remove a node link
+    // event.stopPropagation();
+    removeLinksFromOutput(outputNodeId, outputId);
+  }
 
   let py = nodeVOffset;
 
@@ -56,17 +64,21 @@ const SynthNodeOutputs = memo(function SynthNodeOutputs(props) {
         const loosePosX = synthNode.x;
         const loosePosY = synthNode.y + i.posY;
 
+        const activeXLeft = 1;
+        const activeXRight = 1;
+        const activeYTop = 0.6;
+        const activeYBottom = 0.6;
+
         return (
-          <g key={i.id}>
+          <g key={i.id} className="terminal-group">
             <title>{i.description}</title>
-            <circle
-              className={classCSSOutline}
-              cx={asRem(synthNode.x + synthNode.w)}
-              cy={asRem(synthNode.y + py)}
-              r={remAsPx(0.4) + 2}
-            />
-            <circle
-              className={classCSS}
+            <rect
+              className="drag-zone"
+              x={asRem(synthNode.x + synthNode.w - dragLeft)}
+              y={asRem(synthNode.y + py - dragTop)}
+              width={asRem(dragLeft + dragRight)}
+              height={asRem(dragTop + dragBottom)}
+              onDoubleClick={(e) => handleDoubleClick(synthNode.id, i.id)}
               onMouseMove={(e) => handleMouseMove(e, {
                 targetNode: synthNode,
                 targetOutput: i,
@@ -93,6 +105,15 @@ const SynthNodeOutputs = memo(function SynthNodeOutputs(props) {
                 prevPageX: pxAsRem(e.pageX),
                 prevPageY: pxAsRem(e.pageY),
               })}
+            />
+            <circle
+              className={classCSSOutline}
+              cx={asRem(synthNode.x + synthNode.w)}
+              cy={asRem(synthNode.y + py)}
+              r={remAsPx(0.4) + 2}
+            />
+            <circle
+              className={classCSS}
               cx={asRem(synthNode.x + synthNode.w)}
               cy={asRem(synthNode.y + py)}
               r={asRem(0.4)}

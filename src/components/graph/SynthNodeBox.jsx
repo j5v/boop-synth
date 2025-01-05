@@ -33,7 +33,6 @@ function SynthNodeBox(props) {
     } else {
       if (!synthNode.selected) selectExclusiveNode(synthNode.id);
     }
-
   };
   
   const handleClick = (event) => {
@@ -50,6 +49,7 @@ function SynthNodeBox(props) {
     highlightExclusiveNode();
   };
   
+  // Presentation
 
   const classNames = ['SynthNodeBox'];
   if (synthNode.selected) classNames.push('selected');

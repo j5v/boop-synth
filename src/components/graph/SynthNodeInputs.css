@@ -9,6 +9,7 @@
 }
 .terminal {
   stroke: none;
+  pointer-events: none;
 }
 
 .terminal.level {
@@ -36,13 +37,19 @@
 }
 
 .terminal.outline, .terminal.outline:hover {
+  pointer-events: none;
   fill: #000;
 }
 
-.terminal:hover {
-  fill: #fff;
+.terminal-group:hover .drag-zone {
+  fill: #efe;
 }
 
+.drag-zone {
+  fill: none; /* hsla(220, 80%, 60%, 0.2); */
+  stroke: none; /* hsla(220, 80%, 60%, 0.5); */
+  pointer-events: all;
+}
 
 @media (prefers-color-scheme: light) {
   .terminal-input-label, .terminal-output-label {
@@ -75,5 +82,9 @@
   .terminal:hover {
     fill: #000;
   }
+  .terminal-group:hover .drag-zone {
+    fill: #030;
+  }
+  
  
 }
