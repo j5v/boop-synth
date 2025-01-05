@@ -17,7 +17,7 @@ const getItemById = (list, id) => { // find property by id, in object
 const defaultOutputSpec = {
   // TODO: refactor these into Output node and Performance parmaters
   sampleRate: 44100, // sps
-  duration: 1.0, // seconds
+  duration: 0.5, // seconds
   channels: 1,
   filenameRoot: 'boop - output',
   sustainReleaseTime: 400, // ms

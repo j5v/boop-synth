@@ -8,8 +8,9 @@ function SynthNodes() {
   const nodes = usePatchStore.getState().nodes;
 
   return (
-    nodes.map(node => (
-      <SynthNode key={node.id} synthNode={node} />
+    nodes.toReversed().map(node => (
+        // toReversed() means we draw the last node first, good for new nodes at the start of the list.
+        <SynthNode key={node.id} synthNode={node} />
     ))
   )
 }

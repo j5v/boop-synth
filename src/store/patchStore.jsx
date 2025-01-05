@@ -258,7 +258,7 @@ const usePatchStore = create(
         ];
 
         newNodes.forEach(n => {
-          delete n.clonedTo;
+          delete n.clonedToId;
         })
 
         return {

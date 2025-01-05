@@ -25,7 +25,6 @@ function SynthGraph() {
   const [draggingNode, setDraggingNode] = useState(false);
   const [showDraggingNode, setShowDraggingNode] = useState(false);
 
-
   // Drag Link from Input
 
   const setLinkDragFromInput = usePatchStore(
@@ -134,7 +133,17 @@ function SynthGraph() {
     event.stopPropagation();
   };
 
+
+  // Keyboard shortcuts
   
+  const removeSelectedNodes = usePatchStore((state) => state.removeSelectedNodes)
+  const handleKeyDown = (event) => {
+    if (event.key == 'Delete') {
+      removeSelectedNodes();
+    }
+  };
+
+
   // mouse event handlers
 
   const handleMouseDown = (event) => doDragNodeBegin(event);
@@ -156,6 +165,8 @@ function SynthGraph() {
       onMouseDown={handleMouseDown}
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
+      onKeyDown={handleKeyDown}
+      tabIndex={0}      
     >
       <SynthNodes />
       <SynthNodeLinks />
