@@ -2,7 +2,6 @@
   display: flex;
   flex-direction: row;
   align-items: baseline;
-  gap: 1rem;
   padding: 0.15rem 0.6rem 0.15rem 1.0rem;
   background-color: hsl(0, 0%, 18%);
 }
