@@ -269,7 +269,7 @@ const synthNodeTypes = {
   ADD: {
     id: 4,
     nameShort: '+',
-    name: 'Add',
+    name: 'Add/Mix',
     inputs: [
       {
         id: 1,
@@ -302,6 +302,14 @@ const synthNodeTypes = {
         intentId: synthNodeTerminalIntents.LEVEL.id,
         exposed: false,
         defaultValue: 0,
+      },
+      {
+        id: 5,
+        displayName: 'Gain',
+        description: 'Gain for the mixed signal. Less than 1.0 is quieter, more than 1.0 is louder',
+        intentId: synthNodeTerminalIntents.LEVEL.id,
+        exposed: false,
+        defaultValue: 1.0,
       },
     ],
     outputs: [
@@ -569,9 +577,6 @@ const generate = function (
   const TAU = PI * 2;
 
   const phaseIncNormalized = 2 * Math.PI / sampleRate;
-  const sampleCountToSeconds = 1 / sampleRate;
-  const AttackNormalize = 1 + sampleRate / 44100;
-  const sampleCountToS = 1 / sampleRate;
   const sampleCountToMs = 1000 / sampleRate;
   const msToSampleCount = sampleRate * 0.001;
 
@@ -690,8 +695,8 @@ const generate = function (
         node.outputs[0].signal = signal1 * signal2 * signal3 * signal4 + postMix;
 
       } else if (node.nodeTypeId == synthNodeTypes.ADD.id) {
-        const [ signal1, signal2, signal3, signal4 ] = inputSignals;
-        node.outputs[0].signal = signal1 + signal2 + signal3 + signal4;
+        const [ signal1, signal2, signal3, signal4, gain ] = inputSignals;
+        node.outputs[0].signal = (signal1 + signal2 + signal3 + signal4) * gain;
 
       } else if (node.nodeTypeId == synthNodeTypes.SPLICE.id) {
         const [ pitch, signal1, signal2, switchPhase ] = inputSignals;
