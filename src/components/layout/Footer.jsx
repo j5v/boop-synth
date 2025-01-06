@@ -5,8 +5,8 @@ import FooterItem from './FooterItem.jsx'
 
 const Footer = memo(function Footer(props) {
 
-  const build = '0.0.1.008';
-  const buildDate = '2025-01-05';
+  const build = '0.0.1.009';
+  const buildDate = '2025-01-06';
 
   return (
     <div className="Footer">
@@ -15,7 +15,7 @@ const Footer = memo(function Footer(props) {
           <a href="http://johnvalentine.co.uk" target="_blank">j5v</a>
         </FooterItem>
         <FooterItem>
-          <span className="explained" title="Limited accessibility, no patch saving, no output parameter editing, some bugs known">Early access</span> version {build}, {buildDate}.
+          <span className="explained" title="Limited accessibility, no patch loading, no output parameter editing, some bugs known">Early access</span> version {build}, {buildDate}.
         </FooterItem>
       </>
     </div>

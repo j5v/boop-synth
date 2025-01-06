@@ -63,6 +63,13 @@ select:hover {
   padding: 0.2em 1em;
 }
 
+.expander {
+  float: right;
+  padding: 0.1rem 0.5rem 0.2rem 0.5rem;
+  margin-bottom: 0.1rem;
+  width: 2rem;
+}
+
 .button-bar {
   display: flex;
   gap: 0.4rem;

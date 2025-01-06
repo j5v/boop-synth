@@ -9,6 +9,7 @@
 }
 
 .SynthNodeProperties .node-title {
+  width: 100%;
   color: hsl(45, 100%, 50%);
 }
 

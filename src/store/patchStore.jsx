@@ -16,11 +16,25 @@ const usePatchStore = create(
   persist(
     (set, get) => ({
       nodes: defaultPatchNodes(),
-      perf: { ...defaultOutputSpec },
+      perf: {
+        ...defaultOutputSpec
+      },
+      prefs: {
+        hideNodeDescription: false, // in instpector panel
+      },
       ui: {
         draggingLinkFromInput: undefined,
         draggingLinkFromOutput: undefined,
       },
+
+      // UI Prefs
+      toggleHideNodeDescription: () => set((state) => ({
+        ...state,
+        prefs: {
+          ...state.prefs,
+          hideNodeDescription: !state.prefs.hideNodeDescription,
+        },
+      })),
 
       // Node input field changes
       setInputValue: (targetInput, value) => set((state) => {

@@ -168,6 +168,7 @@ function SynthGraph() {
     } else if (k == 'insert' || k == 'a') {
       event.preventDefault();
       document.getElementById('addNodeSelect').focus();
+      document.getElementById('addNodeSelect').click();
 
     } else if (k == 'enter') {
       document.getElementById('playAudioButton').click();
