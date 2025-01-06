@@ -8,6 +8,10 @@ function SynthGraphProperties() {
     const state = usePatchStore.getState();
     const patchName = state.name || 'untitled';
 
+    // clean up state
+    delete state.ui.draggingLinkFromOutput;
+    delete state.ui.draggingLinkFromInput;
+
     const stream = `data:text/json;charset=utf-8, ${encodeURIComponent(JSON.stringify(state))}`;
 
     saveAs(stream, patchName + '-boop-patch.json');

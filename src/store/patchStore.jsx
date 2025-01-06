@@ -149,17 +149,19 @@ const usePatchStore = create(
       }),
 
       endDragLinkFromInput: () => set((state) => {
-        return {
+        const newState = {
           ...state,
           ui: {
             ...structuredClone(state.ui),
-            draggingLinkFromInput: {},
+            draggingLinkFromInput: undefined,
           }
         };
+        delete newState.ui.draggingLinkFromInput; // test 1
+
+        return newState;
       }),
 
       setLinkDragFromOutput: (spec) => set((state) => {
-        // New
         // console.log('usePatchStore: setLinkDragFromOutput()', spec);
 
         const newDraggingLinkFromOutput = structuredClone(state.ui.draggingLinkFromOutput);
@@ -177,59 +179,64 @@ const usePatchStore = create(
       }),
 
       endDragLinkFromOutput: () => set((state) => {
-        // New
-        return {
+        const newState = {
           ...state,
           ui: {
             ...structuredClone(state.ui),
-            draggingLinkFromOutput: {},
+            draggingLinkFromOutput: undefined
           }
         };
+
+        return newState;
       }),
 
       setNewLinkFromInput: (spec) => set((state) => {
-        const { fromInput, fromNode } = state.ui.draggingLinkFromInput;
+        if (state.ui.draggingLinkFromInput) {
+          const { fromInput, fromNode } = state.ui.draggingLinkFromInput;
 
-        if (fromNode && fromInput) {
-          const newNodes = assignLink(state.nodes, {
-            inputNodeId: fromNode.id,
-            inputId: fromInput.id,
-            targetNodeId: spec.targetNode.id,
-            targetOutputId: spec.targetOutput.id,
-          });
+          if (fromNode && fromInput) {
+            const newNodes = assignLink(state.nodes, {
+              inputNodeId: fromNode.id,
+              inputId: fromInput.id,
+              targetNodeId: spec.targetNode.id,
+              targetOutputId: spec.targetOutput.id,
+            });
 
-          return {
-            ...state,
-            nodes: newNodes,
+            return {
+              ...state,
+              nodes: newNodes,
+            }
           }
-        } else {
-          // failed; do not modify
-          return { ...state }
         }
+
+        // failed; do not modify
+        return { ...state }
       }),
           
       setNewLinkFromOutput: (spec) => set((state) => {
-        // New
-        const { fromOutput, fromNode } = state.ui.draggingLinkFromOutput;
+        if (state.ui.draggingLinkFromOutput) {
 
-        if (fromNode && fromOutput) {
+          const { fromNode,fromOutput } = state.ui.draggingLinkFromOutput;
+          if (fromNode && fromOutput) {
 
-          const newNodes = assignLink(state.nodes, {
-            inputNodeId: spec.targetNode.id,
-            inputId: spec.targetInput.id,
-            targetNodeId: fromNode.id,
-            targetOutputId: fromOutput.id,
-          });
+            const newNodes = assignLink(state.nodes, {
+              inputNodeId: spec.targetNode.id,
+              inputId: spec.targetInput.id,
+              targetNodeId: fromNode.id,
+              targetOutputId: fromOutput.id,
+            });
 
-          return {
-            ...state,
-            nodes: newNodes,
-          };
-        } else {
-          // failed; do not modify
-          return { ...state }
+            return {
+              ...state,
+              nodes: newNodes,
+            };
+          }
         }
+
+        // failed; do not modify
+        return { ...state }
       }),
+
           
       // Node management
 
@@ -272,6 +279,8 @@ const usePatchStore = create(
           })
         })
 
+        state.nodes.forEach(n => { delete n.cloneToId; } );
+      
         const newNodes = [
           ...nodeClones, // insert at start of list, before the output node.
           ...structuredClone(state.nodes),

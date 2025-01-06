@@ -17,7 +17,7 @@ const SynthNodeInputs = memo(function SynthNodeInputs(props) {
   const setLinkDragFromOutput = usePatchStore((state) => state.setLinkDragFromOutput);
   const setNewLinkFromOutput = usePatchStore((state) => state.setNewLinkFromOutput);
   const endDragLinkFromOutput = usePatchStore((state) => state.endDragLinkFromOutput);
-  
+
   const removeLinkFromInput = usePatchStore((state) => state.removeLinkFromInput);
 
 
