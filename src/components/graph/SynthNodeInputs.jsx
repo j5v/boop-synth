@@ -12,14 +12,20 @@ const SynthNodeInputs = memo(function SynthNodeInputs(props) {
   const { inputs } = synthNode;
   const { nodeVSpacing, nodeVOffset, labelPadding, dragLeft, dragRight, dragTop, dragBottom } = nodeLayout;
 
-  const setLinkDragFromInput = usePatchStore((state) => state.setLinkDragFromInput);
-  
-  const setLinkDragFromOutput = usePatchStore((state) => state.setLinkDragFromOutput);
-  const setNewLinkFromOutput = usePatchStore((state) => state.setNewLinkFromOutput);
-  const endDragLinkFromOutput = usePatchStore((state) => state.endDragLinkFromOutput);
-
   const removeLinkFromInput = usePatchStore((state) => state.removeLinkFromInput);
+  
+  const setLinkDragFromInput = usePatchStore((state) => state.setLinkDragFromInput);
+  const setLinkDragFromOutput = usePatchStore((state) => state.setLinkDragFromOutput);
+  
+  const endDragLinkFromOutput = usePatchStore((state) => state.endDragLinkFromOutput);
+  const setNewLinkFromOutput = usePatchStore((state) => state.setNewLinkFromOutput);
+  
+  const draggingLinkFromInput = usePatchStore((state) => state.ui.draggingLinkFromInput);
+  const draggingLinkFromOutput = usePatchStore((state) => state.ui.draggingLinkFromOutput);
 
+  // const clearLinkDragging = usePatchStore((state) => state.clearLinkDragging);
+
+  // events
 
   const handleMouseDown = (event, spec) => {
     // Begin dragging a link from this Input to an Output
@@ -28,25 +34,25 @@ const SynthNodeInputs = memo(function SynthNodeInputs(props) {
   }
 
   const handleMouseMove = (event, spec) => {
-    // Continue dragging a link from an Input to this Output
+    // Continue dragging a link from an Output to this Input
     // TODO: check logic - is this needed? Snaps to node?
-    // event.stopPropagation();
-    setLinkDragFromOutput(spec);
+    if (draggingLinkFromOutput) {
+      setLinkDragFromOutput(spec);
+    }
   }
 
   const handleMouseUp = (event, spec) => {
     // Stop dragging a link from an Output to this Input
-    // event.stopPropagation();
-    setNewLinkFromOutput(spec);
-    endDragLinkFromOutput();
+    if (draggingLinkFromOutput)  {
+      setNewLinkFromOutput(spec);
+      endDragLinkFromOutput();
+    }
   }
 
   const handleDoubleClick = (targetInput) => {
     // Remove a node link
-    // event.stopPropagation();
     removeLinkFromInput(targetInput);
   }
-
 
   let py = nodeVOffset;
 
@@ -67,16 +73,12 @@ const SynthNodeInputs = memo(function SynthNodeInputs(props) {
         const loosePosX = synthNode.x;
         const loosePosY = synthNode.y + i.posY;
 
-        const activeXLeft = 1;
-        const activeXRight = 1;
-        const activeYTop = 0.6;
-        const activeYBottom = 0.6;
 
         return (
           <g key={i.id} className="terminal-group">
             <title>{i.description}</title>
             <rect
-              className="drag-zone"
+              className={`drag-zone${ draggingLinkFromInput ? ' hidden' : ''}`}
               x={asRem(synthNode.x - dragLeft)}
               y={asRem(synthNode.y + py - dragTop)}
               width={asRem(dragLeft + dragRight)}

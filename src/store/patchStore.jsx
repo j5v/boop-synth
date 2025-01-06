@@ -218,6 +218,11 @@ const usePatchStore = create(
 
             return {
               ...state,
+              ui: {
+                ...state.ui,
+                draggingLinkFromInput: undefined,
+                draggingLinkFromOutput: undefined,
+              },
               nodes: newNodes,
             }
           }
@@ -242,6 +247,11 @@ const usePatchStore = create(
 
             return {
               ...state,
+              ui: {
+                ...state.ui,
+                draggingLinkFromInput: undefined,
+                draggingLinkFromOutput: undefined,
+              },
               nodes: newNodes,
             };
           }
@@ -250,6 +260,15 @@ const usePatchStore = create(
         // failed; do not modify
         return { ...state }
       }),
+
+      clearLinkDragging: () => set((state) => ({
+        ...state,
+        ui: {
+          ...state.ui,
+          draggingLinkFromInput: undefined,
+          draggingLinkFromOutput: undefined,
+        },
+      })),
 
           
       // Node management

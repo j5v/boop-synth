@@ -42,7 +42,12 @@
 }
 
 .terminal-group:hover .drag-zone {
-  fill: #efe;
+  fill: hsla(120, 100%, 70%, 0.8);
+  filter: blur(5px);
+}
+.terminal-group:hover .drag-zone.hidden {
+  fill: none;
+  filter: none;
 }
 
 .drag-zone {

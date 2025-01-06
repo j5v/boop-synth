@@ -604,10 +604,10 @@ const generate = function (
       } else if (node.nodeTypeId == synthNodeTypes.ENVELOPE_WAHDSR.id) {
         const [ signal, waitTime, attackTime, holdTime, decayTime, sustainLevel, releaseTime, retrigger, amp ] = inputSignals;
 
-        if (i==0) {
-          console.log({sustainReleaseTime});
-          console.log({signal, waitTime, attackTime, holdTime, decayTime, sustainLevel, releaseTime, retrigger, amp});
-        }
+        // if (i==0) {
+        //   console.log({sustainReleaseTime});
+        //   console.log({signal, waitTime, attackTime, holdTime, decayTime, sustainLevel, releaseTime, retrigger, amp});
+        // }
 
         node.env = node.env || {
           stage: stagesWAHDSR.WAIT,

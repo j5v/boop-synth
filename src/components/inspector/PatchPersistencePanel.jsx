@@ -11,6 +11,7 @@ function SynthGraphProperties() {
     // clean up state
     delete state.ui.draggingLinkFromOutput;
     delete state.ui.draggingLinkFromInput;
+    state.comment = 'This format will change in future versions of the app. Some properties will move into in-app types. Some unset properties might be removed.';
 
     const stream = `data:text/json;charset=utf-8, ${encodeURIComponent(JSON.stringify(state))}`;
 

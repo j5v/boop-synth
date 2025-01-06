@@ -27,19 +27,12 @@ function SynthGraph() {
 
   // Drag Link from Input
 
-  const setLinkDragFromInput = usePatchStore(
-    (state) => state.setLinkDragFromInput
-  );
-  const endDragLinkFromInput = usePatchStore(
-    (state) => state.endDragLinkFromInput
-  );
-  const dragLinkFromInputState = usePatchStore(
-    (state) => state.ui.draggingLinkFromInput
-  );
+  const setLinkDragFromInput = usePatchStore((state) => state.setLinkDragFromInput);
+  const endDragLinkFromInput = usePatchStore((state) => state.endDragLinkFromInput);
+
+  const dragLinkFromInputState = usePatchStore((state) => state.ui.draggingLinkFromInput);
 
   const doDragLinkFromInput = (event) => {
-    // event.stopPropagation();
-
     const newPageX = pxAsRem(event.pageX);
     const newPageY = pxAsRem(event.pageY);
 
@@ -53,11 +46,11 @@ function SynthGraph() {
       prevPageX: newPageX,
       prevPageY: newPageY,
     }
-
     setLinkDragFromInput(spec);
   };
   
   const doEndDragLinkFromInput = (event) => {
+    // console.log('SynthGraph:doEndDragLinkFromInput()');
     endDragLinkFromInput();
     event.stopPropagation();
   };
@@ -65,15 +58,10 @@ function SynthGraph() {
 
   // Drag Link from Output
 
-  const setLinkDragFromOutput = usePatchStore(
-    (state) => state.setLinkDragFromOutput
-  );
-  const endDragLinkFromOutput = usePatchStore(
-    (state) => state.endDragLinkFromOutput
-  );
-  const dragLinkFromOutputState = usePatchStore(
-    (state) => state.ui.draggingLinkFromOutput
-  );
+  const setLinkDragFromOutput = usePatchStore((state) => state.setLinkDragFromOutput);
+  const endDragLinkFromOutput = usePatchStore((state) => state.endDragLinkFromOutput);
+
+  const dragLinkFromOutputState = usePatchStore((state) => state.ui.draggingLinkFromOutput);
 
   const handleOnClick = (event) => {
     // console.log('SynthNodeBox:handleClick() to unselect all nodes')
@@ -81,7 +69,7 @@ function SynthGraph() {
   }
 
   const doDragLinkFromOutput = (event) => {
-    // event.stopPropagation();
+    // console.log('SynthGraph:doDragLinkFromOutput()');
 
     const newPageX = pxAsRem(event.pageX);
     const newPageY = pxAsRem(event.pageY);
@@ -110,13 +98,13 @@ function SynthGraph() {
   // Drag node
 
   const dragSelectedNodes = usePatchStore((state) => state.dragSelectedNodes)
+  const clearLinkDragging = usePatchStore((state) => state.clearLinkDragging);
 
   const doDragNodeBegin = (event) => {
     setDraggingNode(true);
 
     setPrevDragPosX(pxAsRem(event.pageX));
     setPrevDragPosY(pxAsRem(event.pageY));
-    // console.log('mouseDown', posX, posY);
   };
 
   const doDragNode = (event) => {
@@ -192,7 +180,14 @@ function SynthGraph() {
     if (draggingNode) doDragNodeEnd(event);
     if (dragLinkFromInputState && dragLinkFromInputState.fromNode) doEndDragLinkFromInput(event);
     if (dragLinkFromOutputState && dragLinkFromOutputState.fromNode) doEndDragLinkFromOutput(event);
+    clearLinkDragging();
   }
+
+  // debugText
+  const debugText = (
+    false ? <text fill="white" x="2rem" y="0.8rem">Debug: {dragLinkFromInputState ? 'I': ''}{dragLinkFromOutputState ? 'O': ''}.</text> : <></>
+  )
+
   return (
     <svg
       role="list"
@@ -204,6 +199,7 @@ function SynthGraph() {
       onKeyDown={handleKeyDown}
       tabIndex={0}      
     >
+      {debugText}      
       <SynthNodes />
       <SynthNodeLinks />
       <SynthNodeLinkConnecting />
