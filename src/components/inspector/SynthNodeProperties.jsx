@@ -24,7 +24,7 @@ function SynthNodeProperties(props) {
       title={expanderTitle}
       onClick={toggleHideNodeDescription}
     >
-      {hideNodeDescription ? <>+</> : <>-</>}
+      {hideNodeDescription ? <>?</> : <>-?</>}
     </button>
   // end Expander
 
