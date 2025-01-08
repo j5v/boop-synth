@@ -430,9 +430,26 @@ const usePatchStore = create(
         ),
       })),
 
+      // Drag and drop patch file
+      importFileData: (importedJSON) => set((state) => {
+        const loadedState = JSON.parse(importedJSON);
+        delete loadedState.ui;
+        delete loadedState.prefs;
+
+        // todo: parse for boop version
+
+        console.log(loadedState);          
+
+        return {
+          ...state,
+          ...loadedState
+        }
+      }),
+
+
     })
-  
   ),
+
   {
     name: 'boop', // name of the item in the storage (must be unique)
     storage: createJSONStorage(() => localStorage), // (optional) by default, 'localStorage' is used
