@@ -1,3 +1,4 @@
+import { versions } from '../../lib/appInfo.js'
 import { memo } from 'react';
 
 import './Footer.css'
@@ -5,8 +6,8 @@ import FooterItem from './FooterItem.jsx'
 
 const Footer = memo(function Footer(props) {
 
-  const build = '0.0.1.012';
-  const buildDate = '2025-01-06';
+  const build = versions.appVersion;
+  const buildDate = versions.appDate;
 
   return (
     <div className="Footer">

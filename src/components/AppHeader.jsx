@@ -1,3 +1,4 @@
+import { names } from '../lib/appInfo.js'
 import Header from './layout/Header.jsx'
 import IconPlay from './generic/IconPlay.jsx'
 import IconDownload from './generic/IconDownload.jsx'
@@ -31,7 +32,7 @@ function AppHeader() {
 
   return (
     <Header context="button-bar">
-      <div className="title">boop</div>
+      <div className="title">{names.appName}</div>
 
       <div className="button-separator" />   
 
