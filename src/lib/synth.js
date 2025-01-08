@@ -590,6 +590,7 @@ const generate = function (
   const debugEnv = [];
 
   // Generate audio, one channel.
+  // TODO: modularize, so each type is a unit. Dynamic scan? Global and unique Id method?
   for (let i = 0; i < sampleFrames; i++) {
     for (let n in nodes) {
       const node = nodes[n];
@@ -761,6 +762,7 @@ const generate = function (
       const node = nodes[nodeIndex];
       node.nodeTypeId = parseInt(node.nodeTypeId); // TODO: test if needed
       delete node.env;
+      delete node.phase;
       for (let inputIndex in node.inputs) {
         const input = node.inputs[inputIndex];
         if (input.link) {
