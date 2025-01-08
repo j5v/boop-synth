@@ -430,15 +430,16 @@ const usePatchStore = create(
         ),
       })),
 
-      // Drag and drop patch file
+      // Data mutation for 'drag and drop patch file'
+
       importFileData: (importedJSON) => set((state) => {
         const loadedState = JSON.parse(importedJSON);
         delete loadedState.ui;
         delete loadedState.prefs;
 
-        // todo: parse for boop version
+        // TODO: parse for boop version
 
-        console.log(loadedState);          
+        // console.log(loadedState);          
 
         return {
           ...state,
