@@ -5,8 +5,11 @@ import Header from '../layout/Header.jsx'
 
 function SynthGraphProperties() {
 
+  const state = usePatchStore.getState();
+  const importExpanded = usePatchStore((state) => state.ui.importExpanded);
+  const setImportExpanded = usePatchStore((state) => state.setImportExpanded);
+
   const handleExport = () => {
-    const state = usePatchStore.getState();
     const patchName = state.name || 'untitled';
 
     // clean up state
@@ -24,7 +27,9 @@ function SynthGraphProperties() {
     saveAs(stream, patchName + '-boop-patch.json');
   }
 
-  const handleImport = () => {
+  const handleToggleImportExpand = () => {
+    setImportExpanded(!importExpanded);
+    // document.getElementById('file-upload').click();
   }
 
   return (
@@ -35,11 +40,11 @@ function SynthGraphProperties() {
         title="Export patch"
       >Export</button>
       <button
-        className="" 
-        onClick={handleImport}
-        title="Import patch"
-        disabled
-      >Import</button>
+        className="custom-file-upload"
+        onClick={handleToggleImportExpand}
+      >
+        Import [{importExpanded ? '-': '+'}]
+      </button>
     </div>
   )
 }

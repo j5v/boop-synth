@@ -53,13 +53,25 @@ select:hover {
   border: 1px solid hsl(240, 50%, 60%)
 }
 
+input[type="file"] {
+  text-align: center;
+}
+.custom-file-upload {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 1rem 0rem;
+  cursor: pointer;
+}
+
 .Header .button-bar-compact {
   display: flex;
   gap: 0.4rem;
   padding: 0.2rem 0.1rem 0.3rem 1rem;
   align-items: baseline;
 }
-.Header .button-bar-compact button {
+.Header .button-bar-compact button, .custom-file-upload {
   padding: 0.2em 1em;
 }
 
@@ -164,6 +176,11 @@ button.icon {
   
   .text-as-icon {
     color: hsl(0, 0%, 0%, 0.9);
+  }
+  
+  .custom-file-upload {
+    background-color: hsl(0, 0%, 75%);
+    color: hsl(0, 0%, 0%);
   }
   
     

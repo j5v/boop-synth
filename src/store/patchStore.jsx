@@ -36,6 +36,15 @@ const usePatchStore = create(
         },
       })),
 
+      // UI state
+      setImportExpanded: (value) => set((state) => ({
+        ...state,
+        ui: {
+          ...state.ui,
+          importExpanded: value,
+        },
+      })),
+
       // Node input field changes
       setInputValue: (targetInput, value) => set((state) => {
         targetInput.userValue = value; // re-displayed in form input, for editing again
