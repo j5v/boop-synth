@@ -2,6 +2,7 @@ import { names } from './appInfo.js'
 import { joinItems } from './utils.js'
 import { synthNodeTerminalIntents, getSynthNodeTerminalIntentsById } from '../lib/synthNodeIntents.js'
 import { synthNodeTypes, getNodeTypeById } from '../lib/synthNodeTypes.js'
+import { initEnvelope, processEnvelope } from '../lib/synthEnvelopeAnalog.js'
 import saveAs from '../lib/FileSaver.js'
 
 const BITDEPTH_16 = 0;
@@ -36,8 +37,6 @@ const defaultPatchNodes = () => {
   }
   return nodes;
 }
-
-
 
 
 // Links 
@@ -103,15 +102,6 @@ const getNodeDisplayTitle = node => {
 
 // processing
 
-const stagesWAHDSR = {
-  WAIT: 1,
-  ATTACK: 2,
-  HOLD: 3,
-  DECAY: 4,
-  SUSTAIN: 5,
-  RELEASE: 6
-}
-
 const generate = function (
   nodes,
   { sampleRate, duration, freq, sustainReleaseTime = 0 }
@@ -122,15 +112,11 @@ const generate = function (
   const TAU = PI * 2;
 
   const phaseIncNormalized = 2 * Math.PI / sampleRate;
-  const sampleCountToMs = 1000 / sampleRate;
-  const msToSampleCount = sampleRate * 0.001;
 
   const pitchUnit = 1; // 1 = octaves. Semitones would be 1/12
 
   initPatch(nodes);
   clearPeakMeters();
-
-  const debugEnv = [];
 
   // Generate audio, one channel.
   for (let i = 0; i < sampleFrames; i++) {
@@ -150,78 +136,8 @@ const generate = function (
         node.outputs[0].signal = valueOfInput(node.inputs[0]);
 
       } else if (node.nodeTypeId == synthNodeTypes.ENVELOPE_WAHDSR.id) {
-        const [ signal, waitTime, attackTime, holdTime, decayTime, sustainLevel, releaseTime, retrigger, amp ] = inputSignals;
-
         const env = node.env;
-
-        // retrigger
-        env.previousTrigger = env.previousTrigger || 0;
-        if (env.previousTrigger <= 0 && retrigger > 0) {
-          env.startTime = env.timeMs;
-          env.stage = stagesWAHDSR.WAIT;
-        }
-
-        // default value, before stages
-        env.outValue = 0;
-
-        switch (env.stage) {
-          // For zero-duration stages, flow can slip into the next stage on the same iteration.
-          // Note selective use of `break`
-
-          case stagesWAHDSR.WAIT:
-            if (env.timeMs >= waitTime) {
-              env.stage = stagesWAHDSR.ATTACK;
-              env.startAttackTimeMs = env.timeMs;
-              env.previousEnvOutValue = Math.min(1, env.previousEnvOutValue);
-            } else break;
-
-          case stagesWAHDSR.ATTACK:
-            if (env.timeMs >= env.startAttackTimeMs + attackTime || env.timeMs >= sustainReleaseTime) {
-              env.stage = stagesWAHDSR.HOLD;
-              env.startHoldTimeMs = env.timeMs;
-            } else {
-              const attackTimeAsSamples = attackTime * msToSampleCount;
-              const logOf2 = Math.log(2);
-              const attackFactor = logOf2 / attackTimeAsSamples;
-              env.outValue = Math.min(1, env.previousEnvOutValue + (1 - env.previousEnvOutValue) * attackFactor * 8);
-              break;
-            }
-
-          case stagesWAHDSR.HOLD:
-            env.outValue = 1;
-            if (env.timeMs >= env.startHoldTimeMs + holdTime || env.timeMs >= sustainReleaseTime) {
-              env.stage = stagesWAHDSR.DECAY;
-              env.startDecayTimeMs = env.timeMs;
-            } else {
-              break;
-            }
-
-          case stagesWAHDSR.DECAY:
-            // `decayTime`: Time (millisceonds) the envelope takes to reach halfway towards `sustainLevel`.
-            // The envelope converges on, but does not reach, `sustainLevel`, so there is no SUSTAIN stage.
-            if (env.timeMs >= sustainReleaseTime) {
-              env.stage = stagesWAHDSR.RELEASE;
-            } else {
-              const decayTimeAsSamples = decayTime * msToSampleCount;
-              const decayFactor = 1 - Math.pow(0.5, 1 / decayTimeAsSamples);
-              env.outValue = env.previousEnvOutValue - (env.previousEnvOutValue - sustainLevel) * decayFactor;
-              break;
-            }
-
-          case stagesWAHDSR.RELEASE:
-            const releaseTimeAsSamples = releaseTime * msToSampleCount;
-            const releaseFactor = Math.pow(0.5, 1 / releaseTimeAsSamples);
-            env.outValue = env.previousEnvOutValue * releaseFactor;
-            break;
-        }
-
-        env.previousEnvOutValue = env.outValue;
-        env.previousTrigger = env.retrigger;
-
-        env.outValue *= signal * amp;
-
-        env.timeMs += sampleCountToMs;
-
+        processEnvelope(env, inputSignals, sampleRate); // mutates env
         node.outputs[0].signal = env.outValue;
 
       } else if (node.nodeTypeId == synthNodeTypes.RING.id) {
@@ -310,12 +226,7 @@ const generate = function (
     for (let n in nodes) {
       const node = nodes[n];
       if (node.nodeTypeId == synthNodeTypes.ENVELOPE_WAHDSR.id) {
-        node.env = node.env || {
-          stage: stagesWAHDSR.WAIT,
-          timeMs: 0,
-          startTime: 0,
-          previousEnvOutValue: 0,
-        };
+        initEnvelope(node, sustainReleaseTime);
       }
     }
   }
