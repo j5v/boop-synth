@@ -356,7 +356,6 @@ const synthNodeTypes = {
         intentId: synthNodeTerminalIntents.TRIGGER.id,
         exposed: false,
         defaultValue: 0,
-        placeholder: true,
       },
       {
         id: 9,

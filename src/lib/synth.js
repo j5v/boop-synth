@@ -1,4 +1,5 @@
-import { joinItems } from '../lib/utils.js'
+import { names } from './appInfo.js'
+import { joinItems } from './utils.js'
 import { synthNodeTerminalIntents, getSynthNodeTerminalIntentsById } from '../lib/synthNodeIntents.js'
 import { synthNodeTypes, getNodeTypeById } from '../lib/synthNodeTypes.js'
 import saveAs from '../lib/FileSaver.js'
@@ -10,7 +11,7 @@ const defaultOutputSpec = {
   sampleRate: 44100, // sps
   duration: 0.5, // seconds
   channels: 1,
-  filenameRoot: 'boop - output',
+  filenameRoot: `${names.appName} - output`,
   sustainReleaseTime: 400, // ms
   depth: BITDEPTH_16,
 
@@ -126,21 +127,17 @@ const generate = function (
 
   const pitchUnit = 1; // 1 = octaves. Semitones would be 1/12
 
-  // console.log('generate()');
-  // console.table(nodes);
   initPatch(nodes);
   clearPeakMeters();
 
   const debugEnv = [];
 
   // Generate audio, one channel.
-  // TODO: modularize, so each type is a unit. Dynamic scan? Global and unique Id method?
   for (let i = 0; i < sampleFrames; i++) {
     for (let n in nodes) {
       const node = nodes[n];
       const inputSignals = valuesOfInputs(node);
 
-      // note: `switch (node.nodeTypeId) {}` doesn't work
       if (node.nodeTypeId == synthNodeTypes.GEN_FM.id) {
         const [ source, pitch, phaseMod, freqMod, postMix ] = inputSignals;
         const frequency = freq * (pitch == 0 ? 1 : Math.pow(2, pitch * pitchUnit));
@@ -155,26 +152,17 @@ const generate = function (
       } else if (node.nodeTypeId == synthNodeTypes.ENVELOPE_WAHDSR.id) {
         const [ signal, waitTime, attackTime, holdTime, decayTime, sustainLevel, releaseTime, retrigger, amp ] = inputSignals;
 
-        // if (i==0) {
-        //   console.log({sustainReleaseTime});
-        //   console.log({signal, waitTime, attackTime, holdTime, decayTime, sustainLevel, releaseTime, retrigger, amp});
-        // }
-
-        node.env = node.env || {
-          stage: stagesWAHDSR.WAIT,
-          timeMs: 0,
-          startTime: 0,
-          previousEnvOutValue: 0,
-        };
         const env = node.env;
 
-        env.outValue = 0;
-
+        // retrigger
         env.previousTrigger = env.previousTrigger || 0;
         if (env.previousTrigger <= 0 && retrigger > 0) {
           env.startTime = env.timeMs;
           env.stage = stagesWAHDSR.WAIT;
         }
+
+        // default value, before stages
+        env.outValue = 0;
 
         switch (env.stage) {
           // For zero-duration stages, flow can slip into the next stage on the same iteration.
@@ -228,10 +216,10 @@ const generate = function (
         }
 
         env.previousEnvOutValue = env.outValue;
+        env.previousTrigger = env.retrigger;
 
         env.outValue *= signal * amp;
 
-        env.previousTrigger = env.retrigger;
         env.timeMs += sampleCountToMs;
 
         node.outputs[0].signal = env.outValue;
@@ -319,6 +307,17 @@ const generate = function (
 
   function initPatch() {
     cleanPatch();
+    for (let n in nodes) {
+      const node = nodes[n];
+      if (node.nodeTypeId == synthNodeTypes.ENVELOPE_WAHDSR.id) {
+        node.env = node.env || {
+          stage: stagesWAHDSR.WAIT,
+          timeMs: 0,
+          startTime: 0,
+          previousEnvOutValue: 0,
+        };
+      }
+    }
   }
 
   function finishPatch() {
