@@ -20,6 +20,19 @@ const newCreator = ({ defaultObject }) => {
   }
 }
 
+// Generic object helpers
+
+const getItemById = (list, id) => { // find property by id, in object
+  let foundItem;
+  for (let key in list) {
+    if (list[key].id == id) {
+      foundItem = list[key];
+      break;
+    }
+  }
+  return foundItem;
+}
+
 
 // Conversions: browser units
 
@@ -72,6 +85,9 @@ const cleanNodeLinks = (nodes) => {
 
 export {
   newCreator,
+
+  getItemById,
+
   asRem,
   remAsPx,
   pxAsRem,
