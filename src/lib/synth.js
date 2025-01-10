@@ -124,8 +124,9 @@ const generate = function (
     for (let n in nodes) {
       const node = nodes[n];
       const inputSignals = valuesOfInputs(node);
+      const nodeTypeId = node.nodeTypeId;
 
-      if (node.nodeTypeId == synthNodeTypes.GEN_FM.id) {
+      if (nodeTypeId == synthNodeTypes.GEN_FM.id) {
         const [ source, pitch, phaseMod, freqMod, postMix ] = inputSignals;
         const frequency = freq * (pitch == 0 ? 1 : Math.pow(2, pitch * pitchUnit));
 
@@ -133,23 +134,23 @@ const generate = function (
         const ph = node.phase + phaseMod * TAU;
         node.outputs[0].signal = Math.sin(ph) + postMix;
 
-      } else if (node.nodeTypeId == synthNodeTypes.NUMBER.id) {
+      } else if (nodeTypeId == synthNodeTypes.NUMBER.id) {
         node.outputs[0].signal = valueOfInput(node.inputs[0]);
 
-      } else if (node.nodeTypeId == synthNodeTypes.ENVELOPE_WAHDSR.id) {
+      } else if (nodeTypeId == synthNodeTypes.ENVELOPE_WAHDSR.id) {
         const env = node.env;
         processEnvelope(env, inputSignals, sampleRate); // mutates env
         node.outputs[0].signal = env.outValue;
 
-      } else if (node.nodeTypeId == synthNodeTypes.RING.id) {
+      } else if (nodeTypeId == synthNodeTypes.RING.id) {
         const [ signal1, signal2, signal3, signal4, postMix ] = inputSignals;
         node.outputs[0].signal = signal1 * signal2 * signal3 * signal4 + postMix;
 
-      } else if (node.nodeTypeId == synthNodeTypes.ADD.id) {
+      } else if (nodeTypeId == synthNodeTypes.ADD.id) {
         const [ signal1, signal2, signal3, signal4, gain ] = inputSignals;
         node.outputs[0].signal = (signal1 + signal2 + signal3 + signal4) * gain;
 
-      } else if (node.nodeTypeId == synthNodeTypes.SPLICE.id) {
+      } else if (nodeTypeId == synthNodeTypes.SPLICE.id) {
         const [ pitch, signal1, signal2, switchPhase ] = inputSignals;
         
         const frequency = freq * (pitch == 0 ? 1 : Math.pow(2, pitch * pitchUnit));
@@ -158,7 +159,7 @@ const generate = function (
 
         node.outputs[0].signal = (switchPhase > phasePos) ? signal1 : signal2;
 
-      } else if (node.nodeTypeId == synthNodeTypes.OUTPUT.id) {
+      } else if (nodeTypeId == synthNodeTypes.OUTPUT.id) {
         const [ signal, gain ] = inputSignals;
         const output = signal * gain;
         node.peakMeter = Math.max(node.peakMeter || -Infinity, Math.abs(output));

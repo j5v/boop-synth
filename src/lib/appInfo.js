@@ -3,7 +3,7 @@ const appInfo = {
   appVersion: '0.0.1.015',
   appDate: '2025-01-09',
   saveVersion: '0.0.1',
-  specialVersionName: 'early access',
+  specialVersionName: 'Early access',
   specialVersionAbout: 'Limited accessibility, no output parameter editing, some bugs known',
   authorName: 'j5v',
   authorURL: 'http://johnvalentine.co.uk',
