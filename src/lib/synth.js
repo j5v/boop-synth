@@ -1,8 +1,8 @@
 import { appInfo } from './appInfo.js'
-import { joinItems } from './utils.js'
 import { synthNodeTerminalIntents, getSynthNodeTerminalIntentsById } from '../lib/synthNodeIntents.js'
 import { synthNodeTypes, getNodeTypeById } from '../lib/synthNodeTypes.js'
 import { initEnvelope, processEnvelope } from '../lib/synthEnvelopeAnalog.js'
+import { joinItems, getNewId } from './utils.js'
 import saveAs from '../lib/FileSaver.js'
 
 const BITDEPTH_16 = 0;
@@ -68,15 +68,7 @@ const assignLink = (nodes, spec) => {
 // const newSynthNode = newCreator(defaultSynthNode)
 const newSynthNode = (nodes = [], nodeTypeId, overrides) => {
   const nodeType = getNodeTypeById(nodeTypeId);
-  let id = 1;
-  if (nodes.length > 0) {
-    const max = Math.max(...nodes.map((item) => item.id));
-    if (max < 0) {
-      id = 1;
-    } else {
-      id = max + 1;
-    }
-  }
+  const id = (nodes.length > 0) ? getNewId(nodes) : 1;
   
   if (nodeType) {
     return {

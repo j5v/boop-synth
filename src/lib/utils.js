@@ -15,6 +15,7 @@ const newCreator = ({ defaultObject }) => {
       ...structuredClone(options)
     }
   }
+
   return {
     newObject
   }
@@ -33,6 +34,7 @@ const getItemById = (list, id) => { // find property by id, in object
   return foundItem;
 }
 
+const getNewId = (arr) => Math.max(0, ...(arr || []).map((item) => item.id)) + 1;
 
 // Conversions: browser units
 
@@ -87,6 +89,7 @@ export {
   newCreator,
 
   getItemById,
+  getNewId,
 
   asRem,
   remAsPx,

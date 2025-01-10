@@ -104,7 +104,7 @@ const usePatchStore = create(
 
         // add padding
         const xPadding = 3;
-        const yPadding = 2;
+        const yPadding = 1;
 
         bounds.top -= yPadding; 
         bounds.bottom += yPadding; 
@@ -117,8 +117,8 @@ const usePatchStore = create(
         );
 
         const newView = {
-          ox: xPadding,
-          oy: yPadding,
+          panX: scale * -remAsPx(bounds.left),
+          panY: scale * -remAsPx(bounds.top),
           scale
         }
 
