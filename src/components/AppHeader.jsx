@@ -1,4 +1,4 @@
-import { names } from '../lib/appInfo.js'
+import { appInfo } from '../lib/appInfo.js'
 import Header from './layout/Header.jsx'
 import IconPlay from './generic/IconPlay.jsx'
 import IconDownload from './generic/IconDownload.jsx'
@@ -9,7 +9,6 @@ import { generateAndPlay, generateFile, synthNodeTypes } from '../lib/synth.js'
 import usePatchStore from '../store/patchStore.jsx'
 
 function AppHeader() {
-
 
   const perf = usePatchStore.getState().perf;
   const nodes = usePatchStore((state) => state.nodes)
@@ -44,7 +43,7 @@ function AppHeader() {
 
   return (
     <Header context="button-bar">
-      <div className="title">{names.appName}</div>
+      <div className="title">{appInfo.appName}</div>
 
       <div className="button-separator" />   
 
@@ -94,7 +93,7 @@ function AppHeader() {
 
       <div className="button-separator" />      
 
-      <a href="http://johnvalentine.co.uk?art=boop" target="_blank" title="Help"><button tabIndex={-1} className="text-as-icon link-cursor">?</button></a>
+      <a href={appInfo.helpURL} target="_blank" title="Help"><button tabIndex={-1} className="text-as-icon link-cursor">?</button></a>
       <button
           onClick={handleReset}
           title="Reset all nodes [R]"

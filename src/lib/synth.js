@@ -1,4 +1,4 @@
-import { names } from './appInfo.js'
+import { appInfo } from './appInfo.js'
 import { joinItems } from './utils.js'
 import { synthNodeTerminalIntents, getSynthNodeTerminalIntentsById } from '../lib/synthNodeIntents.js'
 import { synthNodeTypes, getNodeTypeById } from '../lib/synthNodeTypes.js'
@@ -12,7 +12,7 @@ const defaultOutputSpec = {
   sampleRate: 44100, // sps
   duration: 0.5, // seconds
   channels: 1,
-  filenameRoot: `${names.appName} - output`,
+  filenameRoot: `${appInfo.appName} - output`,
   sustainReleaseTime: 400, // ms
   depth: BITDEPTH_16,
 

@@ -1,4 +1,4 @@
-import { versions, names } from '../../lib/appInfo.js'
+import { appInfo } from '../../lib/appInfo.js'
 import saveAs from '../../lib/FileSaver.js'
 import usePatchStore from '../../store/patchStore.jsx'
 
@@ -16,9 +16,9 @@ function SynthGraphProperties() {
     delete state.ui.draggingLinkFromInput;
 
     // add some metadata
-    state.appName = names.appName;
-    state.appVersion = versions.appVersion;
-    state.saveVersion = versions.saveVersion;
+    state.appName = appInfo.appName;
+    state.appVersion = appInfo.appVersion;
+    state.saveVersion = appInfo.saveVersion;
     state.comment = 'This format will change in future versions of the app. Some properties will move into in-app types. Some unset properties might be removed.';
 
     const stream = `data:text/json;charset=utf-8, ${encodeURIComponent(JSON.stringify(state))}`;
