@@ -384,7 +384,7 @@ const usePatchStore = create(
           ...state,
           nodes: [
             node, // insert at start of list, before the output node.
-            ...structuredClone(state.nodes),
+            ...structuredClone(state.nodes).map(n => ({...n, selected: false })),
           ],
         }
       }),
