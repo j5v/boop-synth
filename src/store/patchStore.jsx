@@ -9,8 +9,13 @@ import {
   synthNodeTerminalIntents,
 } from "../lib/synth.js";
 
-import { swapItemsInArray, cleanNodeLinks } from "../lib/utils.js";
+import { swapItemsInArray, cleanNodeLinks, remAsPx } from "../lib/utils.js";
 
+const defaultView = {
+  scale: 1,
+  panX: 0, // screen coords (logical pixels)
+  panY: 0 // screen coords (logical pixels)
+};
 
 const usePatchStore = create(
   persist(
@@ -25,6 +30,7 @@ const usePatchStore = create(
       ui: {
         draggingLinkFromInput: undefined,
         draggingLinkFromOutput: undefined,
+        view: defaultView
       },
 
       // UI Prefs
@@ -44,6 +50,90 @@ const usePatchStore = create(
           importExpanded: value,
         },
       })),
+
+      panView: (dx, dy) => set((state) => {
+        const view = state.ui.view || defaultView;
+
+        return {
+          ...state,
+          ui: {
+            ...state.ui,
+            view: {
+              ...view,
+              panX: view.panX + dx,
+              panY: view.panY + dy,
+            }
+          }
+        }
+
+      }),
+
+      setViewScale: (newScale, mousePos) => set((state) => {
+        const view = state.ui.view || defaultView;
+        const scaleFactor = (newScale - view.scale) / view.scale;
+        
+        return {
+          ...state,
+          ui: {
+            ...state.ui,
+            view: {
+              ...view,
+              scale: newScale,
+              panX: view.panX - ( mousePos.x - view.panX ) * scaleFactor,
+              panY: view.panY - ( mousePos.y - view.panY ) * scaleFactor,
+            }
+          }
+        }
+      }),
+
+      viewAll: (vw = 400, vh = 300) => set((state) => {
+
+        const bounds = {
+          top: 0,
+          right: 0,
+          bottom: 0,
+          left: 0,
+        }
+
+        state.nodes.forEach(node => {
+          bounds.top = Math.min(bounds.top, node.y);
+          bounds.bottom = Math.max(bounds.bottom, node.y + node.h);
+          bounds.left = Math.min(bounds.left, node.x);
+          bounds.right = Math.max(bounds.right, node.x + node.w);
+        })
+
+        // add padding
+        const xPadding = 3;
+        const yPadding = 2;
+
+        bounds.top -= yPadding; 
+        bounds.bottom += yPadding; 
+        bounds.left -= xPadding; 
+        bounds.right += xPadding; 
+
+        const scale = Math.min(
+          vw / remAsPx(bounds.right - bounds.left),
+          vh / remAsPx(bounds.bottom - bounds.top)
+        );
+
+        const newView = {
+          ox: xPadding,
+          oy: yPadding,
+          scale
+        }
+
+        return {
+          ...state,
+          ui: {
+            ...state.ui,
+            view: {
+              ...state.ui.view,
+              ...defaultView,
+              ...newView
+            }
+          },
+        }
+      }),
 
       // Node input field changes
       setInputValue: (targetInput, value) => set((state) => {

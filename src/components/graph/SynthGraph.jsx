@@ -4,7 +4,7 @@ import usePatchStore from '../../store/patchStore.jsx'
 import SynthNodes from './SynthNodes.jsx'
 import SynthNodeLinks from './SynthNodeLinks.jsx'
 import SynthNodeLinkConnecting from './SynthNodeLinkConnecting.jsx'
-import { pxAsRem } from '../../lib/utils.js'
+import { pxAsRem, remAsPx } from '../../lib/utils.js'
 
 /* SynthGraph:
   - Contains the node graph and Links.
@@ -24,6 +24,45 @@ function SynthGraph() {
   const [prevDragPosY, setPrevDragPosY] = useState(0);
   const [draggingNode, setDraggingNode] = useState(false);
   const [showDraggingNode, setShowDraggingNode] = useState(false);
+  
+  const [mousePos, setMousePos] = useState({x: 0, y: 0});
+
+
+  // Pan and zoom
+
+  const [panning, setPanning] = useState(false);
+  const view = usePatchStore((state) => state.ui.view) || {
+    scale: 1,
+    panX: 0,
+    panY: 0
+  };
+
+  const panView = usePatchStore((state) => state.panView)
+
+  const doPanView = (event) => {
+    const xDiffRem = event.clientX - prevDragPosX;
+    const yDiffRem = event.clientY - prevDragPosY;
+
+    setPrevDragPosX(event.clientX);
+    setPrevDragPosY(event.clientY);
+
+    panView(xDiffRem, yDiffRem);
+  }
+
+  const viewAll = usePatchStore((state) => state.viewAll)
+
+  const handleViewAll = () => {
+    // Todo: a safer way of getting the SVG dimensions
+    const svgElement = document.getElementById('node-graph');
+
+    if (svgElement) {
+      viewAll(svgElement.clientWidth, svgElement.clientHeight);
+    } else {
+      viewAll();
+    }
+  }
+
+
 
   // Drag Link from Input
 
@@ -41,8 +80,8 @@ function SynthGraph() {
 
     const spec = {
       ...structuredClone(dragLinkFromInputState),
-      loosePosX: dragLinkFromInputState.loosePosX + xDiffRem,  // change when implementing zoom and pan
-      loosePosY: dragLinkFromInputState.loosePosY + yDiffRem,
+      loosePosX: dragLinkFromInputState.loosePosX + xDiffRem / view.scale,  // change when implementing zoom and pan
+      loosePosY: dragLinkFromInputState.loosePosY + yDiffRem / view.scale,
       prevPageX: newPageX,
       prevPageY: newPageY,
     }
@@ -64,7 +103,7 @@ function SynthGraph() {
   const dragLinkFromOutputState = usePatchStore((state) => state.ui.draggingLinkFromOutput);
 
   const handleOnClick = (event) => {
-    // console.log('SynthNodeBox:handleClick() to unselect all nodes')
+    // console.log('SynthNodeBpanX:handleClick() to unselect all nodes')
     selectThisNode();
   }
 
@@ -79,8 +118,8 @@ function SynthGraph() {
 
     const spec = {
       ...structuredClone(dragLinkFromOutputState),
-      loosePosX: dragLinkFromOutputState.loosePosX + xDiffRem,  // change when implementing zoom and pan
-      loosePosY: dragLinkFromOutputState.loosePosY + yDiffRem,
+      loosePosX: dragLinkFromOutputState.loosePosX + xDiffRem / view.scale,  // change when implementing zoom and pan
+      loosePosY: dragLinkFromOutputState.loosePosY + yDiffRem / view.scale,
       prevPageX: newPageX,
       prevPageY: newPageY,
     }
@@ -111,10 +150,10 @@ function SynthGraph() {
     setShowDraggingNode(true);
     event.stopPropagation();
 
-    const xDiffRem = pxAsRem(event.pageX) - prevDragPosX;
-    const yDiffRem = pxAsRem(event.pageY) - prevDragPosY;
+    const xDiffRem = (pxAsRem(event.pageX) - prevDragPosX) / view.scale;
+    const yDiffRem = (pxAsRem(event.pageY) - prevDragPosY) / view.scale;
 
-    setPrevDragPosX(pxAsRem(event.pageX)); // change when implementing zoom and pan
+    setPrevDragPosX(pxAsRem(event.pageX));
     setPrevDragPosY(pxAsRem(event.pageY));
 
     dragSelectedNodes(xDiffRem, yDiffRem);
@@ -132,6 +171,8 @@ function SynthGraph() {
   const removeSelectedNodes = usePatchStore((state) => state.removeSelectedNodes)
   const duplicateSelectedNodes = usePatchStore((state) => state.duplicateSelectedNodes)
   const selectAllNodes = usePatchStore((state) => state.selectAllNodes)
+  const reset = usePatchStore((state) => state.reset)
+  const setViewScale = usePatchStore((state) => state.setViewScale)
 
   const handleKeyDown = (event) => {
     const k = event.key.toLowerCase();
@@ -163,33 +204,80 @@ function SynthGraph() {
       event.stopPropagation();
       event.preventDefault();
 
+    } else if (k == 'r') {
+      if (window.confirm('Continue to reset? This will load the default starting patch.')) reset();
+      event.stopPropagation();
+      event.preventDefault();
+
+    } else if (k == '0' && event.ctrlKey == true) {
+      handleViewAll();
+      event.preventDefault();
+      
     }
-    
+  
   };
 
 
-  // mouse event handlers
+  // Mouse event handlers
 
-  const handleMouseDown = (event) => doDragNodeBegin(event);
+  const MIDDLE_BUTTON = 1;
+  
+  const handleMouseDown = (event) => {
+    if (event.button == MIDDLE_BUTTON) {
+      setPrevDragPosX(event.clientX);
+      setPrevDragPosY(event.clientY);
+      setPanning(true);
+    } else {
+      doDragNodeBegin(event);
+    }
+  }
   const handleMouseMove = (event) => {
+    // store SVG mouse position for for handleWheel
+    const svgElement = document.getElementById('node-graph');
+    if (svgElement) {
+      const svgBounds = svgElement.getBoundingClientRect();
+
+      setMousePos({
+        x: event.clientX - svgBounds.left - svgElement.clientLeft,
+        y: event.clientY - svgBounds.top - svgElement.clientTop
+      });
+    };
+
+    if (panning) doPanView(event);
     if (draggingNode) doDragNode(event);
     if (dragLinkFromInputState && dragLinkFromInputState.fromNode) doDragLinkFromInput(event);
     if (dragLinkFromOutputState && dragLinkFromOutputState.fromNode) doDragLinkFromOutput(event);
   }
   const handleMouseUp = (event) => {
-    if (draggingNode) doDragNodeEnd(event);
-    if (dragLinkFromInputState && dragLinkFromInputState.fromNode) doEndDragLinkFromInput(event);
-    if (dragLinkFromOutputState && dragLinkFromOutputState.fromNode) doEndDragLinkFromOutput(event);
-    clearLinkDragging();
+    if (event.button == MIDDLE_BUTTON) {
+      setPanning(false);
+    } else {
+      if (draggingNode) doDragNodeEnd(event);
+      if (dragLinkFromInputState && dragLinkFromInputState.fromNode) doEndDragLinkFromInput(event);
+      if (dragLinkFromOutputState && dragLinkFromOutputState.fromNode) doEndDragLinkFromOutput(event);
+      clearLinkDragging();
+    }
   }
-
+  const handleWheel = (event) => {
+    setViewScale(
+      view.scale * Math.pow(2, -(event.deltaY || 0) * 0.001),
+      mousePos || { x:0, y:0 } // This default { x, y } is not ideal.
+    );
+  }
+  
   // debugText
-  const debugText = (
-    false ? <text fill="white" x="2rem" y="0.8rem">Debug: {dragLinkFromInputState ? 'I': ''}{dragLinkFromOutputState ? 'O': ''}.</text> : <></>
-  )
+  
+  const debugText = false ? 
+    <text fill="white" fontSize="10" x="2rem" y="1.25rem">
+      Debug: mx: {mousePos.x}, my: {mousePos.y}, view.scale:{view.scale.toFixed(3)}, view.panX:{view.panX.toFixed(2)}, view.panY:{view.panY.toFixed(2)}.
+    </text>
+    : <></>
+
+  const debugCoords = false ? <circle fill="#888" cx="0" cy="0" r="1" /> : <></>;
 
   return (
     <svg
+      id="node-graph"
       role="list"
       className={'SynthGraph' + (showDraggingNode ? ' dragging' : '')}
       onClick={handleOnClick /* unselects all */}
@@ -197,12 +285,20 @@ function SynthGraph() {
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
       onKeyDown={handleKeyDown}
-      tabIndex={0}      
+      onWheel={handleWheel}
+      tabIndex={0}
     >
-      {debugText}      
-      <SynthNodes />
-      <SynthNodeLinks />
-      <SynthNodeLinkConnecting />
+      <g transform={`
+        translate(${(view.panX || 0)} ${(view.panY || 0)})
+        scale(${view.scale || 1})
+        `}
+      >
+        <SynthNodes />
+        <SynthNodeLinks />
+        <SynthNodeLinkConnecting />
+        {debugCoords}  
+        </g>
+      {debugText}
     </svg>
   )
 }

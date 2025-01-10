@@ -1,5 +1,5 @@
 const versions = {
-  appVersion: '0.0.1.014',
+  appVersion: '0.0.1.015',
   appDate: '2025-01-09',
   saveVersion: '0.0.1',
 }

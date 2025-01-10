@@ -1,7 +1,6 @@
 import { versions, names } from '../../lib/appInfo.js'
 import saveAs from '../../lib/FileSaver.js'
 import usePatchStore from '../../store/patchStore.jsx'
-import Header from '../layout/Header.jsx'
 
 function SynthGraphProperties() {
 
@@ -42,6 +41,7 @@ function SynthGraphProperties() {
       <button
         className="custom-file-upload"
         onClick={handleToggleImportExpand}
+        title="Show importer, as the next control"
       >
         Import [{importExpanded ? '-': '+'}]
       </button>

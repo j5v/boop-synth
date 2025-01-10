@@ -17,6 +17,7 @@ function AppHeader() {
   const addNode = usePatchStore((state) => state.addNode)
   const removeSelectedNodes = usePatchStore((state) => state.removeSelectedNodes)
   const duplicateSelectedNodes = usePatchStore((state) => state.duplicateSelectedNodes)
+  const viewAll = usePatchStore((state) => state.viewAll)
   const reset = usePatchStore((state) => state.reset)
 
   const handleReset = (event) => {
@@ -26,6 +27,17 @@ function AppHeader() {
   const handleSelect = (event) => {
     addNode(event.target.value);
     event.target.value = '';
+  }
+
+  const handleZoomAll = () => {
+    // Todo: a safer way of getting the SVG dimensions
+    const svgElement = document.getElementById('node-graph');
+
+    if (svgElement) {
+      viewAll(svgElement.clientWidth, svgElement.clientHeight);
+    } else {
+      viewAll();
+    }
   }
 
   const noNodesSelected = nodes.filter(n => n.selected).length == 0;
@@ -75,10 +87,17 @@ function AppHeader() {
 
       <div className="button-separator" />      
 
+      <button
+          onClick={handleZoomAll}
+          title="Zoom to view all nodes [Ctrl]+[0]"
+        >Zoom all</button>
+
+      <div className="button-separator" />      
+
       <a href="http://johnvalentine.co.uk?art=boop" target="_blank" title="Help"><button tabIndex={-1} className="text-as-icon link-cursor">?</button></a>
       <button
           onClick={handleReset}
-          title="Reset all nodes"
+          title="Reset all nodes [R]"
         >Reset</button>
     </Header>
   )

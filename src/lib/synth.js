@@ -28,6 +28,7 @@ const defaultPatchNodes = () => {
   nodes.push(newSynthNode(nodes, synthNodeTypes.GEN_FM.id));
   nodes.push(newSynthNode(nodes, synthNodeTypes.OUTPUT.id));
 
+  nodes[0].x = 3;
   nodes[1].x = 18;
 
   // add a link
@@ -82,7 +83,7 @@ const newSynthNode = (nodes = [], nodeTypeId, overrides) => {
       id,
       nodeTypeId,
       x: 2, // rem
-      y: 1, // rem
+      y: 2, // rem
       w: 11, // rem
       displayName: '',
       inputs: structuredClone(nodeType.inputs),
