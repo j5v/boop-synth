@@ -25,11 +25,14 @@ const SynthNodeOutputs = memo(function SynthNodeOutputs(props) {
   const clearLinkDragging = usePatchStore((state) => state.clearLinkDragging);
 
   // events
+  const LEFT_BUTTON = 0;
 
   const handleMouseDown = (event, spec) => {
     // Begin dragging a link from this Output to an Input
-    event.stopPropagation();
-    setLinkDragFromOutput(spec);
+    if (event.button == LEFT_BUTTON) {
+      event.stopPropagation();
+      setLinkDragFromOutput(spec);
+    }
   }
 
   const handleMouseMove = (event, spec) => {

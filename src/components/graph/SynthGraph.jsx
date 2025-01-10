@@ -212,7 +212,7 @@ function SynthGraph() {
     } else if (k == '0' && event.ctrlKey == true) {
       handleViewAll();
       event.preventDefault();
-      
+
     }
   
   };
