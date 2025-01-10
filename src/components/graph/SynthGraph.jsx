@@ -293,8 +293,8 @@ function SynthGraph() {
         scale(${view.scale || 1})
         `}
       >
-        <SynthNodes />
         <SynthNodeLinks />
+        <SynthNodes />
         <SynthNodeLinkConnecting />
         {debugCoords}  
         </g>

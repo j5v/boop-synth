@@ -35,8 +35,12 @@
   }
 
   .SynthNodeProperties .node-title {
-    font-weight: 400;
-    color: hsl(240, 15%, 0%);
+    font-weight: 700;
+    color: hsl(45, 100%, 20%);
   }
  
-}
+  .SynthNodeProperties p {
+    font-weight: 400;
+    color: hsl(45, 10%, 10%);
+  }
+  }

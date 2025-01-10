@@ -9,7 +9,7 @@ import {
   synthNodeTerminalIntents,
 } from "../lib/synth.js";
 
-import { swapItemsInArray, cleanNodeLinks, remAsPx } from "../lib/utils.js";
+import { swapItemsInArray, cleanNodeLinks, remAsPx, pxAsRem } from "../lib/utils.js";
 
 const defaultView = {
   scale: 1,
@@ -373,7 +373,12 @@ const usePatchStore = create(
       // Node management
 
       addNode: (synthNodeTypeId) => set((state) => {
-        const node = newSynthNode(state.nodes, synthNodeTypeId, { x: 16, y: 3 });
+        const view = state.ui.view || defaultView;
+        const node = newSynthNode(state.nodes, synthNodeTypeId, {
+          x: pxAsRem(view.panX) + 10,
+          y: pxAsRem(view.panY) + 2,
+          selected: true
+        });
 
         return {
           ...state,
