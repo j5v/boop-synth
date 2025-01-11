@@ -2,7 +2,7 @@ Boop brings FMC Amiga into 2025. FMC was a sample-generating software synth, wit
 
 [Boop homepage](https://johnvalentine.co.uk/?art=boop)
 
-Example: This graph generates a sine wave and sends it to the output.
+Example: This graph generates a sine wave, scales it with an envelope, and sends it to the output.
 
 ![](docs/example1.png)
 
