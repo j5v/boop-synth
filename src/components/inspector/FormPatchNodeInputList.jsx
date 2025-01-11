@@ -1,5 +1,4 @@
 import './FormPatchNodeInputList.css'
-import { getSynthNodeTerminalIntentsById } from '../../lib/synth.js'
 import FormPatchNodeInputItem from './FormPatchNodeInputItem.jsx'
 
 function FormPatchNodeInputList(props) {

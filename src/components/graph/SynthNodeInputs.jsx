@@ -2,7 +2,7 @@ import { memo } from 'react';
 
 import './SynthNodeInputs.css'
 import { asRem, pxAsRem, remAsPx } from '../../lib/utils.js'
-import { getSynthNodeTerminalIntentsById } from '../../lib/synth.js'
+import { getSynthNodeTerminalIntentsById } from '../../lib/synthNodeIntents';
 import { nodeLayout } from '../../lib/nodeLayout.js'
 import usePatchStore from '../../store/patchStore.jsx'
 

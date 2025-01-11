@@ -1,6 +1,7 @@
 import './SynthNodeProperties.css'
 import Header from '../layout/Header.jsx'
-import { getNodeTypeById, getNodeDisplayTitle } from '../../lib/synth.js'
+import { getNodeDisplayTitle } from '../../lib/synth.js'
+import { getNodeTypeById } from '../../lib/synthNodeTypes.js'
 import FormPatchNodeInputList from './FormPatchNodeInputList.jsx'
 import ParameterGroup from './ParameterGroup.jsx'
 import usePatchStore from '../../store/patchStore.jsx'

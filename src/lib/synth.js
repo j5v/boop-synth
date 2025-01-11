@@ -1,5 +1,4 @@
 import { appInfo } from './appInfo.js'
-import { synthNodeTerminalIntents, getSynthNodeTerminalIntentsById } from '../lib/synthNodeIntents.js'
 import { synthNodeTypes, getNodeTypeById } from '../lib/synthNodeTypes.js'
 import { initEnvelope, processEnvelope } from '../nodeTypes/synthEnvelopeAnalog.js'
 import { joinItems, getNewId } from './utils.js'
@@ -341,10 +340,6 @@ const generateAndPlay = function (nodes, spec) {
 }
 
 export {
-  synthNodeTerminalIntents,
-  getSynthNodeTerminalIntentsById,
-  synthNodeTypes,
-  getNodeTypeById,
   getNodeDisplayTitle,
   newSynthNode,
   defaultPatchNodes,

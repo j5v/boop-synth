@@ -1,7 +1,7 @@
 import './FormPatchNodeInputItem.css'
 import { joinItems } from '../../lib/utils.js'
-import { getSynthNodeTerminalIntentsById } from '../../lib/synth.js'
 import usePatchStore from '../../store/patchStore.jsx'
+import { getSynthNodeTerminalIntentsById } from '../../lib/synthNodeIntents';
 
 function FormPatchNodeInputItem(props) {
 

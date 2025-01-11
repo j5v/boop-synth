@@ -6,8 +6,9 @@ import {
   defaultOutputSpec,
   newSynthNode,
   assignLink,
-  synthNodeTerminalIntents,
 } from "../lib/synth.js";
+
+import { synthNodeTerminalIntents } from '../lib/synthNodeIntents';
 
 import {
   swapItemsInArray,
