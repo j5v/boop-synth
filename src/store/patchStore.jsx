@@ -9,7 +9,12 @@ import {
   synthNodeTerminalIntents,
 } from "../lib/synth.js";
 
-import { swapItemsInArray, cleanNodeLinks, remAsPx, pxAsRem } from "../lib/utils.js";
+import {
+  swapItemsInArray,
+  cleanNodeLinks,
+  remAsPx,
+  pxAsRem
+} from "../lib/utils.js";
 
 const defaultView = {
   scale: 1,
@@ -18,9 +23,13 @@ const defaultView = {
 };
 
 const usePatchStore = create(
-  persist(
+  persist( // Used to maintain current state in localStorage
     (set, get) => ({
       nodes: defaultPatchNodes(),
+
+      /* TODO: Move { perf, prefs, ui } out into separate stores,
+         if they're not part of a patch
+      */
       perf: {
         ...defaultOutputSpec
       },
@@ -376,6 +385,15 @@ const usePatchStore = create(
           
       // Node management
 
+      reset: () => set((state) => ({
+        ...state,
+        nodes: defaultPatchNodes(),
+        perf: { ...defaultOutputSpec },
+        ui: {
+          draggingLinkFromInput: undefined,
+        },
+      })),
+
       addNode: (synthNodeTypeId) => set((state) => {
         const view = state.ui.view || defaultView;
         const node = newSynthNode(state.nodes, synthNodeTypeId, {
@@ -440,15 +458,6 @@ const usePatchStore = create(
       removeNode: (nodeId) => set((state) => ({
         ...state,
         nodes: state.nodes.filter((node) => node.id !== nodeId),
-      })),
-
-      reset: () => set((state) => ({
-        ...state,
-        nodes: defaultPatchNodes(),
-        perf: { ...defaultOutputSpec },
-        ui: {
-          draggingLinkFromInput: undefined,
-        },
       })),
 
       removeSelectedNodes: () => set((state) => {
@@ -518,7 +527,7 @@ const usePatchStore = create(
         ),
       })),
 
-      // Update node properties with an object
+      
       updateNode: (nodeId, obj) => set((state) => ({
         ...state,
         nodes: state.nodes.map((node) =>

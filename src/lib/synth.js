@@ -1,7 +1,7 @@
 import { appInfo } from './appInfo.js'
 import { synthNodeTerminalIntents, getSynthNodeTerminalIntentsById } from '../lib/synthNodeIntents.js'
 import { synthNodeTypes, getNodeTypeById } from '../lib/synthNodeTypes.js'
-import { initEnvelope, processEnvelope } from '../lib/synthEnvelopeAnalog.js'
+import { initEnvelope, processEnvelope } from '../nodeTypes/synthEnvelopeAnalog.js'
 import { joinItems, getNewId } from './utils.js'
 import saveAs from '../lib/FileSaver.js'
 
