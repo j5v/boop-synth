@@ -4,6 +4,7 @@ import usePatchStore from '../../store/patchStore.jsx'
 import SynthNodes from './SynthNodes.jsx'
 import SynthNodeLinks from './SynthNodeLinks.jsx'
 import SynthNodeLinkConnecting from './SynthNodeLinkConnecting.jsx'
+import NodeSelectionBox from './NodeSelectionBox.jsx'
 import { pxAsRem, remAsPx } from '../../lib/utils.js'
 
 /* SynthGraph:
@@ -166,6 +167,14 @@ function SynthGraph() {
   };
 
 
+  // Drag selection box
+
+  const selectionBounds = usePatchStore((state) => state.ui.selectionBounds);
+  const beginSelectionBox = usePatchStore((state) => state.beginSelectionBox);
+  const dragSelectionBox = usePatchStore((state) => state.dragSelectionBox);
+  const endSelectionBox = usePatchStore((state) => state.endSelectionBox);
+
+
   // Keyboard shortcuts
 
   const removeSelectedNodes = usePatchStore((state) => state.removeSelectedNodes)
@@ -221,6 +230,7 @@ function SynthGraph() {
   // Mouse event handlers
 
   const MIDDLE_BUTTON = 1;
+  const nodes = usePatchStore((state) => state.nodes);
   
   const handleMouseDown = (event) => {
     if (event.button == MIDDLE_BUTTON) {
@@ -228,9 +238,15 @@ function SynthGraph() {
       setPrevDragPosY(event.clientY);
       setPanning(true);
     } else {
-      doDragNodeBegin(event);
+      if (nodes.filter(n => n.highlighted).length > 0) {
+        // any highlighted: means mouse is over a node, so don't so a selection drag; move a node.
+        doDragNodeBegin(event);
+      } else {
+        beginSelectionBox(mousePos.x, mousePos.y);
+      }
     }
   }
+
   const handleMouseMove = (event) => {
     // store SVG mouse position for for handleWheel
     const svgElement = document.getElementById('node-graph');
@@ -245,19 +261,27 @@ function SynthGraph() {
 
     if (panning) doPanView(event);
     if (draggingNode) doDragNode(event);
+    if (selectionBounds) dragSelectionBox(mousePos.x, mousePos.y);
     if (dragLinkFromInputState && dragLinkFromInputState.fromNode) doDragLinkFromInput(event);
     if (dragLinkFromOutputState && dragLinkFromOutputState.fromNode) doDragLinkFromOutput(event);
   }
+
   const handleMouseUp = (event) => {
     if (event.button == MIDDLE_BUTTON) {
       setPanning(false);
     } else {
       if (draggingNode) doDragNodeEnd(event);
+      if (selectionBounds) {
+        endSelectionBox();
+        event.stopPropagation();
+        event.preventDefault();
+      }
       if (dragLinkFromInputState && dragLinkFromInputState.fromNode) doEndDragLinkFromInput(event);
       if (dragLinkFromOutputState && dragLinkFromOutputState.fromNode) doEndDragLinkFromOutput(event);
       clearLinkDragging();
     }
   }
+
   const handleWheel = (event) => {
     setViewScale(
       view.scale * Math.pow(2, -(event.deltaY || 0) * 0.001),
@@ -265,7 +289,7 @@ function SynthGraph() {
     );
   }
   
-  // debugText
+  // debug overlays
   
   const debugText = false ? 
     <text fill="white" fontSize="10" x="2rem" y="1.25rem">
@@ -274,6 +298,10 @@ function SynthGraph() {
     : <></>
 
   const debugCoords = false ? <circle fill="#888" cx="0" cy="0" r="1" /> : <></>;
+
+  // Selection box
+
+  const selectionBox = selectionBounds ? <NodeSelectionBox rectCoords={selectionBounds} view={view}/> : <></>;
 
   return (
     <svg
@@ -296,6 +324,7 @@ function SynthGraph() {
         <SynthNodeLinks />
         <SynthNodes />
         <SynthNodeLinkConnecting />
+        {selectionBox}
         {debugCoords}  
         </g>
       {debugText}

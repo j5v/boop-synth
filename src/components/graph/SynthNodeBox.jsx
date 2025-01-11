@@ -22,12 +22,10 @@ function SynthNodeBox(props) {
   // Selection
 
   const selectExclusiveNode = usePatchStore((state) => state.selectExclusiveNode)
-  const selectNode = usePatchStore((state) => state.selectNode)
   const toggleSelectNode = usePatchStore((state) => state.toggleSelectNode)
   const highlightExclusiveNode = usePatchStore((state) => state.highlightExclusiveNode);
 
   const handleMouseDown = (event) => {
-    // console.log('SynthNodeBox:handleMouseUp()')
     if (event.ctrlKey) {
       toggleSelectNode(synthNode.id);
     } else {
@@ -37,7 +35,6 @@ function SynthNodeBox(props) {
   
   const handleClick = (event) => {
     // Prevent a click on parent/background from unselecting all nodes
-    // console.log('SynthNodeBox:handleClick()')
     event.stopPropagation();
   };
 

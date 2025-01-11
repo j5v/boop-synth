@@ -2,6 +2,7 @@
   fill: hsl(45, 100%, 50%);
   cursor: pointer;
   pointer-events: none;
+  user-select: none;  
 } 
 
 @media (prefers-color-scheme: light) {

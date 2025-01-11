@@ -2,6 +2,7 @@
   dominant-baseline: middle;
   fill: white;
   pointer-events: none;
+  user-select: none;  
 }
 
 .terminal-output-label {

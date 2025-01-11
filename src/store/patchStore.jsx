@@ -30,8 +30,9 @@ const usePatchStore = create(
       ui: {
         draggingLinkFromInput: undefined,
         draggingLinkFromOutput: undefined,
-        view: defaultView
+        view: structuredClone(defaultView)
       },
+
 
       // UI Prefs
       toggleHideNodeDescription: () => set((state) => ({
@@ -41,6 +42,7 @@ const usePatchStore = create(
           hideNodeDescription: !state.prefs.hideNodeDescription,
         },
       })),
+
 
       // UI state
       setImportExpanded: (value) => set((state) => ({
@@ -204,6 +206,7 @@ const usePatchStore = create(
         }
       }),
 
+
       // Remove link from input
 
       removeLinkFromInput: (targetInput) => set((state) => {
@@ -241,6 +244,7 @@ const usePatchStore = create(
         }
 
       }),
+
 
       // Drag new links
 
@@ -482,15 +486,27 @@ const usePatchStore = create(
         nodes: state.nodes.map((node) => ({ ...node, selected: true }))
       })),
 
-      selectExclusiveNode: (nodeId) => set((state) => ({
-        // Select node, and unselect other nodes.
-        ...state,
-        nodes: state.nodes.map((node) =>
-          node.id === nodeId
-            ? { ...node, selected: true }
-            : { ...node, selected: false }
-        ),
-      })),
+      selectExclusiveNode: (nodeId) => set((state) => {
+
+        if (state.ui && state.ui.selectionBounds && state.ui.selectionBounds.hasSelected) {
+          delete state.ui.selectionBounds;
+          // Do not change selection, because we've just selected using a drag box.
+          return state;
+
+        } else {
+
+          // Select node, and unselect other nodes.
+          return {
+            ...state,
+            nodes: state.nodes.map((node) =>
+              node.id === nodeId
+                ? { ...node, selected: true }
+                : { ...node, selected: false }
+            ),
+          }
+
+        }
+      }),
 
       highlightExclusiveNode: (nodeId) => set((state) => ({
         // Select node, and unselect other nodes.
@@ -523,6 +539,7 @@ const usePatchStore = create(
         };
       }),
 
+
       // Drag node
 
       dragSelectedNodes: (dx, dy) => set((state) => ({
@@ -534,6 +551,83 @@ const usePatchStore = create(
         ),
       })),
 
+
+      // Selection drag box
+
+      beginSelectionBox: (x1, y1) => set((state) => ({
+        ...state,
+        ui: {
+          ...state.ui,
+          selectionBounds: { x1, y1 },
+          // debug: console.log(x1, y1)
+        }
+      })),
+
+      dragSelectionBox: (x2, y2) => set((state) => ({
+        ...state,
+        ui: {
+          ...state.ui,
+          selectionBounds: {
+            ...state.ui.selectionBounds,
+            x2, y2
+          }
+        }
+      })),
+
+      endSelectionBox: () => set((state) => {
+
+        const rectanglesIntersect = ( 
+           minAx, minAy, maxAx, maxAy,
+           minBx, minBy, maxBx, maxBy
+        ) => {
+
+          const aLeftOfB = maxAx < minBx;
+          const aRightOfB = minAx > maxBx;
+          const aAboveB = minAy > maxBy;
+          const aBelowB = maxAy < minBy;
+      
+          const result = !( aLeftOfB || aRightOfB || aAboveB || aBelowB )
+          
+          const dp=1;
+
+          return result;
+        }
+
+        const b = state.ui.selectionBounds;
+
+        if (b.x2 == undefined) {
+          // not immutable; mutates state.
+          delete state.ui.selectionBounds;
+          return state;
+        } else {
+          const { panX, panY, scale } = state.ui.view || { panX: 0, panY: 0, scale: 1 };
+
+          const x1 = pxAsRem(Math.min(b.x1, b.x2) - panX) / scale;
+          const x2 = pxAsRem(Math.max(b.x1, b.x2) - panX) / scale;
+        
+          const y1 = pxAsRem(Math.min(b.y1, b.y2) - panY) / scale;
+          const y2 = pxAsRem(Math.max(b.y1, b.y2) - panY) / scale;
+
+        
+          return {
+            ...state,
+            nodes: state.nodes.map(node => ({
+              ...node,
+              selected: rectanglesIntersect(
+                x1, y1, x2, y2, 
+                node.x, node.y, node.x + node.w, node.y + node.h, 
+              ),
+            })),
+            ui: {
+              ...state.ui,
+              selectionBounds: { hasSelected: true }
+            }
+          }
+        }
+
+      }),
+
+
       // Data mutation for 'drag and drop patch file'
 
       importFileData: (importedJSON) => set((state) => {
@@ -541,16 +635,11 @@ const usePatchStore = create(
         delete loadedState.ui;
         delete loadedState.prefs;
 
-        // TODO: parse for boop version
-
-        // console.log(loadedState);          
-
         return {
           ...state,
           ...loadedState
         }
-      }),
-
+      }),      
 
     })
   ),
