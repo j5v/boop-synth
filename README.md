@@ -1,4 +1,4 @@
-Boop brings FMC Amiga into 2025. FMC was a sample-generating software synth, with graph-based structure.
+Boop brings FMC Amiga into a web browser in 2025. FMC was a sample-generating software synth, with graph-based structure.
 
 [Boop homepage](https://johnvalentine.co.uk/?art=boop)
 
