@@ -101,10 +101,10 @@ const usePatchStore = create(
       viewAll: (vw = 400, vh = 300) => set((state) => {
 
         const bounds = {
-          top: 0,
-          right: 0,
-          bottom: 0,
-          left: 0,
+          top: Infinity,
+          right: -Infinity,
+          bottom: -Infinity,
+          left: Infinity,
         }
 
         state.nodes.forEach(node => {

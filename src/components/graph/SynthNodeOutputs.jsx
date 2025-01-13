@@ -1,6 +1,7 @@
 import './SynthNodeInputs.css' // deliberately Inputs
 import { memo } from 'react';
-import { asRem, pxAsRem, remAsPx } from '../../lib/utils.js'
+import { asRem, pxAsRem, remAsPx, getItemById } from '../../lib/utils.js'
+import { getNodeTypeById } from '../../lib/synthNodeTypes.js'
 import { getSynthNodeTerminalIntentsById } from '../../lib/synthNodeIntents';
 import { nodeLayout } from '../../lib/nodeLayout.js'
 import usePatchStore from '../../store/patchStore.jsx'
@@ -9,6 +10,8 @@ const SynthNodeOutputs = memo(function SynthNodeOutputs(props) {
 
   const { synthNode } = props;
   const { outputs } = synthNode;
+  const nodeType = getNodeTypeById(synthNode.nodeTypeId);
+
   const { nodeVSpacing, nodeVOffset, labelPadding, dragLeft, dragRight, dragTop, dragBottom } = nodeLayout;
 
   const removeLinksFromOutput = usePatchStore((state) => state.removeLinksFromOutput);
@@ -60,8 +63,10 @@ const SynthNodeOutputs = memo(function SynthNodeOutputs(props) {
   return (
     (outputs || []).map(i => {
       if (i.exposed) {
+        const nodeTypeOutput = getItemById(nodeType.outputs, i.id); // get matching input in synthNodeTypes
+
         const classCSS = `terminal ${
-          getSynthNodeTerminalIntentsById(i.intentId).classCSS
+          getSynthNodeTerminalIntentsById(nodeTypeOutput.intentId).classCSS
         }`;
         const classCSSOutline = `terminal outline`;
 
@@ -71,12 +76,12 @@ const SynthNodeOutputs = memo(function SynthNodeOutputs(props) {
         i.posY = py;
         i.posX = synthNode.x;
 
-        const loosePosX = synthNode.x;
-        const loosePosY = synthNode.y + i.posY;
+        const loosePosX = pxAsRem(synthNode.x);
+        const loosePosY = pxAsRem(synthNode.y + i.posY);
 
         return (
           <g key={i.id} className="terminal-group">
-            <title>{i.description}</title>
+            <title>{nodeTypeOutput.description}</title>
             <rect
               className={`drag-zone${ draggingLinkFromOutput ? ' hidden' : ''}`}
               x={asRem(synthNode.x + synthNode.w - dragLeft)}
@@ -89,8 +94,8 @@ const SynthNodeOutputs = memo(function SynthNodeOutputs(props) {
                 targetOutput: i,
                 loosePosX,
                 loosePosY,
-                prevPageX: pxAsRem(loosePosX),
-                prevPageY: pxAsRem(loosePosX),
+                prevPageX: loosePosX,
+                prevPageY: loosePosY,
               })}
               onMouseUp={(e) => handleMouseUp(e, {
                 // stop dragging a link from an Input to this Output
@@ -98,8 +103,8 @@ const SynthNodeOutputs = memo(function SynthNodeOutputs(props) {
                 targetOutput: i,
                 loosePosX,
                 loosePosY,
-                prevPageX: pxAsRem(loosePosX),
-                prevPageY: pxAsRem(loosePosX),
+                prevPageX: loosePosX,
+                prevPageY: loosePosY,
               })}
               onMouseDown={(e) => handleMouseDown(e, {
                 // New: begin dragging a link from this Output to an Input
@@ -127,7 +132,7 @@ const SynthNodeOutputs = memo(function SynthNodeOutputs(props) {
               className="terminal-output-label"
               x={asRem(synthNode.x + synthNode.w - labelPadding)}
               y={asRem(synthNode.y + py + 0.06)}
-            >{i.displayName}</text>
+            >{nodeTypeOutput.displayName}</text>
           </g>
         );
 

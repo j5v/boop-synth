@@ -38,7 +38,7 @@ const synthNodeTypes = {
         description: 'A waveform or sample',
         intentId: synthNodeTerminalIntents.SOURCE.id,
         exposed: false,
-        placeholder: true,
+        isPlaceholder: true,
         defaultValue: 1,
       },
       {
