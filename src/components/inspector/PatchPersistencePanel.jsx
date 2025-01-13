@@ -22,6 +22,12 @@ const SynthGraphProperties = () => {
       delete node.highlighted;
       delete node.selected;
 
+      // Remove excess decimal places (units: rem; pixel at 100% is near 0.06)
+      node.x = Number(node.x.toFixed(4));
+      node.y = Number(node.y.toFixed(4));
+      node.w = Number(node.w.toFixed(4));
+      node.h = Number(node.h.toFixed(4));
+
       node.inputs.forEach(input => {
         // clear up old properties not used now - remove at v1.0
         delete input.displayName;
@@ -33,6 +39,8 @@ const SynthGraphProperties = () => {
         delete input.intentId;
         delete input.displayUnits;
         delete input.isOffset;
+        delete input.posX;
+        delete input.posY;
         if (input.link == {}) delete input.link;
 
         // userValues are only useful if different (parseable format) from value.
@@ -54,6 +62,8 @@ const SynthGraphProperties = () => {
         delete output.displayUnits;
         delete output.isOffset;
         delete output.signal;
+        delete output.posX;
+        delete output.posY;
       })
     })
   
@@ -62,7 +72,6 @@ const SynthGraphProperties = () => {
     state.appName = appInfo.appName;
     state.appVersion = appInfo.appVersion;
     state.saveVersion = appInfo.saveVersion;
-    state.comment = 'This format will change in future versions of the app. Some properties will move into in-app types. Some unset properties might be removed.';
 
     const stream = `data:text/json;charset=utf-8, ${encodeURIComponent(JSON.stringify(state))}`;
 
