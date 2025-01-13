@@ -1,7 +1,8 @@
 import { memo } from 'react';
 
 import './SynthNodeInputs.css'
-import { asRem, pxAsRem, remAsPx } from '../../lib/utils.js'
+import { asRem, pxAsRem, remAsPx, getItemById } from '../../lib/utils.js'
+import { getNodeTypeById } from '../../lib/synthNodeTypes.js'
 import { getSynthNodeTerminalIntentsById } from '../../lib/synthNodeIntents';
 import { nodeLayout } from '../../lib/nodeLayout.js'
 import usePatchStore from '../../store/patchStore.jsx'
@@ -10,6 +11,8 @@ const SynthNodeInputs = memo(function SynthNodeInputs(props) {
 
   const { synthNode } = props;
   const { inputs } = synthNode;
+  const nodeType = getNodeTypeById(synthNode.nodeTypeId);
+
   const { nodeVSpacing, nodeVOffset, labelPadding, dragLeft, dragRight, dragTop, dragBottom } = nodeLayout;
 
   const removeLinkFromInput = usePatchStore((state) => state.removeLinkFromInput);
@@ -62,8 +65,10 @@ const SynthNodeInputs = memo(function SynthNodeInputs(props) {
   return (
     (inputs || []).map(i => {
       if (i.exposed) {
+        const nodeTypeInput = getItemById(nodeType.inputs, i.id); // get matching input in synthNodeTypes
+
         const classCSS = `terminal ${
-          getSynthNodeTerminalIntentsById(i.intentId).classCSS
+          getSynthNodeTerminalIntentsById(nodeTypeInput.intentId).classCSS
         }`;
         const classCSSOutline = 'terminal outline';
 
@@ -76,10 +81,9 @@ const SynthNodeInputs = memo(function SynthNodeInputs(props) {
         const loosePosX = synthNode.x;
         const loosePosY = synthNode.y + i.posY;
 
-
         return (
           <g key={i.id} className="terminal-group">
-            <title>{i.description}</title>
+            <title>{nodeTypeInput.description}</title>
             <rect
               className={`drag-zone${ draggingLinkFromInput ? ' hidden' : ''}`}
               x={asRem(synthNode.x - dragLeft)}
@@ -132,7 +136,7 @@ const SynthNodeInputs = memo(function SynthNodeInputs(props) {
               className="terminal-input-label"
               x={asRem(synthNode.x + labelPadding)}
               y={asRem(synthNode.y + py + 0.06)}              
-            >{i.displayName}</text>
+            >{nodeTypeInput.displayName}</text>
           </g>
         )
       }

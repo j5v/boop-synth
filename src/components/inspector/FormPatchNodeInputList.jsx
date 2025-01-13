@@ -8,7 +8,7 @@ function FormPatchNodeInputList(props) {
   
   return (
     (inputs || []).map(i => (
-      <FormPatchNodeInputItem key={`${synthNode.id}-${i.id}`} inputItem={i} />
+      <FormPatchNodeInputItem key={`${synthNode.id}-${i.id}`} inputItem={i} synthNode={synthNode}/>
     ))
   )
 }

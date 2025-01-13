@@ -1,7 +1,7 @@
 import { appInfo } from './appInfo.js'
 import { synthNodeTypes, getNodeTypeById } from '../lib/synthNodeTypes.js'
 import { initEnvelope, processEnvelope } from '../nodeTypes/synthEnvelopeAnalog.js'
-import { joinItems, getNewId } from './utils.js'
+import { joinItems, getNewId, getItemById } from './utils.js'
 import saveAs from '../lib/FileSaver.js'
 
 const BITDEPTH_16 = 0;
@@ -76,7 +76,6 @@ const newSynthNode = (nodes = [], nodeTypeId, overrides) => {
       x: 2, // rem
       y: 2, // rem
       w: 11, // rem
-      displayName: '',
       inputs: structuredClone(nodeType.inputs),
       outputs: structuredClone(nodeType.outputs),
       ...overrides,
@@ -126,7 +125,7 @@ const generate = function (
         node.outputs[0].signal = Math.sin(ph) + postMix;
 
       } else if (nodeTypeId == synthNodeTypes.NUMBER.id) {
-        node.outputs[0].signal = valueOfInput(node.inputs[0]);
+        node.outputs[0].signal = inputSignals[0];
 
       } else if (nodeTypeId == synthNodeTypes.ENVELOPE_WAHDSR.id) {
         const env = node.env;
@@ -173,7 +172,7 @@ const generate = function (
     });
   }
 
-  function valueOfInput(input) {
+  function valueOfInput(input, node) {
     if (input && input.link && input.link.synthNodeId) {
       const link = input.link; // alias
       if (!link.resolvedOutput) {
@@ -190,38 +189,58 @@ const generate = function (
         return 0;
       }
     } else {
-    return input.value != undefined ? input.value : 
-      input.defaultValue != undefined ? input.defaultValue : 0;
+
+      if (input.value != undefined)
+        return input.value;
+
+      const nodeType = getNodeTypeById(node.nodeTypeId);
+      const nodeTypeInput = getItemById(nodeType.inputs, input.id); // get matching input in synthNodeTypes
+      return nodeTypeInput.defaultValue !== undefined ? nodeTypeInput.defaultValue : 0;
     }
   }
 
   function valuesOfInputs(node) {
-    return node.inputs.map(i => valueOfInput(i));
+    return node.inputs.map(i => valueOfInput(i, node));
   }
 
   function cleanPatch() {  // Remove extra properties and direct object refs
     for (let nodeIndex in nodes) {
       const node = nodes[nodeIndex];
-      node.nodeTypeId = parseInt(node.nodeTypeId); // TODO: test if needed
       delete node.env;
       delete node.phase;
-      for (let inputIndex in node.inputs) {
-        const input = node.inputs[inputIndex];
+
+      node.inputs.forEach(input => {
         if (input.link) {
           delete input.link.resolvedOutput;
         }
-      }
+      });
+
+      node.outputs.forEach(output => {
+        delete output.signal;
+      });
+
     }
   }
 
   function initPatch() {
     cleanPatch();
-    for (let n in nodes) {
-      const node = nodes[n];
+    nodes.forEach(node => {
+      // initialize envelope nodes
       if (node.nodeTypeId == synthNodeTypes.ENVELOPE_WAHDSR.id) {
         initEnvelope(node, sustainReleaseTime);
       }
-    }
+
+      // optimization: force input[].value to avoid expensive lookups to nodeType
+      node.inputs.forEach(input => {
+        if (input.value === undefined) {
+          const nodeType = getNodeTypeById(node.nodeTypeId);
+          const nodeTypeInput = getItemById(nodeType.inputs, input.id); // get matching input in synthNodeTypes
+          input.value = nodeTypeInput.defaultValue !== undefined ? nodeTypeInput.defaultValue : 0;
+        }
+      })
+
+    });
+
   }
 
   function finishPatch() {
