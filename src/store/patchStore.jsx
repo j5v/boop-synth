@@ -399,8 +399,8 @@ const usePatchStore = create(
       addNode: (synthNodeTypeId) => set((state) => {
         const view = state.ui.view || defaultView;
         const node = newSynthNode(state.nodes, synthNodeTypeId, {
-          x: pxAsRem(view.panX) + 10,
-          y: pxAsRem(view.panY) + 2,
+          x: ( -pxAsRem(view.panX) + 12 ) / view.scale,
+          y: ( -pxAsRem(view.panY) + 2 ) / view.scale,
           selected: true
         });
 

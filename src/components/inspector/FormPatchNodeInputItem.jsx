@@ -19,7 +19,6 @@ function FormPatchNodeInputItem(props) {
   const hint = joinItems([name, description], ': ');;
 
   const handleChangeValue = (event) => {
-    console.log(nodeTypeInput);
     setInputValue(inputItem, event.target.value, nodeTypeInput);
   }
 
@@ -59,14 +58,6 @@ function FormPatchNodeInputItem(props) {
   const effectiveStateValue = inputItem.value !== undefined ?
     inputItem.value :
     nodeTypeInput.defaultValue;
-
-  // console.log( {
-  //   'inputItem.id': inputItem.id,
-  //   'inputItem.userValue': inputItem.userValue,
-  //   'inputItem.value': inputItem.value,
-  //   'nodeTypeInput.defaultValue': nodeTypeInput.defaultValue,
-  //   effectiveStateValue
-  // });
 
   const trueValue = (
     inputItem.userValue &&    
