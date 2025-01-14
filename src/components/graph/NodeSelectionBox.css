@@ -1,7 +1,7 @@
 .selection-box {
   stroke-width: 1px;
   stroke: hsla(30, 100%, 50%, 1);
-  fill: hsla(30, 70%, 40%, 0.5);
+  fill: hsla(30, 70%, 40%, 0.3);
   pointer-events: none;
 } 
 

@@ -9,8 +9,9 @@ import { pxAsRem, remAsPx } from '../../lib/utils.js'
 
 /* SynthGraph:
   - Contains the node graph and Links.
-  - Handles mouse events for moving nodes.
+  - Handles events for: moving nodes, drag-selecting many nodes.
   - Handles some of the mouse events for connecting nodes.
+      See SynthNodeInputs, synthNodeOutputs.
 */
 
 function SynthGraph() {

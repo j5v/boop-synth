@@ -498,11 +498,15 @@ const usePatchStore = create(
       })),
 
       selectExclusiveNode: (nodeId) => set((state) => {
-
         if (state.ui && state.ui.selectionBounds && state.ui.selectionBounds.hasSelected) {
-          delete state.ui.selectionBounds;
           // Do not change selection, because we've just selected using a drag box.
-          return state;
+          return {
+            ...state,
+            ui: {
+              ...state.ui,
+              selectionBounds: undefined
+            }
+          };
 
         } else {
 
@@ -606,10 +610,14 @@ const usePatchStore = create(
 
         const b = state.ui.selectionBounds;
 
-        if (b.x2 == undefined) {
-          // not immutable; mutates state.
-          delete state.ui.selectionBounds;
-          return state;
+        if (b.x2 == undefined) { // Clicked in empty space but did not drag a box.
+          return {
+            ...state,
+            ui: {
+              ...state.ui,
+              selectionBounds: undefined
+            }
+          };
         } else {
           const { panX, panY, scale } = state.ui.view || { panX: 0, panY: 0, scale: 1 };
 
@@ -619,8 +627,7 @@ const usePatchStore = create(
           const y1 = pxAsRem(Math.min(b.y1, b.y2) - panY) / scale;
           const y2 = pxAsRem(Math.max(b.y1, b.y2) - panY) / scale;
 
-        
-          return {
+          const newState = {
             ...state,
             nodes: state.nodes.map(node => ({
               ...node,
@@ -634,6 +641,7 @@ const usePatchStore = create(
               selectionBounds: { hasSelected: true }
             }
           }
+          return newState;
         }
 
       }),
