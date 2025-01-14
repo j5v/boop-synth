@@ -148,17 +148,18 @@ const usePatchStore = create(
       }),
 
       // Node input field changes
-      setInputValue: (targetInput, value) => set((state) => {
+      setInputValue: (targetInput, value, nodeTypeInput) => set((state) => {
+
         targetInput.userValue = value; // re-displayed in form input, for editing again
 
-        // interpret input
+        // Interpret input
         // TODO: move into parse function if DRY needed
 
         let writeValue = value !== undefined ? value : 0; // best guess so far; improve below with parsing
 
         const trimmed = value.toString().trim().toLowerCase();
 
-        if (targetInput.intentId == synthNodeTerminalIntents.PITCH_OFFSET_OCTAVES.id) {
+        if (nodeTypeInput.intentId == synthNodeTerminalIntents.PITCH_OFFSET_OCTAVES.id) {
           if (trimmed.slice(-1) == 'c') { // cents
             writeValue = parseFloat(trimmed.slice(0,-1)) / 1200;
 
@@ -174,7 +175,7 @@ const usePatchStore = create(
             if (parts[1] !== 0) writeValue = Math.log(parts[0] / parts[1]) / Math.log(2);
           }
 
-        } else if (targetInput.intentId == synthNodeTerminalIntents.LEVEL.id) {
+        } else if (nodeTypeInput.intentId == synthNodeTerminalIntents.LEVEL.id) {
           if (trimmed.slice(-2) == 'db') { // dB
             const dB = parseFloat(trimmed.slice(0,-2));
             writeValue = Math.pow(10, dB * 0.1);

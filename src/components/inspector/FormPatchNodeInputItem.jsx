@@ -19,7 +19,8 @@ function FormPatchNodeInputItem(props) {
   const hint = joinItems([name, description], ': ');;
 
   const handleChangeValue = (event) => {
-    setInputValue(inputItem, event.target.value);
+    console.log(nodeTypeInput);
+    setInputValue(inputItem, event.target.value, nodeTypeInput);
   }
 
   const handleChangeExposure = (event) => {
@@ -55,11 +56,23 @@ function FormPatchNodeInputItem(props) {
   const rowClassNames = ['form-input-row'];
   if (nodeTypeInput.isPlaceholder) rowClassNames.push('placeholder');
 
-  const effectiveStateValue = inputItem.value !== undefined ? inputItem.value : nodeTypeInput.defaultValue;
+  const effectiveStateValue = inputItem.value !== undefined ?
+    inputItem.value :
+    nodeTypeInput.defaultValue;
+
+  // console.log( {
+  //   'inputItem.id': inputItem.id,
+  //   'inputItem.userValue': inputItem.userValue,
+  //   'inputItem.value': inputItem.value,
+  //   'nodeTypeInput.defaultValue': nodeTypeInput.defaultValue,
+  //   effectiveStateValue
+  // });
+
   const trueValue = (
     inputItem.userValue &&    
     (inputItem.value || nodeTypeInput.defaultValue) &&
-    (parseFloat(inputItem.userValue) != effectiveStateValue))
+    (inputItem.userValue != effectiveStateValue) // was parseFloat(inputItem.userValue)
+  )
   ? <div className="true-value">{effectiveStateValue.toFixed(4)}</div>
   : <></>
   

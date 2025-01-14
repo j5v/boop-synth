@@ -18,6 +18,9 @@ const Footer = memo(function Footer(props) {
         <FooterItem>
           <span className="explained" title={appInfo.specialVersionAbout}>{appInfo.specialVersionName}</span> version {build}, {buildDate}.
         </FooterItem>
+        <FooterItem>
+          <a href={appInfo.sourceURL} target="_blank">Source</a>
+        </FooterItem>
       </>
     </div>
   )
