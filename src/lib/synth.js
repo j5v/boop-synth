@@ -48,7 +48,7 @@ const assignLink = (nodes, spec) => {
   const link = {
     synthNodeId: targetNodeId,
     outputId: targetOutputId,
-    debug: spec
+    // debug: spec
   }
 
   // Set input.link to the new link
