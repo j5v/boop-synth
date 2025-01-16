@@ -117,8 +117,10 @@ const generate = function (
       const nodeTypeId = node.nodeTypeId;
 
       if (nodeTypeId == synthNodeTypes.GEN_FM.id) {
-        const [ source, pitch, phaseMod, freqMod, postMix ] = inputSignals;
-        const frequency = freq * (pitch == 0 ? 1 : Math.pow(2, pitch * pitchUnit));
+        const [ source, pitch, phaseMod, freqMod, postMix, fixedFreq, isFixedFreq ] = inputSignals;
+        const frequency = isFixedFreq ?
+          fixedFreq :
+          (freq * (pitch == 0 ? 1 : Math.pow(2, pitch * pitchUnit)));
 
         node.phase = (node.phase || 0) + phaseIncNormalized * frequency * (1 + freqMod);
         const ph = node.phase + phaseMod * TAU;
@@ -225,10 +227,14 @@ const generate = function (
   function initPatch() {
     cleanPatch();
     nodes.forEach(node => {
+
       // initialize envelope nodes
       if (node.nodeTypeId == synthNodeTypes.ENVELOPE_WAHDSR.id) {
         initEnvelope(node, sustainReleaseTime);
       }
+
+      // order inputs by id. This ensures the list is predictable when destructured in the synth.
+      node.inputs.sort((a, b) => a.id - b.id);
 
       // optimization: force input[].value to avoid expensive lookups to nodeType
       node.inputs.forEach(input => {

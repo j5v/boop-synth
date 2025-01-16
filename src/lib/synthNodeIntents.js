@@ -48,6 +48,21 @@ const synthNodeTerminalIntents = { // draft only
     classCSS: 'trigger',
     modulatable: true
   },
+  FREQUENCY_ABSOLUTE: {
+    id: 7,
+    name: 'Frequency',
+    units: '+octave',
+    classCSS: 'frequency',
+    description: 'A pitch change in octaves, relative to the reference frequency. You can enter units here, like 10c for 10 cents, 2d for 2 semitones (12ET), 3:2 or 3/2 for harmonic ratios.',
+    modulatable: true
+  },  
+  CHECK_BOOL: {
+    id: 8,
+    name: 'On/off',
+    units: '',
+    classCSS: 'boolean',
+    description: 'On or off',
+  },  
 }
 
 const getSynthNodeTerminalIntentsById = id => {

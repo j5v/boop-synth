@@ -37,6 +37,7 @@ const synthNodeTypes = {
         displayNameShort: 'Src',
         description: 'A waveform or sample',
         intentId: synthNodeTerminalIntents.SOURCE.id,
+        isParam: true,
         exposed: false,
         isPlaceholder: true,
         defaultValue: 1,
@@ -51,6 +52,25 @@ const synthNodeTypes = {
         exposed: true,
         isOffset: true, // modifies value
         defaultValue: 0,
+      },
+      {
+        id: 6,
+        displayName: 'Fixed frequency',
+        displayNameShort: 'Hz',
+        description: 'Absolute frequency, not affected by reference frequency',
+        displayUnits: 'Hz',
+        intentId: synthNodeTerminalIntents.FREQUENCY_ABSOLUTE.id,
+        defaultValue: 440,
+      },
+      {
+        id: 7,
+        displayName: 'Frequency fixed?',
+        displayNameShort: 'Hz?',
+        description: 'When enabled, use "Fixed frequency" input. Otherwise, use "Pitch offset"',
+        displayUnits: 'Hz',
+        isParam: true,
+        intentId: synthNodeTerminalIntents.CHECK_BOOL.id,
+        defaultValue: false,
       },
       {
         id: 3,
