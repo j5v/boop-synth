@@ -51,9 +51,9 @@ const synthNodeTerminalIntents = { // draft only
   FREQUENCY_ABSOLUTE: {
     id: 7,
     name: 'Frequency',
-    units: '+octave',
+    units: 'Hz',
     classCSS: 'frequency',
-    description: 'A pitch change in octaves, relative to the reference frequency. You can enter units here, like 10c for 10 cents, 2d for 2 semitones (12ET), 3:2 or 3/2 for harmonic ratios.',
+    description: 'A frequency, Hz',
     modulatable: true
   },  
   CHECK_BOOL: {

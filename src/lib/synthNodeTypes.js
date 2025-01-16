@@ -67,7 +67,7 @@ const synthNodeTypes = {
         displayName: 'Frequency fixed?',
         displayNameShort: 'Hz?',
         description: 'When enabled, use "Fixed frequency" input. Otherwise, use "Pitch offset"',
-        displayUnits: 'Hz',
+        displayUnits: 'On or off',
         isParam: true,
         intentId: synthNodeTerminalIntents.CHECK_BOOL.id,
         defaultValue: false,
