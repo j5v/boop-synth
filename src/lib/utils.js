@@ -66,7 +66,7 @@ const DecibelsFSToSignal = (dB) => (Math.pow(10, dB * 0.1));
 
 // Node operations
 
-const joinItems = (arr, separator = ', ') => arr.filter(i => i > '').join(' - ');
+const joinItems = (arr, separator = ', ') => arr.filter(i => i > '').join(separator);
 
 const cleanNodeLinks = (nodes) => {
   // Delete any links that fail to resolve to target outputs.
