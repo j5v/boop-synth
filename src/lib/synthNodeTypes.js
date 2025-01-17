@@ -112,7 +112,7 @@ const synthNodeTypes = {
     outputs: [
       {
         id: 1,
-        displayName: 'Signal',
+        displayName: 'Out',
         displayNameShort: 'Out',
         description: 'Link inputs to this output',
         intentId: synthNodeTerminalIntents.LEVEL.id,
@@ -172,7 +172,7 @@ const synthNodeTypes = {
     outputs: [
       {
         id: 1,
-        displayName: 'Signal',
+        displayName: 'Out',
         displayNameShort: 'Out',
         description: 'Link inputs to this output',
         intentId: synthNodeTerminalIntents.LEVEL.id,
@@ -231,7 +231,7 @@ const synthNodeTypes = {
     outputs: [
       {
         id: 1,
-        displayName: 'Signal',
+        displayName: 'Out',
         displayNameShort: 'Out',
         description: 'Link inputs to this output',
         intentId: synthNodeTerminalIntents.LEVEL.id,
@@ -282,7 +282,7 @@ const synthNodeTypes = {
     outputs: [
       {
         id: 1,
-        displayName: 'Signal',
+        displayName: 'Out',
         description: 'Link inputs to this output',
         intentId: synthNodeTerminalIntents.LEVEL.id,
         exposed: true,
@@ -307,7 +307,7 @@ const synthNodeTypes = {
     outputs: [
       {
         id: 1,
-        displayName: 'Signal',
+        displayName: 'Out',
         description: 'Link inputs to use this number',
         intentId: synthNodeTerminalIntents.LEVEL.id,
         exposed: true,
@@ -396,7 +396,7 @@ const synthNodeTypes = {
     outputs: [
       {
         id: 1,
-        displayName: 'Signal',
+        displayName: 'Out',
         description: 'Envelope output',
         intentId: synthNodeTerminalIntents.LEVEL.id,
         exposed: true,
@@ -437,7 +437,7 @@ const synthNodeTypes = {
     outputs: [
       {
         id: 1,
-        displayName: 'Signal',
+        displayName: 'Out',
         description: 'Link inputs to use this number',
         intentId: synthNodeTerminalIntents.LEVEL.id,
         exposed: true,

@@ -45,7 +45,7 @@ function SynthNodeProperties(props) {
 
       <ParameterGroup>
         <Header context="property-sheet-subheading">
-          <div className="group-title">Parameters</div>
+          <div className="group-title">Configuration</div>
         </Header>
         <div className="parameters">
           <FormPatchNodeInputList synthNode={synthNode} isParam={true}/>
