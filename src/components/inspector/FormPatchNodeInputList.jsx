@@ -8,7 +8,10 @@ function FormPatchNodeInputList(props) {
   
   return (
     // filter handles undefined as false.
-    (inputs || []).filter(i => (i.isParam == true) == (isParam == true)).map(i => (
+    (inputs || [])
+    .filter(i => (i.isParam == true) == (isParam == true))
+    .sort((a, b) => a.order - b.order)
+    .map(i => (
       <FormPatchNodeInputItem key={`${synthNode.id}-${i.id}`} inputItem={i} synthNode={synthNode}/>
     ))
   )

@@ -55,7 +55,7 @@ function FormPatchNodeInputItem(props) {
   const rowClassNames = ['form-input-row'];
   if (nodeTypeInput.isPlaceholder) rowClassNames.push('placeholder');
 
-  const effectiveStateValue = inputItem.value !== undefined ?
+  const effectiveStateValue = (inputItem.value !== undefined && inputItem.value !== null) ?
     inputItem.value :
     nodeTypeInput.defaultValue;
 

@@ -42,14 +42,14 @@ const synthNodeTerminalIntents = { // draft only
     modulatable: true
   },
   TRIGGER: {
-    id: 6,
+    id: 7,
     name: 'trigger',
     units: 'above 0',
     classCSS: 'trigger',
     modulatable: true
   },
   FREQUENCY_ABSOLUTE: {
-    id: 7,
+    id: 8,
     name: 'Frequency',
     units: 'Hz',
     classCSS: 'frequency',
@@ -57,7 +57,7 @@ const synthNodeTerminalIntents = { // draft only
     modulatable: true
   },  
   CHECK_BOOL: {
-    id: 8,
+    id: 9,
     name: 'On/off',
     units: '',
     classCSS: 'boolean',

@@ -189,6 +189,18 @@ const usePatchStore = create(
             if (parts[1] !== 0) writeValue = parts[0] / parts[1];
           }
 
+        } else if (nodeTypeInput.intentId == synthNodeTerminalIntents.FREQUENCY_ABSOLUTE.id) {
+          const parsed = /([a-g])([#b]?)(\d*)([@]?)([0-9.]*)?/.exec(trimmed);
+
+          if (parsed) {
+            const [ignore, letter, accidental, octave, ignore2, freqOfA] = parsed;
+            if (letter) { // minimum spec
+              const semitones = [0, 2, 4, 5, 7, 9, 11]['cdefgab'.indexOf(letter)];
+              const accidentalInc = accidental ? [-1, 1]['b#'.indexOf(accidental)] : 0;
+              writeValue = Math.pow(2, (12 * ((octave || 4) - 4 + accidentalInc) + semitones - 9) / 12 ) * (parseFloat(freqOfA || '440'));
+            }
+          }
+
         }
 
         return {

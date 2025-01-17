@@ -33,6 +33,7 @@ const synthNodeTypes = {
     inputs: [
       {
         id: 1,
+        order: 1,
         displayName: 'Source',
         displayNameShort: 'Src',
         description: 'A waveform or sample',
@@ -44,6 +45,7 @@ const synthNodeTypes = {
       },
       {
         id: 2,
+        order: 2,
         displayName: 'Pitch offset',
         displayNameShort: 'Pit±',
         description: 'Amount of change to the reference frequency (octaves)',
@@ -55,6 +57,7 @@ const synthNodeTypes = {
       },
       {
         id: 6,
+        order: 3,
         displayName: 'Fixed frequency',
         displayNameShort: 'Hz',
         description: 'Absolute frequency, not affected by reference frequency',
@@ -64,6 +67,7 @@ const synthNodeTypes = {
       },
       {
         id: 7,
+        order: 4,
         displayName: 'Frequency fixed?',
         displayNameShort: 'Hz?',
         description: 'When enabled, use "Fixed frequency" input. Otherwise, use "Pitch offset"',
@@ -74,6 +78,7 @@ const synthNodeTypes = {
       },
       {
         id: 3,
+        order: 5,
         displayName: 'Phase mod',
         displayNameShort: 'PM',
         description: 'Amount of phase shift (cycles, at reference frequency)', // todo: with pitch
@@ -85,6 +90,7 @@ const synthNodeTypes = {
       },
       {
         id: 4,
+        order: 6,
         displayName: 'FM',
         displayNameShort: 'FM',
         description: 'Modulates the pitch, like FM (frequency modulation)',
@@ -94,6 +100,7 @@ const synthNodeTypes = {
       },
       {
         id: 5,
+        order: 7,
         displayName: 'Post-mix',
         displayNameShort: '+',
         description: 'Mixes directly before node output',
