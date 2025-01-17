@@ -196,8 +196,8 @@ const usePatchStore = create(
             const [ignore, letter, accidental, octave, ignore2, freqOfA] = parsed;
             if (letter) { // minimum spec
               const semitones = [0, 2, 4, 5, 7, 9, 11]['cdefgab'.indexOf(letter)];
-              const accidentalInc = accidental ? [-1, 1]['b#'.indexOf(accidental)] : 0;
-              writeValue = Math.pow(2, (12 * ((octave || 4) - 4 + accidentalInc) + semitones - 9) / 12 ) * (parseFloat(freqOfA || '440'));
+              const accidentalInc = accidental == '#' ? 1 : (accidental == 'b' ? -1 : 0);
+              writeValue = Math.pow(2, (octave || 4) - 4 + (accidentalInc + semitones - 9) / 12 ) * (parseFloat(freqOfA || '440'));
             }
           }
 

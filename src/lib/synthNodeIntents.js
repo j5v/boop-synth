@@ -53,9 +53,9 @@ const synthNodeTerminalIntents = { // draft only
     name: 'Frequency',
     units: 'Hz',
     classCSS: 'frequency',
-    description: 'A frequency, Hz',
+    description: 'Enter a frequency, or a note like Eb5, or Eb5@439 for a note relative to a tuned A4.',
     modulatable: true
-  },  
+  },
   CHECK_BOOL: {
     id: 9,
     name: 'On/off',
