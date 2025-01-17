@@ -151,12 +151,21 @@ const generate = function (
 
         node.outputs[0].signal = (switchPhase > phasePos) ? signal1 : signal2;
 
+      } else if (nodeTypeId == synthNodeTypes.NOISE.id) {
+        const [ freqSH, min, max ] = inputSignals;
+        node.prevPhase = node.phase;
+        node.phase = (node.phase || 0) + (phaseIncNormalized * freqSH);
+        if (Math.floor(node.prevPhase) !== Math.floor(node.phase)) {
+          node.outputs[0].signal = Math.random() * (max - min) + min;
+        }
+
       } else if (nodeTypeId == synthNodeTypes.OUTPUT.id) {
         const [ signal, gain ] = inputSignals;
         const output = signal * gain;
         node.peakMeter = Math.max(node.peakMeter || -Infinity, Math.abs(output));
         samples.push(output); // TODO: a buffer per output node
       }
+
 
     }
   }

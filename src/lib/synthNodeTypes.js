@@ -20,7 +20,7 @@ const synthNodeTypes = {
         description: 'Less than 1.0 is quieter, more than 1.0 is louder',
         intentId: synthNodeTerminalIntents.LEVEL.id,
         exposed: false,
-        defaultValue: 1.0,
+        defaultValue: 0.125,
       }
     ],
     outputs: [],
@@ -404,6 +404,47 @@ const synthNodeTypes = {
       }
     ],
     description: 'An analog-style envelope, using \'Sustain time\' in Performance properties',
+  },
+  NOISE: {
+    id: 8,
+    name: 'Noise',
+    inputs: [
+      {
+        id: 1,
+        displayName: 'S/H frequency',
+        description: 'Frequency',
+        intentId: synthNodeTerminalIntents.FREQUENCY_ABSOLUTE.id,
+        exposed: false,
+        defaultValue: 22050,
+      },
+      {
+        id: 2,
+        displayName: 'Min',
+        description: 'Minimum value',
+        intentId: synthNodeTerminalIntents.LEVEL.id,
+        exposed: false,
+        defaultValue: -1,
+      },
+      {
+        id: 3,
+        displayName: 'Max',
+        description: 'Maximum value',
+        intentId: synthNodeTerminalIntents.LEVEL.id,
+        exposed: false,
+        defaultValue: 1,
+      },
+    ],
+    outputs: [
+      {
+        id: 1,
+        displayName: 'Signal',
+        description: 'Link inputs to use this number',
+        intentId: synthNodeTerminalIntents.LEVEL.id,
+        exposed: true,
+        defaultValue: 0,
+      }
+    ],
+    description: 'A random number, changing at S/H rate',
   },
     
 }
