@@ -51,7 +51,7 @@ const synthNodeTypes = {
         description: 'Amount of change to the reference frequency (octaves)',
         displayUnits: 'semitones',
         intentId: synthNodeTerminalIntents.PITCH_OFFSET_OCTAVES.id,
-        exposed: true,
+        exposed: false,
         isOffset: true, // modifies value
         defaultValue: 0,
       },
@@ -84,7 +84,7 @@ const synthNodeTypes = {
         description: 'Amount of phase shift (cycles, at reference frequency)', // todo: with pitch
         displayUnits: '...0..1...',
         intentId: synthNodeTerminalIntents.LEVEL.id,
-        exposed: true,
+        exposed: false,
         isOffset: true, // modifies value
         defaultValue: 0,
       },
@@ -105,7 +105,7 @@ const synthNodeTypes = {
         displayNameShort: '+',
         description: 'Mixes directly before node output',
         intentId: synthNodeTerminalIntents.LEVEL.id,
-        exposed: false,
+        exposed: true,
         defaultValue: 0,
       },
     ],
