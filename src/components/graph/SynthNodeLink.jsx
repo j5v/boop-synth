@@ -1,7 +1,7 @@
 import './SynthNodeLink.css'
 import { remAsPx } from '../../lib/utils.js'
 
-function SynthNodeLink({ outputPos, inputPos }) {
+function SynthNodeLink({ outputPos, inputPos, isFeedback }) {
 
   const midpointPos = {
     x: inputPos.x * 0.5 + outputPos.x * 0.5,
@@ -34,7 +34,7 @@ function SynthNodeLink({ outputPos, inputPos }) {
         d={path}
       />
       <path
-        className="synth-node-cable"
+        className={`synth-node-cable${isFeedback ? ' feedback' : ''}`}
         d={path}
       />
     </>

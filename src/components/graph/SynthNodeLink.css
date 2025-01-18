@@ -2,8 +2,12 @@
   stroke-width: 4px;
   fill: none;
   stroke: hsl(120, 80%, 40%);
-  stroke-linecap: round;
   pointer-events: none;
+}
+
+.synth-node-cable.feedback {
+  stroke-dasharray: 8 2;
+  stroke: hsl(120, 80%, 40%);
 }
 
 .synth-node-cable-outline {

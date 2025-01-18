@@ -28,6 +28,10 @@ function SynthNodeLinks() {
         const outputNode = i.link && nodes.find(n => n.id == i.link.synthNodeId);
         
         if (outputNode) {
+          const thisNodeIndex = nodes.indexOf(node);
+          const outputNodeIndex = nodes.indexOf(outputNode);
+          const isFeedback = thisNodeIndex <= outputNodeIndex;
+
           const outputOutput = outputNode.outputs.find(n => n.id == i.link.outputId);
 
           let outputIndex = 0;
@@ -49,6 +53,7 @@ function SynthNodeLinks() {
               key={key}
               outputPos={outputPos}
               inputPos={inputPos}
+              isFeedback={isFeedback}
             />
           );
         }
