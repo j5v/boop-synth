@@ -1,4 +1,5 @@
 import { synthNodeTerminalIntents } from '../lib/synthNodeIntents.js'
+import { sourceTypeGroups } from '../lib/sourceTypeGroups.js'
 import { getItemById } from '../lib/utils.js'
 
 const synthNodeTypes = {
@@ -37,15 +38,13 @@ const synthNodeTypes = {
         displayName: 'Source',
         displayNameShort: 'Src',
         description: 'A waveform or sample',
-        intentId: synthNodeTerminalIntents.SOURCE.id,
+        intentId: synthNodeTerminalIntents.SOURCE_TYPE_GROUP.id,
         isParam: true,
-        exposed: false,
-        isPlaceholder: true,
-        defaultValue: 1,
+        defaultValue: sourceTypeGroups.FUNCTION.id,
       },
       {
         id: 2,
-        order: 2,
+        order: 12,
         displayName: 'Pitch offset',
         displayNameShort: 'Pit±',
         description: 'Amount of change to the reference frequency (octaves)',
@@ -57,7 +56,7 @@ const synthNodeTypes = {
       },
       {
         id: 6,
-        order: 3,
+        order: 13,
         displayName: 'Fixed frequency',
         displayNameShort: 'Hz',
         description: 'Absolute frequency, not affected by reference frequency',
@@ -67,8 +66,8 @@ const synthNodeTypes = {
       },
       {
         id: 7,
-        order: 4,
-        displayName: 'Frequency fixed?',
+        order: 14,
+        displayName: 'Fixed frequency?',
         displayNameShort: 'Hz?',
         description: 'When enabled, use "Fixed frequency" input. Otherwise, use "Pitch offset"',
         displayUnits: 'On or off',
@@ -78,7 +77,7 @@ const synthNodeTypes = {
       },
       {
         id: 3,
-        order: 5,
+        order: 15,
         displayName: 'Phase mod',
         displayNameShort: 'PM',
         description: 'Amount of phase shift (cycles, at reference frequency)', // todo: with pitch
@@ -90,7 +89,7 @@ const synthNodeTypes = {
       },
       {
         id: 4,
-        order: 6,
+        order: 16,
         displayName: 'FM',
         displayNameShort: 'FM',
         description: 'Modulates the pitch, like FM (frequency modulation)',
@@ -100,13 +99,23 @@ const synthNodeTypes = {
       },
       {
         id: 5,
-        order: 7,
+        order: 20,
         displayName: 'Post-mix',
         displayNameShort: '+',
         description: 'Mixes directly before node output',
         intentId: synthNodeTerminalIntents.LEVEL.id,
         exposed: true,
         defaultValue: 0,
+      },
+      {
+        id: 10,
+        order: 2,
+        displayName: 'Function',
+        displayNameShort: 'Fn',
+        description: 'A function that creates a wave shape',
+        intentId: synthNodeTerminalIntents.SOURCE_TYPE_FUNCTION.id,
+        isParam: true,
+        defaultValue: 1,
       },
     ],
     outputs: [

@@ -3,6 +3,8 @@ import { joinItems, getItemById } from '../../lib/utils.js'
 import { getNodeTypeById } from '../../lib/synthNodeTypes.js'
 import usePatchStore from '../../store/patchStore.jsx'
 import { getSynthNodeTerminalIntentsById, synthNodeTerminalIntents } from '../../lib/synthNodeIntents';
+import { sourceTypeGroups } from '../../lib/sourceTypeGroups.js'
+import { sourceFunctions } from '../../lib/sourceFunctions.js'
 
 function FormPatchNodeInputItem(props) {
 
@@ -36,26 +38,66 @@ function FormPatchNodeInputItem(props) {
   ) : <></>
 
   const inputFieldVisible = (!inputItem.exposed || nodeTypeInput.isOffset)
-  let inputField
+  let inputField;
   
+  // Controls for input intent
+
   if (intent == synthNodeTerminalIntents.CHECK_BOOL) {
 
-    // For compatibility with olf patches; remove in future.
+    // For compatibility with old patches; remove in future.
     if (inputItem.value === 'false') inputItem.value = false;
     if (inputItem.value === 'true') inputItem.value = true;
 
     inputField = <input
-    type="checkbox"
-    checked={
-      (inputItem.userValue !== undefined) ? inputItem.userValue :
-      (inputItem.value !== undefined) ? inputItem.value :
-      nodeTypeInput.defaultValue
-    }
-    onChange={(e) => handleChangeCheckbox(e, inputItem.id)}
-    title=""
-  ></input>
+      type="checkbox"
+      checked={
+        (inputItem.userValue !== undefined) ? inputItem.userValue :
+        (inputItem.value !== undefined) ? inputItem.value :
+        nodeTypeInput.defaultValue
+      }
+      onChange={(e) => handleChangeCheckbox(e, inputItem.id)}
+      title={hint}
+    ></input>
 
-  } else {
+  } else if (intent == synthNodeTerminalIntents.SOURCE_TYPE_GROUP) { 
+
+    const options = Object.entries(sourceTypeGroups).map(stg => (
+      <option key={`stg-${stg[1].id}`} value={stg[1].id} disabled={stg[1].isPlaceholder}>{stg[1].name}</option>
+    ));
+
+    inputField = <select
+      defaultValue={
+        (inputItem.userValue !== undefined) ? inputItem.userValue :
+        (inputItem.value !== undefined) ? inputItem.value :
+        nodeTypeInput.defaultValue
+      }
+      className="select"
+      onChange={(e) => handleChangeValue(e, inputItem.id)}
+      title={hint}
+    >
+      {options}
+    </select>
+
+  } else if (intent == synthNodeTerminalIntents.SOURCE_TYPE_FUNCTION) { 
+
+    const options = Object.entries(sourceFunctions).map(stg => (
+      <option key={`stg-${stg[1].id}`} value={stg[1].id} disabled={stg[1].isPlaceholder}>{stg[1].name}</option>
+    ));
+
+    inputField = <select
+      defaultValue={
+        (inputItem.userValue !== undefined) ? inputItem.userValue :
+        (inputItem.value !== undefined) ? inputItem.value :
+        nodeTypeInput.defaultValue
+      }
+      className="select"
+      onChange={(e) => handleChangeValue(e, inputItem.id)}
+      title={hint}
+    >
+      {options}
+    </select>
+
+  } else { // Default to a text input.
    
     inputField = <input
       className={`number ${inputFieldVisible ? '' : ' invisible'}`}
@@ -67,6 +109,7 @@ function FormPatchNodeInputItem(props) {
       }
       title={hint}
     ></input>
+
   }
 
   const exposureField = (intent.modulatable) ? (
@@ -74,7 +117,7 @@ function FormPatchNodeInputItem(props) {
       type="checkbox"
       checked={inputItem.exposed}
       onChange={handleChangeExposure}
-      title="Show terminal"
+      title="Show or hide input socket"
     ></input>
   ) : <></>
 

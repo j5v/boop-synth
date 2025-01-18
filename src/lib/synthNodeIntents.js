@@ -13,7 +13,7 @@ const synthNodeTerminalIntents = { // draft only
     description: 'A pitch change in octaves, relative to the reference frequency. You can enter units here, like 10c for 10 cents, 2d for 2 semitones (12ET), 3:2 or 3/2 for harmonic ratios.',
     modulatable: true
   },
-  SOURCE: {
+  SOURCE_TYPE_GROUP: {
     id: 3,
     name: 'Source',
     units: 'choice',
@@ -62,6 +62,13 @@ const synthNodeTerminalIntents = { // draft only
     units: '',
     classCSS: 'boolean',
     description: 'On or off',
+  },
+  SOURCE_TYPE_FUNCTION: {
+    id: 10,
+    name: 'Function',
+    units: 'choice',
+    classCSS: 'enum',
+    description: 'Choose a wave shape for the function',
   },  
 }
 

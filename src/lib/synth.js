@@ -1,5 +1,7 @@
 import { appInfo } from './appInfo.js'
 import { synthNodeTypes, getNodeTypeById } from '../lib/synthNodeTypes.js'
+import { sourceTypeGroups } from '../lib/sourceTypeGroups.js'
+import { sourceFunctions } from '../lib/sourceFunctions.js'
 import { initEnvelope, processEnvelope } from '../nodeTypes/synthEnvelopeAnalog.js'
 import { joinItems, getNewId, getItemById } from './utils.js'
 import saveAs from '../lib/FileSaver.js'
@@ -100,7 +102,9 @@ const generate = function (
   const samples = new Array();
   const sampleFrames = sampleRate * duration;
   const PI = Math.PI;
+  const INV_PI = 1 / PI;
   const TAU = PI * 2;
+  const INV_TAU = 1 / TAU;
 
   const phaseIncNormalized = 2 * Math.PI / sampleRate;
 
@@ -117,14 +121,30 @@ const generate = function (
       const nodeTypeId = node.nodeTypeId;
 
       if (nodeTypeId == synthNodeTypes.GEN_FM.id) {
-        const [ source, pitch, phaseMod, freqMod, postMix, fixedFreq, isFixedFreq ] = inputSignals;
+        const [ sourceType, pitch, phaseMod, freqMod, postMix, fixedFreq, isFixedFreq, sourceFn ] = inputSignals;
+
         const frequency = isFixedFreq ?
           fixedFreq :
           (freq * (pitch == 0 ? 1 : Math.pow(2, pitch * pitchUnit)));
 
         node.phase = (node.phase || 0) + phaseIncNormalized * frequency * (1 + freqMod);
         const ph = node.phase + phaseMod * TAU;
-        node.outputs[0].signal = Math.sin(ph) + postMix;
+        if (sourceType == sourceTypeGroups.FUNCTION.id) {
+          switch (sourceFn) {
+            case sourceFunctions.SINE.id:
+              node.outputs[0].signal = Math.sin(ph) + postMix;
+              break;
+            case sourceFunctions.SAW.id:
+              node.outputs[0].signal = (ph * INV_TAU) % 1 * -2 + 1 + postMix;
+              break;
+            case sourceFunctions.SQUARE.id:
+              node.outputs[0].signal = ((ph % TAU) > PI ? -1 : 1) + postMix;
+              break;
+            case sourceFunctions.TRIANGLE.id:
+              node.outputs[0].signal = (Math.abs(1 - (ph * INV_PI) % 2)) * 2 - 1 + postMix;
+              break;
+          }
+        }
 
       } else if (nodeTypeId == synthNodeTypes.NUMBER.id) {
         node.outputs[0].signal = inputSignals[0];

@@ -4,7 +4,7 @@
   font-weight: 400;
 
   color-scheme: light dark;
-  color: hsl(0,0%,85%);
+  color: hsl(0,0%,90%);
   background-color: #242424;
 
   font-synthesis: none;
@@ -15,6 +15,10 @@
 
 html {
   margin: 0;
+}
+
+select, input {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
 }
 
 a {
@@ -143,11 +147,28 @@ button.icon {
 }
 
 
+@media (prefers-color-scheme: dark) {
+
+  select option {
+    color: hsl(0,0%,90%);
+  }
+  select option:checked {
+    background-color: hsl(30,100%,30%);
+  }
+  select option:disabled {
+    color: hsl(0,0%,80%);
+    background-color: hsl(0,0%,15%);
+    filter: blur(0.7px);
+  }
+
+}
+
 @media (prefers-color-scheme: light) {
   :root {
     color: hsl(0,0%,15%);
     background-color: #ffffff;
   }
+
   a {
     font-weight: 500;
     color: hsl(30,100%,20%);

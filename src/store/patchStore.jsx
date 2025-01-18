@@ -202,7 +202,13 @@ const usePatchStore = create(
           }
 
         } else if (nodeTypeInput.intentId == synthNodeTerminalIntents.CHECK_BOOL.id) {
-            writeValue = value; // Boolean
+          writeValue = value; // Boolean
+
+        } else if (nodeTypeInput.intentId == synthNodeTerminalIntents.SOURCE_TYPE_GROUP.id) {
+          writeValue = parseInt(value, 10);
+
+        } else if (nodeTypeInput.intentId == synthNodeTerminalIntents.SOURCE_TYPE_FUNCTION.id) {
+          writeValue = parseInt(value, 10);
 
         }
 
