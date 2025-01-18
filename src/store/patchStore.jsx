@@ -201,6 +201,9 @@ const usePatchStore = create(
             }
           }
 
+        } else if (nodeTypeInput.intentId == synthNodeTerminalIntents.CHECK_BOOL.id) {
+            writeValue = value; // Boolean
+
         }
 
         return {
@@ -209,7 +212,7 @@ const usePatchStore = create(
             ...node,
             inputs: node.inputs.map(input => ({
               ...input,
-              value: (input == targetInput) ? parseFloat(writeValue) : input.value
+              value: (input == targetInput) ? writeValue : input.value
             }))
           }))
         }

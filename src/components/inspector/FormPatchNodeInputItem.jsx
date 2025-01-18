@@ -2,7 +2,7 @@ import './FormPatchNodeInputItem.css'
 import { joinItems, getItemById } from '../../lib/utils.js'
 import { getNodeTypeById } from '../../lib/synthNodeTypes.js'
 import usePatchStore from '../../store/patchStore.jsx'
-import { getSynthNodeTerminalIntentsById } from '../../lib/synthNodeIntents';
+import { getSynthNodeTerminalIntentsById, synthNodeTerminalIntents } from '../../lib/synthNodeIntents';
 
 function FormPatchNodeInputItem(props) {
 
@@ -22,6 +22,10 @@ function FormPatchNodeInputItem(props) {
     setInputValue(inputItem, event.target.value, nodeTypeInput);
   }
 
+  const handleChangeCheckbox = (event) => {
+    setInputValue(inputItem, event.target.checked, nodeTypeInput);
+  }
+
   const handleChangeExposure = (event) => {
     setInputExposed(inputItem, event.target.checked);
   }
@@ -32,7 +36,28 @@ function FormPatchNodeInputItem(props) {
   ) : <></>
 
   const inputFieldVisible = (!inputItem.exposed || nodeTypeInput.isOffset)
-  const inputField = <input
+  let inputField
+  
+  if (intent == synthNodeTerminalIntents.CHECK_BOOL) {
+
+    // For compatibility with olf patches; remove in future.
+    if (inputItem.value === 'false') inputItem.value = false;
+    if (inputItem.value === 'true') inputItem.value = true;
+
+    inputField = <input
+    type="checkbox"
+    checked={
+      (inputItem.userValue !== undefined) ? inputItem.userValue :
+      (inputItem.value !== undefined) ? inputItem.value :
+      nodeTypeInput.defaultValue
+    }
+    onChange={(e) => handleChangeCheckbox(e, inputItem.id)}
+    title=""
+  ></input>
+
+  } else {
+   
+    inputField = <input
       className={`number ${inputFieldVisible ? '' : ' invisible'}`}
       onBlur={handleChangeValue}
       defaultValue={
@@ -42,7 +67,8 @@ function FormPatchNodeInputItem(props) {
       }
       title={hint}
     ></input>
-  
+  }
+
   const exposureField = (intent.modulatable) ? (
     <input
       type="checkbox"
