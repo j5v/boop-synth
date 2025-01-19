@@ -112,10 +112,11 @@ const synthNodeTypes = {
       {
         id: 10,
         order: 2,
-        displayName: 'Function',
+        displayName: 'Shape',
         displayNameShort: 'Fn',
         description: 'A function that creates a wave shape',
         intentId: synthNodeTerminalIntents.SOURCE_TYPE_FUNCTION.id,
+        onlyShowIf: { inputId: 1, hasValue: sourceTypeGroups.FUNCTION.id },
         isParam: true,
         defaultValue: 1,
       },
