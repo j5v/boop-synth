@@ -108,8 +108,6 @@ const generate = function (
 
   const phaseIncNormalized = 2 * Math.PI / sampleRate;
 
-  const pitchUnit = 1; // 1 = octaves. Semitones would be 1/12
-
   initPatch(nodes);
   clearPeakMeters();
 
@@ -125,7 +123,7 @@ const generate = function (
 
         const frequency = isFixedFreq ?
           fixedFreq :
-          (freq * (pitch == 0 ? 1 : Math.pow(2, pitch * pitchUnit)));
+          (freq * (pitch == 0 ? 1 : Math.pow(2, pitch)));
 
         node.phase = (node.phase || 0) + phaseIncNormalized * frequency * (1 + freqMod);
         const ph = node.phase + phaseMod * TAU;
@@ -165,7 +163,7 @@ const generate = function (
       } else if (nodeTypeId == synthNodeTypes.SPLICE.id) {
         const [ pitch, signal1, signal2, switchPhase ] = inputSignals;
         
-        const frequency = freq * (pitch == 0 ? 1 : Math.pow(2, pitch * pitchUnit));
+        const frequency = freq * (pitch == 0 ? 1 : Math.pow(2, pitch));
         node.phase = (node.phase || 0) + (phaseIncNormalized * frequency);
         const phasePos = node.phase % (phaseIncNormalized * frequency);
 
