@@ -174,7 +174,7 @@ const generate = function (
       } else if (nodeTypeId == synthNodeTypes.NOISE.id) {
         const [ freqSH, min, max ] = inputSignals;
         node.prevPhase = node.phase;
-        node.phase = (node.phase || 0) + (phaseIncNormalized * freqSH);
+        node.phase = (node.phase || 0) + (phaseIncNormalized * freqSH * INV_TAU);
         if (Math.floor(node.prevPhase) !== Math.floor(node.phase)) {
           node.outputs[0].signal = Math.random() * (max - min) + min;
         }

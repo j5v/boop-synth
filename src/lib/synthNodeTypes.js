@@ -3,30 +3,6 @@ import { sourceTypeGroups } from '../lib/sourceTypeGroups.js'
 import { getItemById } from '../lib/utils.js'
 
 const synthNodeTypes = {
-  OUTPUT: {
-    id: 1,
-    name: 'Output',
-    inputs: [
-      {
-        id: 1,
-        displayName: 'Signal',
-        displayNameShort: 'In',
-        intentId: synthNodeTerminalIntents.LEVEL.id,
-        exposed: true,
-        defaultValue: 0,
-      },
-      {
-        id: 2,
-        displayName: 'Gain',
-        description: 'Less than 1.0 is quieter, more than 1.0 is louder',
-        intentId: synthNodeTerminalIntents.LEVEL.id,
-        exposed: false,
-        defaultValue: 0.125,
-      }
-    ],
-    outputs: [],
-    description: 'Collects a signal to be the output for the graph',
-  },
   GEN_FM: {
     id: 2,
     nameShort: 'Osc',
@@ -131,6 +107,71 @@ const synthNodeTypes = {
       }
     ],
     description: 'Generates from a wave source, with optional FM (frequency modulation) and PM (phase modulation)',
+  },
+  NOISE: {
+    id: 8,
+    name: 'Noise',
+    inputs: [
+      {
+        id: 1,
+        displayName: 'S/H rate',
+        description: 'Double the highest frequency it can generate.',
+        intentId: synthNodeTerminalIntents.FREQUENCY_ABSOLUTE.id,
+        exposed: false,
+        defaultValue: 22050,
+      },
+      {
+        id: 2,
+        displayName: 'Min signal',
+        description: 'Minimum value',
+        intentId: synthNodeTerminalIntents.LEVEL.id,
+        exposed: false,
+        defaultValue: -1,
+      },
+      {
+        id: 3,
+        displayName: 'Max signal',
+        description: 'Maximum value',
+        intentId: synthNodeTerminalIntents.LEVEL.id,
+        exposed: false,
+        defaultValue: 1,
+      },
+    ],
+    outputs: [
+      {
+        id: 1,
+        displayName: 'Out',
+        description: 'Link inputs to use this number',
+        intentId: synthNodeTerminalIntents.LEVEL.id,
+        exposed: true,
+        defaultValue: 0,
+      }
+    ],
+    description: 'A random number, changing at S/H rate',
+  },
+  OUTPUT: {
+    id: 1,
+    name: 'Output',
+    inputs: [
+      {
+        id: 1,
+        displayName: 'Signal',
+        displayNameShort: 'In',
+        intentId: synthNodeTerminalIntents.LEVEL.id,
+        exposed: true,
+        defaultValue: 0,
+      },
+      {
+        id: 2,
+        displayName: 'Gain',
+        description: 'Less than 1.0 is quieter, more than 1.0 is louder',
+        intentId: synthNodeTerminalIntents.LEVEL.id,
+        exposed: false,
+        defaultValue: 0.125,
+      }
+    ],
+    outputs: [],
+    description: 'Collects a signal to be the output for the graph',
   },
   RING: {
     id: 3,
@@ -413,47 +454,6 @@ const synthNodeTypes = {
       }
     ],
     description: 'An analog-style envelope, using \'Sustain time\' in Performance properties',
-  },
-  NOISE: {
-    id: 8,
-    name: 'Noise',
-    inputs: [
-      {
-        id: 1,
-        displayName: 'S/H frequency',
-        description: 'Frequency',
-        intentId: synthNodeTerminalIntents.FREQUENCY_ABSOLUTE.id,
-        exposed: false,
-        defaultValue: 22050,
-      },
-      {
-        id: 2,
-        displayName: 'Min',
-        description: 'Minimum value',
-        intentId: synthNodeTerminalIntents.LEVEL.id,
-        exposed: false,
-        defaultValue: -1,
-      },
-      {
-        id: 3,
-        displayName: 'Max',
-        description: 'Maximum value',
-        intentId: synthNodeTerminalIntents.LEVEL.id,
-        exposed: false,
-        defaultValue: 1,
-      },
-    ],
-    outputs: [
-      {
-        id: 1,
-        displayName: 'Out',
-        description: 'Link inputs to use this number',
-        intentId: synthNodeTerminalIntents.LEVEL.id,
-        exposed: true,
-        defaultValue: 0,
-      }
-    ],
-    description: 'A random number, changing at S/H rate',
   },
     
 }
