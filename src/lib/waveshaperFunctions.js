@@ -7,7 +7,7 @@ const waveshaperFunctions = {
 }
 
 // not used yet - some dependencies to work out.
-const waveShaperPreview = (inputSignals, steps = 200) => {
+const waveShaperPreviewData = (inputSignals, steps = 200) => {
   const [ signal, inMin, inMax, outMin, outMax, preAmp, offset, threshold, shaperId, doClipInput, doClipOutput ] = inputSignals;
  
   const outputs = [];

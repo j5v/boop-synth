@@ -248,7 +248,7 @@ const usePatchStore = create(
       // Remove link from input
 
       removeLinkFromInput: (targetInput) => set((state) => {
-        // console.log('usePatchStore: setLinkDragFromInput()', spec);
+        // console.log('usePatchStore: setLinkDragFromInput()', targetInput);
         
         return {
           ...state,
@@ -264,7 +264,7 @@ const usePatchStore = create(
       }),
 
       removeLinksFromOutput: (outputNodeId, outputId) => set((state) => {
-        // console.log('usePatchStore: setLinkDragFromInput()', spec);
+        // console.log('usePatchStore: setLinkDragFromInput()', outputNodeId, outputId);
         
         return {
           ...state,

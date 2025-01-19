@@ -100,7 +100,8 @@ const generate = function (
   nodes,
   { sampleRate, duration, freq, sustainReleaseTime = 0 }
 ) {
-  const samples = new Array();
+  const outputBuffers = [];
+
   const sampleFrames = sampleRate * duration;
   const phaseIncNormalized = 1 / sampleRate;
   const PI = Math.PI;
@@ -218,18 +219,17 @@ const generate = function (
         const [ signal, gain ] = inputSignals;
         const output = signal * gain;
         node.peakMeter = Math.max(node.peakMeter || -Infinity, Math.abs(output));
-        samples.push(output); // TODO: a buffer per output node
+        node.buffer.samples.push(output);
       }
-
 
     }
   }
 
   finishPatch();
-
+  
   return {
     sampleFrames,
-    samples
+    outputBuffers
   }
 
   function clearPeakMeters() {
@@ -274,6 +274,7 @@ const generate = function (
       const node = nodes[nodeIndex];
       delete node.env;
       delete node.phase;
+      delete node.buffer; // but retain node.buffer.id
 
       node.inputs.forEach(input => {
         if (input.link) {
@@ -290,7 +291,25 @@ const generate = function (
 
   function initPatch() {
     cleanPatch();
+
+    let id = 1;
+
     nodes.forEach(node => {
+
+      // initialize output buffers
+      if (node.nodeTypeId == synthNodeTypes.OUTPUT.id) {
+        const newBuffer = {
+          id: id++,
+          nodeId: node.nodeId,
+          samples: []
+        };
+        outputBuffers.push(newBuffer);
+
+        node.bufferId = newBuffer.id;
+
+        // fast access in generate(). non-serializable; delete reference in finishPatch()
+        node.buffer = newBuffer; 
+      }
 
       // initialize envelope nodes
       if (node.nodeTypeId == synthNodeTypes.ENVELOPE_WAHDSR.id) {
@@ -320,15 +339,21 @@ const generate = function (
 
 const generateFile = function (nodes, spec) {
 
-  var dataview = encodeWAV(
-    generate(nodes, spec).samples,
-    spec.sampleRate,
-    spec.channels
-  );
+  const output = generate(nodes, spec);
 
-  var audioBlob = new Blob([dataview], { type : 'audio/wav' });
-  saveAs(audioBlob, spec.filenameRoot + '.wav');
-  
+  for (let outputBufferIndex in output.outputBuffers) {
+    const samples = output.outputBuffers[outputBufferIndex].samples;
+
+    const dataview = encodeWAV(
+      samples,
+      spec.sampleRate,
+      spec.channels
+    );
+
+    const audioBlob = new Blob([dataview], { type : 'audio/wav' });
+    saveAs(audioBlob, spec.filenameRoot + '.wav');
+  }
+
   function encodeWAV(buf, sr, ch) {
     var bytesPerSample = 2;
   
@@ -401,29 +426,34 @@ const generateAndPlay = function (nodes, spec) {
   const { duration, channels, sampleRate } = spec;
 
   // synthesize a buffer
-  const output = generate(nodes, spec).samples;
+  const output = generate(nodes, spec);
 
-  // allocate audio context
-  const audioCtx = new AudioContext();
-  
-  // allocate audio buffer
-  const sampleFrames = duration * sampleRate;
-  const myArrayBuffer = audioCtx.createBuffer(channels, sampleFrames, sampleRate);
+  for (let outputBufferIndex in output.outputBuffers) {
 
-  // populate buffer
-  for (var channel = 0; channel < channels; channel++) {
-    var nowBuffering = myArrayBuffer.getChannelData(channel);
-    for (var i = 0; i < sampleFrames; i++) {
-      nowBuffering[i] = output[i];
+    const samples = output.outputBuffers[outputBufferIndex].samples;
+
+    // allocate audio context
+    const audioCtx = new AudioContext();
+    
+    // allocate audio buffer
+    const sampleFrames = duration * sampleRate;
+    const myArrayBuffer = audioCtx.createBuffer(channels, sampleFrames, sampleRate);
+
+    // populate buffer
+    for (let channel = 0; channel < channels; channel++) {
+      const nowBuffering = myArrayBuffer.getChannelData(channel);
+      for (let i = 0; i < sampleFrames; i++) {
+        nowBuffering[i] = samples[i];
+      }
     }
+
+    // Play buffer
+    const source = audioCtx.createBufferSource();
+    source.buffer = myArrayBuffer;
+    source.connect(audioCtx.destination);
+    source.start();
+
   }
-
-  // Play buffer
-  var source = audioCtx.createBufferSource();
-  source.buffer = myArrayBuffer;
-  source.connect(audioCtx.destination);
-  source.start();
-
   // TODO: check if context and buffers need async deallocation
 
 }

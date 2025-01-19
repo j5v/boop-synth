@@ -96,7 +96,10 @@ function FormPatchNodeInputItem(props) {
   } else if (intent == synthNodeTerminalIntents.SOURCE_TYPE_FUNCTION) { 
 
     const options = Object.entries(sourceFunctions).map(stg => (
-      <option key={`stg-${stg[1].id}`} value={stg[1].id} disabled={stg[1].isPlaceholder}>{stg[1].name}</option>
+      <option
+        key={`stg-${stg[1].id}`}
+        value={stg[1].id} disabled={stg[1].isPlaceholder}
+      >{stg[1].name}</option>
     ));
 
     inputField = <select
@@ -115,7 +118,10 @@ function FormPatchNodeInputItem(props) {
   } else if (intent == synthNodeTerminalIntents.WAVESHAPER_FUNCTION) { 
 
     const options = Object.entries(waveshaperFunctions).map(stg => (
-      <option key={`stg-${stg[1].id}`} value={stg[1].id} disabled={stg[1].isPlaceholder}>{stg[1].name}</option>
+      <option
+        key={`stg-${stg[1].id}`}
+        value={stg[1].id} disabled={stg[1].isPlaceholder}
+      >{stg[1].name}</option>
     ));
 
     inputField = <select

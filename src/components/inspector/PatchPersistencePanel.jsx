@@ -43,6 +43,9 @@ const SynthGraphProperties = () => {
         delete input.posY;
         if (input.link == {}) delete input.link;
 
+        // remove reference to output buffer.
+        delete input.buffer; // just from the node; will be discarded on generate()
+
         // userValues are only useful if different (parseable format) from value.
         if (input.userValue == input.value) delete input.userValue;
 
