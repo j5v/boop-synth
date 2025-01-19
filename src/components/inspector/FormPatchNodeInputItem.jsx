@@ -37,7 +37,21 @@ function FormPatchNodeInputItem(props) {
     <div className="units">{nodeTypeInput.displayUnits}</div>
   ) : <></>
 
-  const inputFieldVisible = (!inputItem.exposed || nodeTypeInput.isOffset)
+  let hideInput = false;
+  if (nodeTypeInput.onlyShowIf !== undefined) {
+    const otherInput = getItemById(synthNode.inputs, nodeTypeInput.onlyShowIf.inputId);
+    const otherInputType = getItemById(nodeType.inputs, otherInput.id);
+
+    if ((otherInput.value || otherInputType.defaultValue) != nodeTypeInput.onlyShowIf.hasValue) {
+      hideInput = true;
+    }
+  }
+
+  if (hideInput) {
+    return <></>
+  }
+
+  const inputFieldVisible = (!inputItem.exposed || nodeTypeInput.isOffset);
   let inputField;
   
   // Controls for input intent
@@ -146,6 +160,7 @@ function FormPatchNodeInputItem(props) {
       {trueValue}
     </>
   )
+  
 }
 
 export default FormPatchNodeInputItem

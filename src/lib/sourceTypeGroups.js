@@ -1,7 +1,7 @@
 const sourceTypeGroups = {
   FUNCTION: {
     id: 1,
-    name: 'Function',
+    name: 'Shape',
   },  
   WAVE_TABLE: {
     id: 2,
