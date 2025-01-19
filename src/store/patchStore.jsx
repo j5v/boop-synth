@@ -173,6 +173,8 @@ const usePatchStore = create(
           } else if (trimmed.indexOf(':') > -1) { // fraction of numbers (colon ratio)
             const parts = trimmed.split(':').map(n => parseFloat(n));
             if (parts[1] !== 0) writeValue = Math.log(parts[0] / parts[1]) / Math.log(2);
+          } else {
+            writeValue = parseFloat(trimmed);
           }
 
         } else if (nodeTypeInput.intentId == synthNodeTerminalIntents.LEVEL.id) {
@@ -187,6 +189,8 @@ const usePatchStore = create(
           } else if (trimmed.indexOf(':') > -1) { // fraction of numbers (colon ratio)
             const parts = trimmed.split(':').map(n => parseFloat(n));
             if (parts[1] !== 0) writeValue = parts[0] / parts[1];
+          } else {
+            writeValue = parseFloat(trimmed);
           }
 
         } else if (nodeTypeInput.intentId == synthNodeTerminalIntents.FREQUENCY_ABSOLUTE.id) {
@@ -199,6 +203,8 @@ const usePatchStore = create(
               const accidentalInc = accidental == '#' ? 1 : (accidental == 'b' ? -1 : 0);
               writeValue = Math.pow(2, (octave || 4) - 4 + (accidentalInc + semitones - 9) / 12 ) * (parseFloat(freqOfA || '440'));
             }
+          } else {
+            writeValue = parseFloat(trimmed);
           }
 
         } else if (nodeTypeInput.intentId == synthNodeTerminalIntents.CHECK_BOOL.id) {

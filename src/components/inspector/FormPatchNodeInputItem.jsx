@@ -5,6 +5,7 @@ import usePatchStore from '../../store/patchStore.jsx'
 import { getSynthNodeTerminalIntentsById, synthNodeTerminalIntents } from '../../lib/synthNodeIntents';
 import { sourceTypeGroups } from '../../lib/sourceTypeGroups.js'
 import { sourceFunctions } from '../../lib/sourceFunctions.js'
+import { waveshaperFunctions } from '../../lib/waveshaperFunctions.js'
 
 function FormPatchNodeInputItem(props) {
 
@@ -95,6 +96,25 @@ function FormPatchNodeInputItem(props) {
   } else if (intent == synthNodeTerminalIntents.SOURCE_TYPE_FUNCTION) { 
 
     const options = Object.entries(sourceFunctions).map(stg => (
+      <option key={`stg-${stg[1].id}`} value={stg[1].id} disabled={stg[1].isPlaceholder}>{stg[1].name}</option>
+    ));
+
+    inputField = <select
+      defaultValue={
+        (inputItem.userValue !== undefined) ? inputItem.userValue :
+        (inputItem.value !== undefined) ? inputItem.value :
+        nodeTypeInput.defaultValue
+      }
+      className="select"
+      onChange={(e) => handleChangeValue(e, inputItem.id)}
+      title={hint}
+    >
+      {options}
+    </select>
+
+  } else if (intent == synthNodeTerminalIntents.WAVESHAPER_FUNCTION) { 
+
+    const options = Object.entries(waveshaperFunctions).map(stg => (
       <option key={`stg-${stg[1].id}`} value={stg[1].id} disabled={stg[1].isPlaceholder}>{stg[1].name}</option>
     ));
 

@@ -5,6 +5,7 @@ import { sourceFunctions } from '../lib/sourceFunctions.js'
 import { initEnvelope, processEnvelope } from '../nodeTypes/synthEnvelopeAnalog.js'
 import { joinItems, getNewId, getItemById } from './utils.js'
 import saveAs from '../lib/FileSaver.js'
+import { getWaveshaperFunctionById } from './waveshaperFunctions.js'
 
 const BITDEPTH_16 = 0;
 
@@ -165,6 +166,45 @@ const generate = function (
         const phasePos = node.phase % (phaseIncNormalized * frequency);
 
         node.outputs[0].signal = (switchPhase > phasePos) ? signal1 : signal2;
+
+      } else if (nodeTypeId == synthNodeTypes.MAPPER.id) {
+        const [ signal, inMin, inMax, outMin, outMax, preAmp, offset, threshold, shaperId, doClipInput, doClipOutput ] = inputSignals;
+
+        let sig = signal; // Mutate this through the signal path of the waveshaper.
+
+        if (doClipInput)
+          sig = Math.min(Math.max(sig, inMin), inMax);
+
+        // Scale input from inMin..inMax to -1..1
+        if ((inMin !== -1 && inMax !== 1) && (inMax - inMin) !== 0)
+          sig = (sig - inMin) * 2 / (inMax - inMin) - 1;
+
+        // Pre-amp (gain) and offset (bias)
+        sig = sig * preAmp + offset;
+
+        // Threshold
+        if (threshold !== 0)
+          if (Math.abs(sig) > Math.abs(threshold)) {
+            sig = sig - threshold * Math.sign(sig);
+          } else if (threshold > 0) {
+            sig = 0;
+          } else {
+            sig = threshold;
+          }
+
+        // Waveshaper
+        // TODO: optimize later
+        const ws = getWaveshaperFunctionById(shaperId);
+        if (ws) sig = ws.fn(sig);
+
+        // Scale output from -1..1 to outMin..outMax
+        sig = (sig + 1) * (outMax - outMin) * 0.5 + outMin
+
+        // Clip output
+        if (doClipOutput)
+          sig = Math.min(Math.max(sig, outMin), outMax);
+
+        node.outputs[0].signal = sig;
 
       } else if (nodeTypeId == synthNodeTypes.NOISE.id) {
         const [ freqSH, min, max ] = inputSignals;

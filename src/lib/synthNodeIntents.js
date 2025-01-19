@@ -69,6 +69,13 @@ const synthNodeTerminalIntents = { // draft only
     units: 'choice',
     classCSS: 'enum',
     description: 'Choose a wave shape for the function',
+  },
+  WAVESHAPER_FUNCTION: {
+    id: 11,
+    name: 'WS Function',
+    units: 'choice',
+    classCSS: 'enum',
+    description: 'Choose a wave shape for the function',
   },  
 }
 
