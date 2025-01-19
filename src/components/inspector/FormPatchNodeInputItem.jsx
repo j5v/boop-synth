@@ -51,7 +51,7 @@ function FormPatchNodeInputItem(props) {
     return <></>
   }
 
-  const inputFieldVisible = (!inputItem.exposed || nodeTypeInput.isOffset);
+  const inputFieldVisible = true; // TODO: hide if linked-to
   let inputField;
   
   // Controls for input intent

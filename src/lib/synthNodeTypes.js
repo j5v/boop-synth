@@ -52,7 +52,6 @@ const synthNodeTypes = {
         intentId: synthNodeTerminalIntents.PITCH_OFFSET_OCTAVES.id,
         onlyShowIf: { inputId: 7, hasValue: false },
         exposed: false,
-        isOffset: true, // modifies value
         defaultValue: 0,
       },
       {
@@ -86,7 +85,6 @@ const synthNodeTypes = {
         displayUnits: '...0..1...',
         intentId: synthNodeTerminalIntents.LEVEL.id,
         exposed: false,
-        isOffset: true, // modifies value
         defaultValue: 0,
       },
       {
@@ -264,7 +262,6 @@ const synthNodeTypes = {
         displayUnits: 'semitones',
         intentId: synthNodeTerminalIntents.PITCH_OFFSET_OCTAVES.id,
         exposed: true,
-        isOffset: true, // modifies value
         defaultValue: 0,
       },
       {
