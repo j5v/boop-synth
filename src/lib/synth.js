@@ -101,12 +101,9 @@ const generate = function (
 ) {
   const samples = new Array();
   const sampleFrames = sampleRate * duration;
+  const phaseIncNormalized = 1 / sampleRate;
   const PI = Math.PI;
-  const INV_PI = 1 / PI;
   const TAU = PI * 2;
-  const INV_TAU = 1 / TAU;
-
-  const phaseIncNormalized = 2 * Math.PI / sampleRate;
 
   initPatch(nodes);
   clearPeakMeters();
@@ -130,16 +127,16 @@ const generate = function (
         if (sourceType == sourceTypeGroups.FUNCTION.id) {
           switch (sourceFn) {
             case sourceFunctions.SINE.id:
-              node.outputs[0].signal = Math.sin(ph) + postMix;
+              node.outputs[0].signal = Math.sin(ph * TAU) + postMix;
               break;
             case sourceFunctions.SAW.id:
-              node.outputs[0].signal = (ph * INV_TAU) % 1 * -2 + 1 + postMix;
+              node.outputs[0].signal = ph % 1 * -2 + 1 + postMix;
               break;
             case sourceFunctions.SQUARE.id:
-              node.outputs[0].signal = ((ph % TAU) > PI ? -1 : 1) + postMix;
+              node.outputs[0].signal = ((ph % 1) > 0.5 ? -1 : 1) + postMix;
               break;
             case sourceFunctions.TRIANGLE.id:
-              node.outputs[0].signal = (Math.abs(1 - (ph * INV_PI) % 2)) * 2 - 1 + postMix;
+              node.outputs[0].signal = (Math.abs(1 - (ph * 2) % 2)) * 2 - 1 + postMix;
               break;
           }
         }
@@ -172,7 +169,7 @@ const generate = function (
       } else if (nodeTypeId == synthNodeTypes.NOISE.id) {
         const [ freqSH, min, max ] = inputSignals;
         node.prevPhase = node.phase;
-        node.phase = (node.phase || 0) + (phaseIncNormalized * freqSH * INV_TAU);
+        node.phase = (node.phase || 0) + (phaseIncNormalized * freqSH);
         if (Math.floor(node.prevPhase) !== Math.floor(node.phase)) {
           node.outputs[0].signal = Math.random() * (max - min) + min;
         }
