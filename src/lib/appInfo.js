@@ -1,6 +1,6 @@
 const appInfo = {
   appName: 'boop',
-  appVersion: '0.0.1.032',
+  appVersion: '0.0.1.033',
   appDate: '2025-01-17',
   saveVersion: '0.0.2',
   specialVersionName: 'Early access',
