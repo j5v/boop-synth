@@ -2,15 +2,24 @@ import './App.css'
 import Footer from './components/layout/Footer.jsx'
 import Content from './components/layout/Content.jsx'
 import AppHeader from './components/AppHeader.jsx'
+
 import usePatchStore from './store/patchStore.jsx'
+import { BoopContext, defaultBoopState } from './store/BoopContext.js';
+
+import { useState } from 'react'
 
 function App() {
+
+  const [boop, setBoop] = useState({defaultBoopState});
+
+  // drag and drop
 
   const importFileData = usePatchStore((state) => state.importFileData);
 
   const handleDragOver = (event) => {
     event.preventDefault();
   }
+  
   const handleDrop = (event) => {
     event.preventDefault();
   
@@ -44,16 +53,20 @@ function App() {
     }
   }
 
+  // end: drag and drop.
+
   return (
-    <div
-      className="App"
-      onDrop={handleDrop}
-      onDragOver={handleDragOver}
-    >
-      <AppHeader />
-      <Content />
-      <Footer />
-    </div>
+    <BoopContext.Provider value={{ boop, setBoop }}>
+      <div
+        className="App"
+        onDrop={handleDrop}
+        onDragOver={handleDragOver}
+      >
+        <AppHeader />
+        <Content />
+        <Footer />
+      </div>
+    </BoopContext.Provider>
   )
 }
 

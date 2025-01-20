@@ -1,13 +1,15 @@
+import usePatchStore from '../store/patchStore.jsx'
+
 import { appInfo } from '../lib/appInfo.js'
+import { synthNodeTypes } from '../lib/synthNodeTypes.js'
+import { generateAndPlay, generateFile } from '../lib/synth.js'
+
 import Header from './layout/Header.jsx'
 import IconPlay from './generic/IconPlay.jsx'
 import IconDownload from './generic/IconDownload.jsx'
 import IconDelete from './generic/IconDelete.jsx'
 import IconDuplicate from './generic/IconDuplicate.jsx'
 
-import { generateAndPlay, generateFile } from '../lib/synth.js'
-import { synthNodeTypes } from '../lib/synthNodeTypes.js'
-import usePatchStore from '../store/patchStore.jsx'
 
 function AppHeader() {
 
