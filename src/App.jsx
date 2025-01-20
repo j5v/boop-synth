@@ -4,7 +4,7 @@ import Content from './components/layout/Content.jsx'
 import AppHeader from './components/AppHeader.jsx'
 
 import usePatchStore from './store/patchStore.jsx'
-import { BoopContext, defaultBoopState } from './store/BoopContext.js';
+import { BoopContext, defaultBoopState } from './store/AppContext.js';
 
 import { useState } from 'react'
 
