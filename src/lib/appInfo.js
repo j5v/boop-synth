@@ -9,6 +9,7 @@ const appInfo = {
   authorURL: 'http://johnvalentine.co.uk',
   helpURL: 'http://johnvalentine.co.uk?art=boop',
   sourceURL: 'https://github.com/j5v/boop-synth',
+  generatedFileBoopMetadata: 'boop-synth by j5v',
 }
 
 export {

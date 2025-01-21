@@ -1,6 +1,6 @@
 import { synthNodeTypes } from '../lib/synthNodeTypes.js'
 
-const synthNodeActions = { // draft only
+const synthNodeActions = {
   VIEW_WAVE: {
     id: 1,
     synthNodeTypeId: synthNodeTypes.OUTPUT.id,

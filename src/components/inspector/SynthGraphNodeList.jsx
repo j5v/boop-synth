@@ -4,7 +4,7 @@ import { getNodeDisplayTitle } from '../../lib/synth.js'
 import IconMoveUp from '../generic/IconMoveUp.jsx';
 import IconMoveDown from '../generic/IconMoveDown.jsx';
 
-function ParameterGroup(props) {
+function SynthGraphNodeList() {
 
   const nodes = usePatchStore.getState().nodes;
 
@@ -84,4 +84,4 @@ function ParameterGroup(props) {
   )
 }
 
-export default ParameterGroup
+export default SynthGraphNodeList

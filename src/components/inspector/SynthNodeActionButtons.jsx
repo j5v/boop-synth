@@ -1,5 +1,5 @@
 import { synthNodeActions, getActionsForSynthNodeTypeId } from '../../lib/synthNodeActions.js'
-import ParameterGroup from './ParameterGroup.jsx'
+import ParameterGroup from '../generic/ParameterGroup.jsx'
 
 function SynthNodeActionButtons({ nodeTypeId, nodeId }) { 
 
@@ -18,7 +18,7 @@ function SynthNodeActionButtons({ nodeTypeId, nodeId }) {
   return (actions.length == 0) ?
     <></> : 
     <ParameterGroup>
-      <div className="button-bar-compact">
+      <div className="button-bar-compact actions">
         {actions.map(a => (
           <button
             key={`${nodeId}-${a.id}`}

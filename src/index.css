@@ -81,8 +81,9 @@ input[type="file"] {
   padding: 0.2em 1em 0.3em 1em;
 }
 
-.button-bar-compact {
+.button-bar-compact.actions {
   display: flex;
+  max-width: 18rem;
   flex-flow: row wrap;
   gap: 0.4rem;
   padding: 0.2rem 0.3rem 0.2rem 0.3rem;

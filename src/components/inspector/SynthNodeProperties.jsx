@@ -4,7 +4,7 @@ import { getNodeDisplayTitle } from '../../lib/synth.js'
 import { getNodeTypeById } from '../../lib/synthNodeTypes.js'
 import FormPatchNodeInputList from './FormPatchNodeInputList.jsx'
 import SynthNodeActionButtons from './SynthNodeActionButtons.jsx'
-import ParameterGroup from './ParameterGroup.jsx'
+import ParameterGroup from '../generic/ParameterGroup.jsx'
 import usePatchStore from '../../store/patchStore.jsx'
 
 function SynthNodeProperties(props) {
@@ -14,7 +14,9 @@ function SynthNodeProperties(props) {
 
   const nodeType = getNodeTypeById(synthNode.nodeTypeId);
 
-  // TODO: componentize Expander
+
+  // expander shows/hides the node description.
+
   const hideNodeDescription = usePatchStore((state) => state.prefs.hideNodeDescription);
   const toggleHideNodeDescription = usePatchStore((state) => state.toggleHideNodeDescription);
 
@@ -27,8 +29,10 @@ function SynthNodeProperties(props) {
     >
       {hideNodeDescription ? <>?</> : <>-?</>}
     </button>
+
   // end Expander
 
+  
   const nodeTypeDescription = nodeType.description && !hideNodeDescription ? (
     <p>{nodeType.description}.</p>
   ) : <></>;

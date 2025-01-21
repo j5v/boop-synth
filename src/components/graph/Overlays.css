@@ -1,0 +1,16 @@
+.X {
+  stroke-width: 1px;
+  stroke: hsla(30, 100%, 50%, 1);
+  fill: hsla(30, 70%, 40%, 0.3);
+  pointer-events: none;
+} 
+
+@media (prefers-color-scheme: light) {
+
+  .X-box {
+    stroke-width: 2px;
+    stroke: hsla(30, 70%, 0%, 0.6);
+    fill: hsla(30, 70%, 70%, 0.3);
+  } 
+      
+}
