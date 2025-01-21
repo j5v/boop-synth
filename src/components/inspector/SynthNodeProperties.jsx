@@ -3,6 +3,7 @@ import Header from '../layout/Header.jsx'
 import { getNodeDisplayTitle } from '../../lib/synth.js'
 import { getNodeTypeById } from '../../lib/synthNodeTypes.js'
 import FormPatchNodeInputList from './FormPatchNodeInputList.jsx'
+import SynthNodeActionButtons from './SynthNodeActionButtons.jsx'
 import ParameterGroup from './ParameterGroup.jsx'
 import usePatchStore from '../../store/patchStore.jsx'
 
@@ -18,7 +19,6 @@ function SynthNodeProperties(props) {
   const toggleHideNodeDescription = usePatchStore((state) => state.toggleHideNodeDescription);
 
   const expanderTitle = hideNodeDescription ? 'Show description' : 'Hide description';
-
   const expander = 
     <button
       className="compact expander"
@@ -42,6 +42,8 @@ function SynthNodeProperties(props) {
           {nodeTypeDescription}
         </div>
       </Header>
+
+      <SynthNodeActionButtons nodeTypeId={nodeType.id} synthNodeId={synthNode.id} />
 
       <ParameterGroup>
         <Header context="property-sheet-subheading">

@@ -10,6 +10,9 @@ import IconDownload from './generic/IconDownload.jsx'
 import IconDelete from './generic/IconDelete.jsx'
 import IconDuplicate from './generic/IconDuplicate.jsx'
 
+import { useContext } from 'react';
+import { BoopContext } from '../store/AppContext.js';
+
 
 function AppHeader() {
 
@@ -44,6 +47,8 @@ function AppHeader() {
 
   const noNodesSelected = nodes.filter(n => n.selected).length == 0;
 
+  const { boop, setBoop } = useContext(BoopContext);
+
   return (
     <Header context="button-bar">
       <div className="title">{appInfo.appName}</div>
@@ -53,12 +58,12 @@ function AppHeader() {
       <button
         id="playAudioButton"
         className="icon" 
-        onClick={() => generateAndPlay(nodes, perf)} 
+        onClick={() => generateAndPlay({ nodes, perf, boop })} 
         title="Play audio"
       ><IconPlay /></button>
       <button
         className="icon" 
-        onClick={() => generateFile(nodes, perf)}
+        onClick={() => generateFile({ nodes, perf, boop })}
         title="Download audio file"
       ><IconDownload /></button>
 

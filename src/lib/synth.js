@@ -96,11 +96,12 @@ const getNodeDisplayTitle = node => {
 
 // processing
 
-const generate = function (
-  nodes,
-  { sampleRate, duration, freq, sustainReleaseTime = 0 }
-) {
-  const outputBuffers = [];
+const generate = function ({ nodes, perf, boop }) {
+  const { sampleRate, duration, freq, sustainReleaseTime = 0 } = (perf || {});
+
+  boop.defaultBoopState.outpuBuffers = [];
+  const outputBuffers = boop.defaultBoopState.outpuBuffers;
+
 
   const sampleFrames = sampleRate * duration;
   const phaseIncNormalized = 1 / sampleRate;
@@ -337,21 +338,21 @@ const generate = function (
   } 
 }
 
-const generateFile = function (nodes, spec) {
+const generateFile = function ({ nodes, perf = {}, boop }) {
 
-  const output = generate(nodes, spec);
+  const output = generate({ nodes, perf, boop });
 
   for (let outputBufferIndex in output.outputBuffers) {
     const samples = output.outputBuffers[outputBufferIndex].samples;
 
     const dataview = encodeWAV(
       samples,
-      spec.sampleRate,
-      spec.channels
+      perf.sampleRate,
+      perf.channels
     );
 
     const audioBlob = new Blob([dataview], { type : 'audio/wav' });
-    saveAs(audioBlob, spec.filenameRoot + '.wav');
+    saveAs(audioBlob, perf.filenameRoot + '.wav');
   }
 
   function encodeWAV(buf, sr, ch) {
@@ -421,12 +422,12 @@ const generateFile = function (nodes, spec) {
   }
 }
 
-const generateAndPlay = function (nodes, spec) {
+const generateAndPlay = function ({ nodes, perf = {}, boop }) {
   // TODO: use patch data.
-  const { duration, channels, sampleRate } = spec;
+  const { duration, channels, sampleRate } = perf;
 
   // synthesize a buffer
-  const output = generate(nodes, spec);
+  const output = generate({ nodes, perf, boop });
 
   for (let outputBufferIndex in output.outputBuffers) {
 

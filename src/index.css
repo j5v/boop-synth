@@ -54,7 +54,7 @@ select {
   border: 1px solid hsl(0, 0%, 30%);
 }
 select:hover {
-  border: 1px solid hsl(240, 50%, 60%)
+  border: 1px solid hsl(30, 40%, 90%);
 }
 
 input[type="file"] {
@@ -72,11 +72,21 @@ input[type="file"] {
 .Header .button-bar-compact {
   display: flex;
   gap: 0.4rem;
-  padding: 0.2rem 0.1rem 0.3rem 1rem;
+  padding: 0.2rem 0.1rem 0.2rem 1rem;
   align-items: baseline;
 }
-.Header .button-bar-compact button, .custom-file-upload {
-  padding: 0.2em 1em;
+.Header .button-bar-compact button,
+.button-bar-compact button,
+.custom-file-upload {
+  padding: 0.2em 1em 0.3em 1em;
+}
+
+.button-bar-compact {
+  display: flex;
+  flex-flow: row wrap;
+  gap: 0.4rem;
+  padding: 0.2rem 0.3rem 0.2rem 0.3rem;
+  align-items: baseline;
 }
 
 .expander {
@@ -107,8 +117,8 @@ button {
   font-family: inherit;
   background-color: #1a1a1a;
 }
-button:hover {
-  border-color: #646cff;
+button:hover:not(:disabled) {
+  border-color: hsl(30, 40%, 90%);
 }
 button:focus,
 button:focus-visible {

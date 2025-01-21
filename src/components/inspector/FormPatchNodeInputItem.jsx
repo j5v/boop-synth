@@ -56,6 +56,7 @@ function FormPatchNodeInputItem(props) {
   let inputField;
   
   // Controls for input intent
+  // todo: consider refactor to function synthNodeTerminalIntents[].uiControl(inputItem, callback) ?
 
   if (intent == synthNodeTerminalIntents.CHECK_BOOL) {
 

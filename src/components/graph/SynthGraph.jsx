@@ -7,10 +7,6 @@ import SynthNodeLinkConnecting from './SynthNodeLinkConnecting.jsx'
 import NodeSelectionBox from './NodeSelectionBox.jsx'
 import { pxAsRem, remAsPx } from '../../lib/utils.js'
 
-
-import { useContext } from 'react';
-import { BoopContext } from '../../store/AppContext.js';
-
 /* SynthGraph:
   - Contains the node graph and Links.
   - Handles events for: moving nodes, drag-selecting many nodes.
@@ -20,8 +16,6 @@ import { BoopContext } from '../../store/AppContext.js';
 
 function SynthGraph() {
 
-
-  
   const selectThisNode = usePatchStore(
     // On the SynthGraph (background), click unselects all nodes.
     // In SynthNodes[<SynthNode>] click on a node to select it.
