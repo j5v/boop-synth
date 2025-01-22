@@ -2,11 +2,12 @@ import usePatchStore from '../store/patchStore.jsx'
 
 import { appInfo } from '../lib/appInfo.js'
 import { synthNodeTypes } from '../lib/synthNodeTypes.js'
-import { generateAndPlay, generateFile } from '../lib/synth.js'
+import { generate, generateAndPlay, generateFile } from '../lib/synth.js'
 
 import Header from './layout/Header.jsx'
 import IconPlay from './generic/IconPlay.jsx'
 import IconDownload from './generic/IconDownload.jsx'
+import IconRefresh from './generic/IconRefresh.jsx'
 import IconDelete from './generic/IconDelete.jsx'
 import IconDuplicate from './generic/IconDuplicate.jsx'
 
@@ -28,6 +29,16 @@ function AppHeader() {
 
   const handleGenerateAndPlay = (params) => {
     generateAndPlay(params);
+    stateDirty();
+  }
+
+  const handleGenerateFile = (params) => {
+    generateFile(params);
+    stateDirty();
+  }
+
+  const handleGenerateOnly = (params) => {
+    generate(params);
     stateDirty();
   }
 
@@ -69,9 +80,14 @@ function AppHeader() {
       ><IconPlay /></button>
       <button
         className="icon" 
-        onClick={() => generateFile({ nodes, perf, boop })}
+        onClick={() => handleGenerateFile({ nodes, perf, boop })}
         title="Download audio file"
       ><IconDownload /></button>
+      <button
+        className="icon" 
+        onClick={() => handleGenerateOnly({ nodes, perf, boop })}
+        title="Refresh previews"
+      ><IconRefresh /></button>
 
       <div className="button-separator" />
 

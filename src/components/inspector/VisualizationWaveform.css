@@ -1,19 +1,23 @@
+html {
+  --hue: 120;
+}
+
 .axis {
-  stroke: hsla(30, 100%, 70%, 0.3);
+  stroke: hsla(var(--hue), 100%, 70%, 0.3);
   stroke-width: 0.5px;
   fill: none;
 }
 .wf {
-  stroke: hsla(30, 100%, 90%, 0.8);
+  stroke: hsla(var(--hue), 100%, 90%, 0.5);
   stroke-width: 0.5px;
   fill: none;
 }
 
 @media (prefers-color-scheme: light) {
   .axis {
-    stroke: hsla(30, 40%, 50%, 0.05);
+    stroke: hsla(var(--hue), 40%, 0%, 0.2);
   }
   .wf {
-    stroke: hsla(30, 100%, 20%, 0.8);
+    stroke: hsla(var(--hue), 100%, 20%, 0.8);
   }
 }

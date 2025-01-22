@@ -73,7 +73,7 @@ function SynthNodeProperties(props) {
         </div>
       </ParameterGroup>
 
-      {previewsAvailable ? <OutputPreviews nodeTypeId={nodeType.id} synthNodeId={synthNode.id} runCount={runCount} /> : <></> }
+      {previewsAvailable ? <OutputPreviews nodeTypeId={nodeType.id} synthNodeId={synthNode.id} runCount={runCount} /> : <></>}
 
     </div>
   )

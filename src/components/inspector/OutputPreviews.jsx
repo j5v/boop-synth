@@ -1,27 +1,55 @@
+import './OutputPreviews.css'
+
 import { useContext } from 'react';
 import { BoopContext } from '../../store/AppContext.js';
 
-import OutputPreviewPanel from './OutputPreviewPanel.jsx'
+import ParameterGroup from '../generic/ParameterGroup.jsx'
+import VisualizationWaveform from './VisualizationWaveform.jsx'
+
+import usePatchStore from '../../store/patchStore.jsx'
+
 
 function OutputPreviews({ nodeTypeId, synthNodeId }) {
 
+  // boop state: buffers
   const { boop, setBoop } = useContext(BoopContext);
 
   const buffers = boop.defaultBoopState.outputBuffers;
   const buffer = buffers.find(b => b.nodeId == synthNodeId);
-  
+
+  // if (!buffer) return <button onClick={console.log('')}>Generate previews</button>
+
+  // UI state
+  const isExpanded = usePatchStore((state) => state.ui.expandPreviewWaveform);
+
+  // console.log('OutputPreviews', isExpanded); 
+
+  // render (don't render if not displayed/expanded)
+  const waveformVisualization = isExpanded ? 
+    <VisualizationWaveform buffer={buffer} w={20} h={16} />
+    : <></>;
+
+
+  // event handlers
+  const toggleHandler = usePatchStore((state) => state.togglePreviewWaveformExpanded);
+
+  const handleToggleExpand = () => {
+    // console.log('+-');
+    toggleHandler();
+  }
+
+
   return (
     <>
-      <OutputPreviewPanel
-        label="Preview"
-        vis={1}
-        buffer={buffer}
-      />
-      <OutputPreviewPanel
-        label="Spectrum"
-        vis={2}
-        buffer={buffer}
-      />
+      <ParameterGroup>
+        <div className="expandable">
+          <button className="icon-button-small" onClick={handleToggleExpand}>
+            {isExpanded ? <>[&minus;]</> : <>[+]</>}
+          </button>
+          <div className="expander-label">Preview</div>
+        </div>
+        {waveformVisualization}
+      </ParameterGroup>
     </>
   );
 

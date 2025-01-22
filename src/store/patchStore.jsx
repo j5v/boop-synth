@@ -40,7 +40,9 @@ const usePatchStore = create(
       ui: {
         draggingLinkFromInput: undefined,
         draggingLinkFromOutput: undefined,
-        view: structuredClone(defaultView)
+        view: structuredClone(defaultView),
+        expandPreviewWaveform: false,
+        expandPreviewSpectrum: false,
       },
 
 
@@ -55,6 +57,23 @@ const usePatchStore = create(
 
 
       // UI state
+      togglePreviewSpectrumExpanded: (id) => set((state) => ({
+        ...state,
+        ui: {
+          ...state.ui,
+          expandPreviewSpectrum: !state.ui.expandPreviewSpectrum
+        },
+      })),
+
+      togglePreviewWaveformExpanded: (id) => set((state) => ({
+        ...state,
+        ui: {
+          ...state.ui,
+          expandPreviewWaveform: !state.ui.expandPreviewWaveform
+        },
+      })),
+
+
       setImportExpanded: (value) => set((state) => ({
         ...state,
         ui: {

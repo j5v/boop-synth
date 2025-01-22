@@ -404,7 +404,8 @@ export {
   defaultOutputSpec,
   defaultPatchPerformance,
   assignLink,
-
+  
+  generate,
   generateFile,
   generateAndPlay,
 }
