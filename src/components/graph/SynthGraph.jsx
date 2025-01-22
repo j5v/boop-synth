@@ -289,6 +289,11 @@ function SynthGraph() {
       mousePos || { x:0, y:0 } // This default { x, y } is not ideal.
     );
   }
+
+
+  // External side-effect updates
+  const runCount = usePatchStore((state) => state.runCount);
+
   
   // debug overlays
   
@@ -323,7 +328,7 @@ function SynthGraph() {
         `}
       >
         <SynthNodeLinks />
-        <SynthNodes />
+        <SynthNodes runCount={runCount}/>
         <SynthNodeLinkConnecting />
         {selectionBox}
         {debugCoords}  

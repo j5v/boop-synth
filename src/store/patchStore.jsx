@@ -244,6 +244,15 @@ const usePatchStore = create(
         }
       }),
 
+      // Side-effect notification
+      stateDirty: () => set((state) => {
+
+        return {
+          ...state,
+          runCount: (state.runCount || 0) + 1
+        }
+      }),
+
 
       // Remove link from input
 

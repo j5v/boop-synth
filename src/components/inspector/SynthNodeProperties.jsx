@@ -23,6 +23,7 @@ function SynthNodeProperties(props) {
 
   const hideNodeDescription = usePatchStore((state) => state.prefs.hideNodeDescription);
   const toggleHideNodeDescription = usePatchStore((state) => state.toggleHideNodeDescription);
+  const runCount = usePatchStore((state) => state.runCount);
 
   const expanderTitle = hideNodeDescription ? 'Show description' : 'Hide description';
   const expander = 
@@ -72,7 +73,7 @@ function SynthNodeProperties(props) {
         </div>
       </ParameterGroup>
 
-      {previewsAvailable ? <OutputPreviews nodeTypeId={nodeType.id} synthNodeId={synthNode.id} /> : <></> }
+      {previewsAvailable ? <OutputPreviews nodeTypeId={nodeType.id} synthNodeId={synthNode.id} runCount={runCount} /> : <></> }
 
     </div>
   )

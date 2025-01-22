@@ -24,6 +24,12 @@ function AppHeader() {
   const duplicateSelectedNodes = usePatchStore((state) => state.duplicateSelectedNodes)
   const viewAll = usePatchStore((state) => state.viewAll)
   const reset = usePatchStore((state) => state.reset)
+  const stateDirty = usePatchStore((state) => state.stateDirty)
+
+  const handleGenerateAndPlay = (params) => {
+    generateAndPlay(params);
+    stateDirty();
+  }
 
   const handleReset = (event) => {
     if (window.confirm('Continue to reset? This will load the default starting patch.')) reset();
@@ -58,7 +64,7 @@ function AppHeader() {
       <button
         id="playAudioButton"
         className="icon" 
-        onClick={() => generateAndPlay({ nodes, perf, boop })} 
+        onClick={() => handleGenerateAndPlay({ nodes, perf, boop })} 
         title="Play audio"
       ><IconPlay /></button>
       <button
