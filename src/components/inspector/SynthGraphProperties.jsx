@@ -22,6 +22,7 @@ function SynthGraphProperties() {
       loadFile(file);
     }
   }
+  
   const loadFile = (f) => {
     if (f.name && f.name.slice(-5).toLowerCase() === '.json') {
       const reader = new FileReader();

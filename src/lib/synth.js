@@ -100,8 +100,8 @@ const getNodeDisplayTitle = node => {
 const generate = function ({ nodes, perf, boop }) {
   const { sampleRate, duration, freq, sustainReleaseTime = 0 } = (perf || {});
 
-  boop.defaultBoopState.outpuBuffers = [];
-  const outputBuffers = boop.defaultBoopState.outpuBuffers;
+  boop.defaultBoopState.outputBuffers = [];
+  const outputBuffers = boop.defaultBoopState.outputBuffers;
 
 
   const sampleFrames = sampleRate * duration;
@@ -126,7 +126,6 @@ const generate = function ({ nodes, perf, boop }) {
           fixedFreq :
           (freq * (pitch == 0 ? 1 : Math.pow(2, pitch)));
 
-        node.phase = (node.phase || 0) + phaseIncNormalized * frequency * (1 + freqMod);
         const ph = node.phase + phaseMod * TAU;
         if (sourceType == sourceTypeGroups.FUNCTION.id) {
           switch (sourceFn) {
@@ -144,6 +143,7 @@ const generate = function ({ nodes, perf, boop }) {
               break;
           }
         }
+        node.phase = node.phase + phaseIncNormalized * frequency * (1 + freqMod);
 
       } else if (nodeTypeId == synthNodeTypes.NUMBER.id) {
         node.outputs[0].signal = inputSignals[0];
@@ -165,8 +165,8 @@ const generate = function ({ nodes, perf, boop }) {
         const [ pitch, signal1, signal2, switchPhase ] = inputSignals;
         
         const frequency = freq * (pitch == 0 ? 1 : Math.pow(2, pitch));
-        node.phase = (node.phase || 0) + (phaseIncNormalized * frequency);
         const phasePos = node.phase % (phaseIncNormalized * frequency);
+        node.phase = node.phase + (phaseIncNormalized * frequency);
 
         node.outputs[0].signal = (switchPhase > phasePos) ? signal1 : signal2;
 
@@ -212,7 +212,7 @@ const generate = function ({ nodes, perf, boop }) {
       } else if (nodeTypeId == synthNodeTypes.NOISE.id) {
         const [ freqSH, min, max ] = inputSignals;
         node.prevPhase = node.phase;
-        node.phase = (node.phase || 0) + (phaseIncNormalized * freqSH);
+        node.phase = node.phase + (phaseIncNormalized * freqSH);
         if (Math.floor(node.prevPhase) !== Math.floor(node.phase)) {
           node.outputs[0].signal = Math.random() * (max - min) + min;
         }
@@ -302,7 +302,7 @@ const generate = function ({ nodes, perf, boop }) {
       if (node.nodeTypeId == synthNodeTypes.OUTPUT.id) {
         const newBuffer = {
           id: id++,
-          nodeId: node.nodeId,
+          nodeId: node.id,
           samples: []
         };
         outputBuffers.push(newBuffer);
@@ -312,6 +312,9 @@ const generate = function ({ nodes, perf, boop }) {
         // fast access in generate(). non-serializable; delete reference in finishPatch()
         node.buffer = newBuffer; 
       }
+
+      // misc
+      node.phase = 0;
 
       // initialize envelope nodes
       if (node.nodeTypeId == synthNodeTypes.ENVELOPE_WAHDSR.id) {

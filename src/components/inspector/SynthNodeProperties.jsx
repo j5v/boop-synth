@@ -1,11 +1,15 @@
 import './SynthNodeProperties.css'
-import Header from '../layout/Header.jsx'
+
 import { getNodeDisplayTitle } from '../../lib/synth.js'
-import { getNodeTypeById } from '../../lib/synthNodeTypes.js'
+import { getNodeTypeById, synthNodeTypes } from '../../lib/synthNodeTypes.js'
+
+import Header from '../layout/Header.jsx'
 import FormPatchNodeInputList from './FormPatchNodeInputList.jsx'
-import SynthNodeActionButtons from './SynthNodeActionButtons.jsx'
+import OutputPreviews from './OutputPreviews.jsx'
 import ParameterGroup from '../generic/ParameterGroup.jsx'
+
 import usePatchStore from '../../store/patchStore.jsx'
+
 
 function SynthNodeProperties(props) {
 
@@ -15,7 +19,7 @@ function SynthNodeProperties(props) {
   const nodeType = getNodeTypeById(synthNode.nodeTypeId);
 
 
-  // expander shows/hides the node description.
+  // Node description.
 
   const hideNodeDescription = usePatchStore((state) => state.prefs.hideNodeDescription);
   const toggleHideNodeDescription = usePatchStore((state) => state.toggleHideNodeDescription);
@@ -23,21 +27,24 @@ function SynthNodeProperties(props) {
   const expanderTitle = hideNodeDescription ? 'Show description' : 'Hide description';
   const expander = 
     <button
-      className="compact expander"
+      className="expander"
       title={expanderTitle}
       onClick={toggleHideNodeDescription}
     >
       {hideNodeDescription ? <>?</> : <>-?</>}
     </button>
 
-  // end Expander
-
-  
   const nodeTypeDescription = nodeType.description && !hideNodeDescription ? (
     <p>{nodeType.description}.</p>
   ) : <></>;
 
+  // end Node description
+  
 
+  // Previews
+
+  const previewsAvailable = nodeType.id == synthNodeTypes.OUTPUT.id;
+  
   return (
     <div className="SynthNodeProperties">
       <Header context="property-sheet">
@@ -46,8 +53,6 @@ function SynthNodeProperties(props) {
           {nodeTypeDescription}
         </div>
       </Header>
-
-      <SynthNodeActionButtons nodeTypeId={nodeType.id} synthNodeId={synthNode.id} />
 
       <ParameterGroup>
         <Header context="property-sheet-subheading">
@@ -67,6 +72,7 @@ function SynthNodeProperties(props) {
         </div>
       </ParameterGroup>
 
+      {previewsAvailable ? <OutputPreviews nodeTypeId={nodeType.id} synthNodeId={synthNode.id} /> : <></> }
 
     </div>
   )

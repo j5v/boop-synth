@@ -5,8 +5,7 @@ import SynthNodes from './SynthNodes.jsx'
 import SynthNodeLinks from './SynthNodeLinks.jsx'
 import SynthNodeLinkConnecting from './SynthNodeLinkConnecting.jsx'
 import NodeSelectionBox from './NodeSelectionBox.jsx'
-import Overlays from './Overlays.jsx'
-import { pxAsRem, remAsPx } from '../../lib/utils.js'
+import { pxAsRem } from '../../lib/utils.js'
 
 /* SynthGraph:
   - Contains the node graph and Links.
@@ -329,7 +328,6 @@ function SynthGraph() {
         {selectionBox}
         {debugCoords}  
       </g>
-      <Overlays />
       {debugText}
     </svg>
   )
