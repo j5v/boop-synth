@@ -7,6 +7,7 @@ import { joinItems, getNewId, getItemById } from './utils.js'
 import { encodeWAV } from './wav.js'
 import saveAs from '../lib/FileSaver.js'
 import { getWaveshaperFunctionById } from './waveshaperFunctions.js'
+import { synthNodeTerminalIntents } from './synthNodeIntents.js'
 
 const BITDEPTH_16 = 0;
 
@@ -404,7 +405,7 @@ export {
   defaultOutputSpec,
   defaultPatchPerformance,
   assignLink,
-  
+
   generate,
   generateFile,
   generateAndPlay,

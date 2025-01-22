@@ -74,18 +74,14 @@ function VisualizationWaveform({ buffer, w, h }) {
   let linePhase = 0;
   let key = 0;
 
-  console.log({cursorIncPerLine});
-
-
   for (let lineCount = 0; lineCount < numLines; lineCount++) {
 
-
-    const lineSamples = Math.min(cursor + wavelengthAsSamples, samples.length) - cursor;
-
+    const numSamplesThisLine = Math.min(cursor + wavelengthAsSamples, samples.length) - cursor;
     const path = [ ];
+
     let lineOriginX = graphOriginX + lineCount * lineIncX;
     let lineOriginY = graphOriginY + lineCount * lineIncY;
-    for (let xc = 0; xc <= lineSamples; xc++ ) {
+    for (let xc = 0; xc <= numSamplesThisLine; xc++ ) {
       const sample = Math.min(1, Math.max(-1, samples[Math.floor(cursor + xc)]));
       path.push( `${xc == 0 ? 'M' : 'L'} ${xc * scaleX + lineOriginX} ${lineOriginY - sample * waveformAmplitude} ` );
     }

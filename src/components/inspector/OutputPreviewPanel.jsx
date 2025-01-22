@@ -4,7 +4,10 @@ import ParameterGroup from '../generic/ParameterGroup.jsx'
 
 function OutputPreviewPanel({ label, isExpanded, onToggleExpand, children }) {
 
-  console.log('OutputPreviewPanel', isExpanded); 
+  // Wraps a preview in a header+expander UI.
+  // Was fully working; this is reverted to an earlier WIP version.
+
+  // console.log('OutputPreviewPanel', isExpanded); 
 
   return (
     <ParameterGroup>

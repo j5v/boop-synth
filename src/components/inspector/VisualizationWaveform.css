@@ -3,14 +3,17 @@ html {
 }
 
 .axis {
-  stroke: hsla(var(--hue), 100%, 70%, 0.3);
-  stroke-width: 0.5px;
+  stroke: hsla(var(--hue), 100%, 70%, 0.2);
+  stroke-width: 1px;
   fill: none;
 }
 .wf {
-  stroke: hsla(var(--hue), 100%, 90%, 0.5);
-  stroke-width: 0.5px;
+  stroke: hsla(var(--hue), 100%, 85%, 0.5);
+  stroke-width: 1px;
   fill: none;
+}
+.wf.highlight {
+  stroke: hsla(var(--hue), 100%, 95%, 1);
 }
 
 @media (prefers-color-scheme: light) {

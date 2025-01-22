@@ -43,10 +43,14 @@ function OutputPreviews({ nodeTypeId, synthNodeId }) {
     <>
       <ParameterGroup>
         <div className="expandable">
-          <button className="icon-button-small" onClick={handleToggleExpand}>
+          <button
+            className="icon-button-small"
+            onClick={handleToggleExpand}
+            title={isExpanded ? 'Hide' : 'Expand'}
+          >
             {isExpanded ? <>[&minus;]</> : <>[+]</>}
           </button>
-          <div className="expander-label">Preview</div>
+          <div className="expander-label">Waveform</div>
         </div>
         {waveformVisualization}
       </ParameterGroup>

@@ -17,6 +17,7 @@
 
 .visualization {
   background-color: black;
+  /* filter: blur(0.707px); */
 }
 
 .visualization.small {

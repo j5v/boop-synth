@@ -41,10 +41,11 @@ function FormPatchNodeInputItem(props) {
   let hideInput = false;
   if (nodeTypeInput.onlyShowIf !== undefined) {
     const otherInput = getItemById(synthNode.inputs, nodeTypeInput.onlyShowIf.inputId);
-    const otherInputType = getItemById(nodeType.inputs, otherInput.id);
-
-    if ((otherInput.value || otherInputType.defaultValue) != nodeTypeInput.onlyShowIf.hasValue) {
-      hideInput = true;
+    if (otherInput) {
+      const otherInputType = getItemById(nodeType.inputs, otherInput.id);
+      if ((!otherInput || otherInput.value || !otherInputType || otherInputType.defaultValue) != nodeTypeInput.onlyShowIf.hasValue) {
+        hideInput = true;
+      }
     }
   }
 
