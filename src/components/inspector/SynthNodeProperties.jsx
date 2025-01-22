@@ -41,6 +41,8 @@ function SynthNodeProperties(props) {
 
   // end Node description
   
+  const hasConfiguration = (synthNode.inputs || []).filter(i => i.isParam == true).length > 0;
+
 
   // Previews
 
@@ -55,6 +57,7 @@ function SynthNodeProperties(props) {
         </div>
       </Header>
 
+      {hasConfiguration ? (
       <ParameterGroup>
         <Header context="property-sheet-subheading">
           <div className="group-title">Configuration</div>
@@ -63,6 +66,7 @@ function SynthNodeProperties(props) {
           <FormPatchNodeInputList synthNode={synthNode} isParam={true}/>
         </div>
       </ParameterGroup>
+      ) : <></>}
 
       <ParameterGroup>
         <Header context="property-sheet-subheading">
