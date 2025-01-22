@@ -239,7 +239,7 @@ function SynthGraph() {
       setPrevDragPosY(event.clientY);
       setPanning(true);
     } else {
-      if (nodes.filter(n => n.highlighted).length > 0) {
+      if (nodes.find(n => n.highlighted)) {
         // any highlighted: means mouse is over a node, so don't so a selection drag; move a node.
         doDragNodeBegin(event);
       } else {

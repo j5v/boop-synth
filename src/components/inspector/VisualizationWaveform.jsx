@@ -27,16 +27,32 @@ function VisualizationWaveform({ buffer, w, h }) {
     stateDirty();
   }
 
-  const generateActionBtn = (buffer ? <></> :
-    <button
-      className="icon" 
-      onClick={() => handleGenerateOnly({ nodes, perf, boop })}
-      title="Refresh previews"
-    ><IconRefresh /></button>
-  )
   if (!buffer) {
-    return generateActionBtn;
+    return (
+      <button
+        className="icon" 
+        onClick={() => handleGenerateOnly({ nodes, perf, boop })}
+        title="Refresh previews"
+      ><IconRefresh /></button>
+    )
   }
+
+  // highlight row
+  const [ highlightRow, setHighlightRow ] = useState(-1);
+
+  const handleMouseMove = (event) => {
+
+    const svgElement = document.getElementById('preview-waveform');
+    if (svgElement) {
+      const svgBounds = svgElement.getBoundingClientRect();
+
+      const y = event.clientY - svgBounds.top - svgElement.clientTop;
+      const line = Math.floor((y - graphOriginY) / lineIncY + 0.5);
+      setHighlightRow(line);
+    };
+
+  }
+
 
   // render inner SVG
 
@@ -81,6 +97,7 @@ function VisualizationWaveform({ buffer, w, h }) {
 
     let lineOriginX = graphOriginX + lineCount * lineIncX;
     let lineOriginY = graphOriginY + lineCount * lineIncY;
+
     for (let xc = 0; xc <= numSamplesThisLine; xc++ ) {
       const sample = Math.min(1, Math.max(-1, samples[Math.floor(cursor + xc)]));
       path.push( `${xc == 0 ? 'M' : 'L'} ${xc * scaleX + lineOriginX} ${lineOriginY - sample * waveformAmplitude} ` );
@@ -89,15 +106,20 @@ function VisualizationWaveform({ buffer, w, h }) {
     // error distribution, for the start of the next wavelength
     linePhase += cursorIncPerLine;
     cursor += Math.floor((linePhase - cursor) / wavelengthAsSamples) * wavelengthAsSamples;
+
+    const lineClass = lineCount == highlightRow ? 'wf highlight' : 'wf';
     
-    svg.push( <path key={key++} className="wf" d={path.join('')} /> );
+    svg.push( <path className={lineClass} key={key++} d={path.join('')} /> );
     svg.push( <line key={key++} className="axis" x1={lineOriginX} y1={lineOriginY} x2={lineOriginX + lineLength} y2={lineOriginY} /> );
   }
 
 
   return (
-    <div className="visualization small">
-      <svg className="visualization-svg small" width="17rem" height="16rem">
+    <div
+      className="visualization small"
+      onMouseMove={handleMouseMove}
+    >
+      <svg id="preview-waveform" className="visualization-svg small" width="17rem" height="16rem">
         {svg.reverse()}
       </svg>
     </div>
