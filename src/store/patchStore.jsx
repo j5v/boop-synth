@@ -135,7 +135,7 @@ const usePatchStore = create(
 
         // add padding
         const xPadding = 3;
-        const yPadding = 1;
+        const yPadding = 2;
 
         bounds.top -= yPadding; 
         bounds.bottom += yPadding; 

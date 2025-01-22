@@ -219,7 +219,7 @@ function SynthGraph() {
       event.stopPropagation();
       event.preventDefault();
 
-    } else if (k == '0' && event.ctrlKey == true) {
+    } else if (k == '0') {
       handleViewAll();
       event.preventDefault();
 

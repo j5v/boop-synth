@@ -96,7 +96,7 @@ function AppHeader() {
         title="Add node"
         defaultValue=""
       >
-        <option value="" disabled hidden>&nbsp;Add</option>              
+        <option value="" disabled hidden>&nbsp;Add node</option>              
         {Object.keys(synthNodeTypes).map(
           (keyName, keyIndex) => <option key={synthNodeTypes[keyName].id} value={synthNodeTypes[keyName].id} title={synthNodeTypes[keyName].description || ''}>{synthNodeTypes[keyName].name}</option>
         )}
