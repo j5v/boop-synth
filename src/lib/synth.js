@@ -70,7 +70,7 @@ const assignLink = (nodes, spec) => {
 }
 
 // const newSynthNode = newCreator(defaultSynthNode)
-const newSynthNode = (nodes = [], nodeTypeId, overrides) => {
+const newSynthNode = (nodes = [], nodeTypeId, overrides = {}) => {
   const nodeType = getNodeTypeById(nodeTypeId);
   const id = (nodes.length > 0) ? getNewId(nodes) : 1;
   

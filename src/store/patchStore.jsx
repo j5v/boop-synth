@@ -9,6 +9,7 @@ import {
 } from "../lib/synth.js";
 
 import { synthNodeTerminalIntents } from '../lib/synthNodeIntents';
+import { getNodeTypeById } from '../lib/synthNodeTypes';
 
 import {
   swapItemsInArray,
@@ -709,9 +710,37 @@ const usePatchStore = create(
         delete loadedState.ui;
         delete loadedState.prefs;
 
+        const newState = structuredClone(loadedState);
+
+
+
         return {
           ...state,
-          ...loadedState
+          ...loadedState,
+          nodes: loadedState.nodes.map(n => {
+
+            const nodeType = getNodeTypeById(n.nodeTypeId);
+
+            // merge inputs
+            const inputs = structuredClone(nodeType.inputs).map(i => {
+              const importInput = n.inputs.find(input => input.id == i.id);
+              return (importInput ? { ...importInput, ...i } : i)
+            });
+
+            // merge outputs
+            const outputs = structuredClone(nodeType.outputs).map(i => {
+              const importOutput = n.outputs.find(output => output.id == i.id);
+              return (importOutput ? { ...importOutput, ...i } : i)
+            });
+          
+            // const nodeTypeDefault = structuredClone(getNodeTypeById(n.nodeTypeId));
+            
+            return {
+              ...n,
+              inputs,
+              outputs,              
+            }
+          }),
         }
       }),      
 
