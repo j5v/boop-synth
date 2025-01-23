@@ -1,15 +1,18 @@
-import './OutputPreviews.css'
+import './Visualizations.css'
 
 import { useContext } from 'react';
 import { BoopContext } from '../../store/AppContext.js';
 
 import ParameterGroup from '../generic/ParameterGroup.jsx'
 import VisualizationWaveform from './VisualizationWaveform.jsx'
+import { synthNodeTypes } from '../../lib/synthNodeTypes.js'
 
 import usePatchStore from '../../store/patchStore.jsx'
 
 
-function OutputPreviews({ nodeTypeId, synthNodeId }) {
+function Visualizations({ nodeTypeId, synthNodeId }) {
+
+  const previewsAvailable = nodeTypeId == synthNodeTypes.OUTPUT.id;
 
   // boop state: buffers
   const { boop, setBoop } = useContext(BoopContext);
@@ -59,4 +62,4 @@ function OutputPreviews({ nodeTypeId, synthNodeId }) {
 
 }
 
-export default OutputPreviews
+export default Visualizations

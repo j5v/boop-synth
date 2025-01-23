@@ -6,7 +6,7 @@ import { getNodeTypeById, synthNodeTypes } from '../../lib/synthNodeTypes.js'
 import React from 'react' // not needed to build; satisfies a code checker
 import Header from '../layout/Header.jsx'
 import FormPatchNodeInputList from './FormPatchNodeInputList.jsx'
-import OutputPreviews from './OutputPreviews.jsx'
+import Visualizations from './Visualizations.jsx'
 import ParameterGroup from '../generic/ParameterGroup.jsx'
 
 import usePatchStore from '../../store/patchStore.jsx'
@@ -48,10 +48,7 @@ function SynthNodeProperties(props) {
   ).length > 0;
 
 
-  // Previews
-
-  const previewsAvailable = nodeType.id == synthNodeTypes.OUTPUT.id;
-  
+ 
   return (
     <div className="SynthNodeProperties">
       <Header context="property-sheet">
@@ -81,13 +78,12 @@ function SynthNodeProperties(props) {
         </div>
       </ParameterGroup>
 
-      {previewsAvailable ?
-        <OutputPreviews
-          nodeTypeId={nodeType.id}
-          synthNodeId={synthNode.id} 
-          // @ts-ignore
-          runCount={runCount}
-        /> : <></>}
+      <Visualizations
+        nodeTypeId={nodeType.id}
+        synthNodeId={synthNode.id} 
+        // @ts-ignore
+        runCount={runCount}
+      />
 
     </div>
   )

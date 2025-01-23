@@ -49,6 +49,7 @@ function VisualizationWaveform({ buffer, w, h }) {
   const svg = [];
 
   if (buffer) {
+
     // render inner SVG
 
     const { duration, sampleRate, freq } = perf;
