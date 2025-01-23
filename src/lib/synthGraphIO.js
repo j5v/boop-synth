@@ -1,3 +1,6 @@
+import { cleanStateForExport } from './synthGraphUtils.js'
+import { appInfo } from './appInfo.js'
+
 import { encodeWAV } from './wav.js'
 import saveAs from '../lib/FileSaver.js'
 
@@ -51,8 +54,19 @@ function playAudio(outputBuffers, perf) {
   }
 }
 
+function exportPatch(state) {
+
+  const patchName = state.name || 'untitled';
+  const exportState = cleanStateForExport(state);
+  const stream = `data:text/json;charset=utf-8, ${encodeURIComponent(JSON.stringify(exportState))}`;
+
+  saveAs(stream, patchName + '-boop-patch.json');
+  
+}
+
 
 export {
   writeFile,
   playAudio,
+  exportPatch,
 }

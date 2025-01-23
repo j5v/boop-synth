@@ -53,7 +53,7 @@ const getNodeDisplayTitle = node => {
   return joinItems([ node.displayName, displayTypeName ], ' - ');
 }
 
-function valueOfInput(input, node, nodes) {
+const valueOfInput = (input, node, nodes) => {
   if (input && input.link && input.link.synthNodeId) {
     const link = input.link; // alias
     if (!link.resolvedOutput) {
@@ -74,10 +74,14 @@ function valueOfInput(input, node, nodes) {
     if (input.value != undefined)
       return input.value;
 
-    const nodeType = getNodeTypeById(node.nodeTypeId);
-    const nodeTypeInput = getItemById(nodeType.inputs, input.id); // get matching input in synthNodeTypes
+    const nodeTypeInput =  getDefaultInput(node, input);
     return nodeTypeInput.defaultValue !== undefined ? nodeTypeInput.defaultValue : 0;
   }
+}
+
+const getDefaultInput = (synthNode, input) => { // get matching input in synthNodeTypes
+  const nodeType = getNodeTypeById(synthNode.nodeTypeId);
+  return getItemById(nodeType.inputs, input.id);
 }
 
 
@@ -106,6 +110,79 @@ function cleanPatch(nodes) {  // Remove extra properties and direct object refs
       delete output.signal;
     });
   }
+}
+
+function cleanStateForExport(workingState) {  
+
+  const state = workingState; // want structuredClone(workingState);
+  
+  // clean up state
+  delete state.ui.draggingLinkFromOutput;
+  delete state.ui.draggingLinkFromInput;
+
+  state.nodes.forEach(node => {
+    delete node.highlighted;
+    delete node.selected;
+
+    // Remove excess decimal places (units: rem; pixel at 100% is near 0.06)
+    node.x = Number(node.x.toFixed(4));
+    node.y = Number(node.y.toFixed(4));
+    node.w = Number(node.w.toFixed(4));
+    node.h = Number(node.h.toFixed(4));
+
+    node.inputs.forEach(input => {
+      // clear up old properties not used now - remove at v1.0
+      delete input.displayName;
+      delete input.displayNameShort;
+      delete input.description;
+      delete input.defaultValue;
+      delete input.isParam; // TODO: remove also from new node
+      delete input.placeholder;
+      delete input.isPlaceholder;
+      delete input.intentId;
+      delete input.displayUnits;
+      delete input.isOffset;
+      delete input.onlyShowIf; // TODO: remove also from new node
+      delete input.order; // TODO: remove also from new node
+      delete input.posX;
+      delete input.posY;
+      if (input.link == {}) delete input.link;
+
+      // remove reference to output buffer.
+      delete input.buffer; // just from the node; will be discarded on generate()
+
+      // userValues are only useful if different (parseable format) from value.
+      if (input.userValue == input.value) delete input.userValue;
+
+      // delete values identical to default (consider removing if defaults are likely to change)
+      const nodeType = getNodeTypeById(node.nodeTypeId);
+      const nodeTypeInput = getItemById(nodeType.inputs, input.id); // get matching input in synthNodeTypes
+      if (input.value == nodeTypeInput.defaultValue) delete input.value;
+
+    })
+
+    node.outputs.forEach(output => {
+      // clear up old properties not used now - remove at v1.0
+      delete output.displayName;
+      delete output.displayNameShort;
+      delete output.description;
+      delete output.intentId;
+      delete output.displayUnits;
+      delete output.isOffset;
+      delete output.signal;
+      delete output.posX;
+      delete output.posY;
+    })
+  })
+
+
+  // add some metadata
+  state.appName = appInfo.appName;
+  state.appVersion = appInfo.appVersion;
+  state.saveVersion = appInfo.saveVersion;
+
+  return state;
+
 }
 
 
@@ -157,9 +234,11 @@ export {
 
   getNodeDisplayTitle,
   valueOfInput,
+  getDefaultInput,
 
   clearPeakMeters,
   cleanPatch,
+  cleanStateForExport,
   assignLink,
   newSynthNode,
 }

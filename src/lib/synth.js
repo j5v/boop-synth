@@ -3,8 +3,8 @@ import { sourceTypeGroups } from '../lib/sourceTypeGroups.js'
 import { sourceFunctions } from '../lib/sourceFunctions.js'
 import { initEnvelope, processEnvelope } from '../nodeTypes/synthEnvelopeAnalog.js'
 import { getWaveshaperFunctionById } from './waveshaperFunctions.js'
+import { getDefaultInput } from './synthGraphUtils.js'
 
-import { getItemById } from './utils.js'
 import { writeFile, playAudio } from './synthGraphIO.js'
 import { clearPeakMeters, cleanPatch, valueOfInput } from './synthGraphUtils.js'
 
@@ -188,8 +188,7 @@ const generate = function (params) {
       // optimization: force input[].value to avoid expensive lookups to nodeType
       node.inputs.forEach(input => {
         if (input.value === undefined) {
-          const nodeType = getNodeTypeById(node.nodeTypeId);
-          const nodeTypeInput = getItemById(nodeType.inputs, input.id); // get matching input in synthNodeTypes
+          const nodeTypeInput = getDefaultInput(node, input);
           input.value = nodeTypeInput.defaultValue !== undefined ? nodeTypeInput.defaultValue : 0;
         }
       })
@@ -207,7 +206,6 @@ const generateFile = function (params) {
   const output = generate(params);
   writeFile(output.outputBuffers, params.perf);
 }
-
 
 const generateAndPlay = function (params) {
   const output = generate(params);

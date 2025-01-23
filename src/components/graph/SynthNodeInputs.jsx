@@ -1,4 +1,5 @@
 import { memo } from 'react';
+import React from 'react' // not needed to build; satisfies a code checker
 
 import './SynthNodeInputs.css'
 import { asRem, pxAsRem, remAsPx, getItemById } from '../../lib/utils.js'
@@ -9,6 +10,7 @@ import usePatchStore from '../../store/patchStore.jsx'
 
 const SynthNodeInputs = memo(function SynthNodeInputs(props) {
 
+  // @ts-ignore
   const { synthNode } = props;
   const { inputs } = synthNode;
   const nodeType = getNodeTypeById(synthNode.nodeTypeId);
@@ -26,8 +28,6 @@ const SynthNodeInputs = memo(function SynthNodeInputs(props) {
   const draggingLinkFromInput = usePatchStore((state) => state.ui.draggingLinkFromInput);
   const draggingLinkFromOutput = usePatchStore((state) => state.ui.draggingLinkFromOutput);
 
-  // const clearLinkDragging = usePatchStore((state) => state.clearLinkDragging);
-
   // events
   const LEFT_BUTTON = 0;
 
@@ -41,7 +41,6 @@ const SynthNodeInputs = memo(function SynthNodeInputs(props) {
 
   const handleMouseMove = (event, spec) => {
     // Continue dragging a link from an Output to this Input
-    // TODO: check logic - is this needed? Snaps to node?
     if (draggingLinkFromOutput) {
       setLinkDragFromOutput(spec);
     }
@@ -68,6 +67,7 @@ const SynthNodeInputs = memo(function SynthNodeInputs(props) {
         const nodeTypeInput = getItemById(nodeType.inputs, i.id); // get matching input in synthNodeTypes
 
         const classCSS = `terminal ${
+          // @ts-ignore
           getSynthNodeTerminalIntentsById(nodeTypeInput.intentId).classCSS
         }`;
         const classCSSOutline = 'terminal outline';

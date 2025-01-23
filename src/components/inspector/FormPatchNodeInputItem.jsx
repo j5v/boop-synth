@@ -1,3 +1,4 @@
+// @ts-nocheck
 import './FormPatchNodeInputItem.css'
 import { joinItems, getItemById } from '../../lib/utils.js'
 import { getNodeTypeById } from '../../lib/synthNodeTypes.js'
@@ -72,7 +73,7 @@ function FormPatchNodeInputItem(props) {
         (inputItem.value !== undefined) ? inputItem.value :
         nodeTypeInput.defaultValue
       }
-      onChange={(e) => handleChangeCheckbox(e, inputItem.id)}
+      onChange={(e) => handleChangeCheckbox(e)}
       title={hint}
     ></input>
 
@@ -89,7 +90,7 @@ function FormPatchNodeInputItem(props) {
         nodeTypeInput.defaultValue
       }
       className="select"
-      onChange={(e) => handleChangeValue(e, inputItem.id)}
+      onChange={(e) => handleChangeValue(e)}
       title={hint}
     >
       {options}
@@ -111,7 +112,7 @@ function FormPatchNodeInputItem(props) {
         nodeTypeInput.defaultValue
       }
       className="select"
-      onChange={(e) => handleChangeValue(e, inputItem.id)}
+      onChange={(e) => handleChangeValue(e)}
       title={hint}
     >
       {options}
@@ -133,7 +134,7 @@ function FormPatchNodeInputItem(props) {
         nodeTypeInput.defaultValue
       }
       className="select"
-      onChange={(e) => handleChangeValue(e, inputItem.id)}
+      onChange={(e) => handleChangeValue(e)}
       title={hint}
     >
       {options}

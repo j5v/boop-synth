@@ -1,5 +1,9 @@
 import './FormPatchNodeInputList.css'
+
+import { getDefaultInput } from '../../lib/synthGraphUtils.js'
+
 import FormPatchNodeInputItem from './FormPatchNodeInputItem.jsx'
+import React from 'react' // not needed to build; satisfies a code checker
 
 function FormPatchNodeInputList(props) {
 
@@ -8,8 +12,8 @@ function FormPatchNodeInputList(props) {
   
   const displayInputs = (inputs || [])
     // filter handles undefined as false.
-    .filter(i => (i.isParam == true) == (isParam == true))
-    .sort((a, b) => a.order - b.order);
+    .filter(i => (getDefaultInput(synthNode, i).isParam == true) == (isParam == true))
+    .sort((a, b) => getDefaultInput(synthNode, a).order - getDefaultInput(synthNode, b).order);
 
   if (displayInputs && displayInputs.length == 0) return (<p className="no-items-text">(none)</p>)
 

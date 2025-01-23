@@ -1,8 +1,9 @@
 import './SynthNodeProperties.css'
 
-import { getNodeDisplayTitle } from '../../lib/synthGraphUtils.js'
+import { getNodeDisplayTitle, getDefaultInput } from '../../lib/synthGraphUtils.js'
 import { getNodeTypeById, synthNodeTypes } from '../../lib/synthNodeTypes.js'
 
+import React from 'react' // not needed to build; satisfies a code checker
 import Header from '../layout/Header.jsx'
 import FormPatchNodeInputList from './FormPatchNodeInputList.jsx'
 import OutputPreviews from './OutputPreviews.jsx'
@@ -40,8 +41,11 @@ function SynthNodeProperties(props) {
   ) : <></>;
 
   // end Node description
+
   
-  const hasConfiguration = (synthNode.inputs || []).filter(i => i.isParam == true).length > 0;
+  const hasConfiguration = (synthNode.inputs || []).filter(
+    i => getDefaultInput(synthNode, i).isParam == true
+  ).length > 0;
 
 
   // Previews
@@ -77,7 +81,13 @@ function SynthNodeProperties(props) {
         </div>
       </ParameterGroup>
 
-      {previewsAvailable ? <OutputPreviews nodeTypeId={nodeType.id} synthNodeId={synthNode.id} runCount={runCount} /> : <></>}
+      {previewsAvailable ?
+        <OutputPreviews
+          nodeTypeId={nodeType.id}
+          synthNodeId={synthNode.id} 
+          // @ts-ignore
+          runCount={runCount}
+        /> : <></>}
 
     </div>
   )

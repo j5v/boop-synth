@@ -13,6 +13,7 @@ import IconDuplicate from './generic/IconDuplicate.jsx'
 
 import { useContext } from 'react';
 import { BoopContext } from '../store/AppContext.js';
+import React from 'react' // not needed to build; satisfies a code checker
 
 
 function AppHeader() {
