@@ -2,8 +2,23 @@ const waveshaperFunctions = {
   PASS_THROUGH: {
     id: 1,
     name: 'No change',
-    fn: inp => inp,
-  },  
+    fn: i => i,
+  },
+  SIN: { // periodic
+    id: 10,
+    name: 'Sine',
+    fn: i => Math.sin(Math.PI * 0.5 * i),
+  },
+  SAW: { // periodic
+    id: 11,
+    name: 'Saw',
+    fn: i => i % 1,
+  },
+  RECTIFY: {
+    id: 30,
+    name: 'Rectify',
+    fn: i => Math.abs(i),
+  },
 }
 
 // not used yet - some dependencies to work out.
