@@ -109,6 +109,7 @@ const generate = function (params) {
         // Waveshaper
         // TODO: optimize later
         const ws = getWaveshaperFunctionById(shaperId);
+        // @ts-ignore
         if (ws) sig = ws.fn(sig);
 
         // Scale output from -1..1 to outMin..outMax
@@ -257,7 +258,7 @@ const generateFile = function (params) {
 
   const output = generate(params);
 
-  const { channels, sampleRate } = params.perf;
+  const { channels, sampleRate, filenameRoot } = params.perf;
 
   for (let outputBufferIndex in output.outputBuffers) {
     const samples = output.outputBuffers[outputBufferIndex].samples;
@@ -269,7 +270,7 @@ const generateFile = function (params) {
     );
 
     const audioBlob = new Blob([dataview], { type : 'audio/wav' });
-    saveAs(audioBlob, perf.filenameRoot + '.wav');
+    saveAs(audioBlob, filenameRoot + '.wav');
   }
 }
 

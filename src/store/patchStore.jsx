@@ -25,6 +25,7 @@ const defaultView = {
 };
 
 const usePatchStore = create(
+  // @ts-ignore
   persist( // Used to maintain current state in localStorage
     (set, get) => ({
       nodes: defaultPatchNodes(),
@@ -221,6 +222,7 @@ const usePatchStore = create(
             if (letter) { // minimum spec
               const semitones = [0, 2, 4, 5, 7, 9, 11]['cdefgab'.indexOf(letter)];
               const accidentalInc = accidental == '#' ? 1 : (accidental == 'b' ? -1 : 0);
+              // @ts-ignore
               writeValue = Math.pow(2, (octave || 4) - 4 + (accidentalInc + semitones - 9) / 12 ) * (parseFloat(freqOfA || '440'));
             }
           } else {
@@ -747,6 +749,7 @@ const usePatchStore = create(
     })
   ),
 
+  // @ts-ignore
   {
     name: 'boop', // name of the item in the storage (must be unique)
     storage: createJSONStorage(() => localStorage), // (optional) by default, 'localStorage' is used
