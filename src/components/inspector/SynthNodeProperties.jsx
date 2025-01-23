@@ -1,6 +1,6 @@
 import './SynthNodeProperties.css'
 
-import { getNodeDisplayTitle } from '../../lib/synth.js'
+import { getNodeDisplayTitle } from '../../lib/synthGraphUtils.js'
 import { getNodeTypeById, synthNodeTypes } from '../../lib/synthNodeTypes.js'
 
 import Header from '../layout/Header.jsx'

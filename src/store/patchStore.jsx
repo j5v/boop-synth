@@ -2,11 +2,11 @@ import { create } from "zustand";
 import { persist, createJSONStorage } from 'zustand/middleware';
 
 import {
-  defaultPatchNodes,
-  defaultOutputSpec,
-  newSynthNode,
   assignLink,
-} from "../lib/synth.js";
+  newSynthNode,
+  defaultOutputSpec,
+  defaultPatchNodes
+} from '../lib/synthGraphUtils.js'
 
 import { synthNodeTerminalIntents } from '../lib/synthNodeIntents';
 import { getNodeTypeById } from '../lib/synthNodeTypes';

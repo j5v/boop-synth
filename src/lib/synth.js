@@ -1,109 +1,19 @@
-import { appInfo } from './appInfo.js'
 import { synthNodeTypes, getNodeTypeById } from '../lib/synthNodeTypes.js'
 import { sourceTypeGroups } from '../lib/sourceTypeGroups.js'
 import { sourceFunctions } from '../lib/sourceFunctions.js'
 import { initEnvelope, processEnvelope } from '../nodeTypes/synthEnvelopeAnalog.js'
-import { joinItems, getNewId, getItemById } from './utils.js'
+import { getItemById } from './utils.js'
 import { encodeWAV } from './wav.js'
 import saveAs from '../lib/FileSaver.js'
 import { getWaveshaperFunctionById } from './waveshaperFunctions.js'
-import { synthNodeTerminalIntents } from './synthNodeIntents.js'
-
-const BITDEPTH_16 = 0;
-
-const defaultOutputSpec = {
-  // TODO: refactor these into Output node and Performance parmaters
-  sampleRate: 44100, // sps
-  duration: 0.5, // seconds
-  channels: 1,
-  filenameRoot: `${appInfo.appName} - output`,
-  sustainReleaseTime: 400, // ms
-  depth: BITDEPTH_16,
-
-  freq: 440 * Math.pow(2, -9/12), // C below concert pitch A
-}
-const defaultPatchPerformance = {
-  baseFreq: 440 * Math.pow(2, -9/12), // C below concert pitch A
-  baseNoteMIDI: 60
-}
-
-const defaultPatchNodes = () => {
-  const nodes = [];
-  nodes.push(newSynthNode(nodes, synthNodeTypes.GEN_FM.id));
-  nodes.push(newSynthNode(nodes, synthNodeTypes.OUTPUT.id));
-
-  nodes[0].x = 3;
-  nodes[1].x = 18;
-
-  // add a link
-  nodes[1].inputs[0].link = {
-    synthNodeId: nodes[0].id,
-    outputId: 1
-  }
-  return nodes;
-}
 
 
-// Links 
-const assignLink = (nodes, spec) => {
-  const newNodes = [ ...structuredClone(nodes) ];
-
-  const { inputNodeId, inputId, targetNodeId, targetOutputId } = spec;
-  
-  const link = {
-    synthNodeId: targetNodeId,
-    outputId: targetOutputId,
-    // debug: spec
-  }
-
-  // Set input.link to the new link
-  let input;
-
-  const node = newNodes.find(n => n.id == inputNodeId);
-  if (node) {
-    input = node.inputs.find(i => i.id == inputId);
-  }
-  if (input) {
-    input.link = link;
-  }
-  return newNodes;
-}
-
-// const newSynthNode = newCreator(defaultSynthNode)
-const newSynthNode = (nodes = [], nodeTypeId, overrides = {}) => {
-  const nodeType = getNodeTypeById(nodeTypeId);
-  const id = (nodes.length > 0) ? getNewId(nodes) : 1;
-  
-  if (nodeType) {
-    return {
-      id,
-      nodeTypeId,
-      x: 2, // rem
-      y: 2, // rem
-      w: 11, // rem
-      inputs: structuredClone(nodeType.inputs),
-      outputs: structuredClone(nodeType.outputs),
-      ...overrides,
-    }
-  }
-}
-
-// query functons
-  
-const getNodeDisplayTitle = node => {
-  const nodeType = getNodeTypeById(node.nodeTypeId);
-  const displayTypeName = nodeType ? `${nodeType.name}` : '';
-  return joinItems([ node.displayName, displayTypeName ], ' - ');
-}
-
-// processing
-
-const generate = function ({ nodes, perf, boop }) {
+const generate = function (params) {
+  const { nodes, perf, boop } = params;
   const { sampleRate, duration, freq, sustainReleaseTime = 0 } = (perf || {});
 
   boop.defaultBoopState.outputBuffers = [];
   const outputBuffers = boop.defaultBoopState.outputBuffers;
-
 
   const sampleFrames = sampleRate * duration;
   const phaseIncNormalized = 1 / sampleRate;
@@ -292,7 +202,7 @@ const generate = function ({ nodes, perf, boop }) {
     }
   }
 
-  function initPatch() {
+  function initPatch(nodes) { // call before generate()
     cleanPatch();
 
     let id = 1;
@@ -343,17 +253,19 @@ const generate = function ({ nodes, perf, boop }) {
   } 
 }
 
-const generateFile = function ({ nodes, perf = {}, boop }) {
+const generateFile = function (params) {
 
-  const output = generate({ nodes, perf, boop });
+  const output = generate(params);
+
+  const { channels, sampleRate } = params.perf;
 
   for (let outputBufferIndex in output.outputBuffers) {
     const samples = output.outputBuffers[outputBufferIndex].samples;
 
     const dataview = encodeWAV(
       samples,
-      perf.sampleRate,
-      perf.channels
+      sampleRate,
+      channels
     );
 
     const audioBlob = new Blob([dataview], { type : 'audio/wav' });
@@ -361,25 +273,25 @@ const generateFile = function ({ nodes, perf = {}, boop }) {
   }
 }
 
-const generateAndPlay = function ({ nodes, perf = {}, boop }) {
-  // TODO: use patch data.
-  const { duration, channels, sampleRate } = perf;
+const generateAndPlay = function (params) {
 
   // synthesize a buffer
-  const output = generate({ nodes, perf, boop });
+  const output = generate(params);
+
+  // TODO: use patch data.
+  const { duration, channels, sampleRate } = params.perf;
 
   for (let outputBufferIndex in output.outputBuffers) {
 
     const samples = output.outputBuffers[outputBufferIndex].samples;
 
-    // allocate audio context
     const audioCtx = new AudioContext();
     
-    // allocate audio buffer
+    // Allocate audio buffer. Fractional sample at end is rendered as a whole sample.
     const sampleFrames = duration * sampleRate;
     const myArrayBuffer = audioCtx.createBuffer(channels, sampleFrames, sampleRate);
 
-    // populate buffer
+    // Populate audio buffer
     for (let channel = 0; channel < channels; channel++) {
       const nowBuffering = myArrayBuffer.getChannelData(channel);
       for (let i = 0; i < sampleFrames; i++) {
@@ -387,7 +299,7 @@ const generateAndPlay = function ({ nodes, perf = {}, boop }) {
       }
     }
 
-    // Play buffer
+    // Play audiio buffer
     const source = audioCtx.createBufferSource();
     source.buffer = myArrayBuffer;
     source.connect(audioCtx.destination);
@@ -399,13 +311,6 @@ const generateAndPlay = function ({ nodes, perf = {}, boop }) {
 }
 
 export {
-  getNodeDisplayTitle,
-  newSynthNode,
-  defaultPatchNodes,
-  defaultOutputSpec,
-  defaultPatchPerformance,
-  assignLink,
-
   generate,
   generateFile,
   generateAndPlay,

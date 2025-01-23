@@ -1,6 +1,6 @@
 import './SynthGraphNodeList.css'
 import usePatchStore from '../../store/patchStore.jsx'
-import { getNodeDisplayTitle } from '../../lib/synth.js'
+import { getNodeDisplayTitle } from '../../lib/synthGraphUtils.js'
 import IconMoveUp from '../generic/IconMoveUp.jsx';
 import IconMoveDown from '../generic/IconMoveDown.jsx';
 

@@ -1,6 +1,6 @@
 import './SynthNodeTitle.css'
 import { asRem } from '../../lib/utils.js'
-import { getNodeDisplayTitle } from '../../lib/synth.js'
+import { getNodeDisplayTitle } from '../../lib/synthGraphUtils.js'
  
 function SynthNodeTitle(props) {
 

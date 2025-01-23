@@ -2,7 +2,7 @@ import { memo } from 'react';
 
 import './PerformancePropertiesForm.css'
 import usePatchStore from '../../store/patchStore.jsx';
-import { defaultOutputSpec } from '../../lib/synth.js';
+import { defaultOutputSpec } from '../../lib/synthGraphUtils.js';
 
 const PerformancePropertiesForm = memo(function PerformancePropertiesForm(props) {
 

@@ -4,6 +4,11 @@ const waveshaperFunctions = {
     name: 'No change',
     fn: i => i,
   },
+  SQUARE: {
+    id: 2,
+    name: 'Power 2',
+    fn: i => i * i * Math.sign(i),
+  },  
   SIN: { // periodic
     id: 10,
     name: 'Sine',
