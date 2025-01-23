@@ -1,5 +1,9 @@
+/* Contains: default data objects, pure functions
+    related to synthGraph (patch and performance data).
+*/
+
 import { appInfo } from './appInfo.js'
-import { getNewId, joinItems } from './utils.js'
+import { getNewId, joinItems, getItemById } from './utils.js'
 import { synthNodeTypes, getNodeTypeById } from '../lib/synthNodeTypes.js'
 
 
@@ -49,8 +53,61 @@ const getNodeDisplayTitle = node => {
   return joinItems([ node.displayName, displayTypeName ], ' - ');
 }
 
+function valueOfInput(input, node, nodes) {
+  if (input && input.link && input.link.synthNodeId) {
+    const link = input.link; // alias
+    if (!link.resolvedOutput) {
+      // cache a direct link as resolvedOutput, so we don't need to look up next time.
+      const outputSynthNode = nodes.find(n => n.id == link.synthNodeId);
+      if (outputSynthNode) {
+        link.resolvedOutput = outputSynthNode && outputSynthNode.outputs.find(output => output.id == link.outputId);
+      }
+    }
+    if (link.resolvedOutput) {
+      return link.resolvedOutput.signal || 0;
+    } else {
+      console.warn('Link failed to resolve, from input:', input);
+      return 0;
+    }
+  } else {
+
+    if (input.value != undefined)
+      return input.value;
+
+    const nodeType = getNodeTypeById(node.nodeTypeId);
+    const nodeTypeInput = getItemById(nodeType.inputs, input.id); // get matching input in synthNodeTypes
+    return nodeTypeInput.defaultValue !== undefined ? nodeTypeInput.defaultValue : 0;
+  }
+}
+
 
 // actions
+
+function clearPeakMeters(nodes) {
+  nodes.forEach(n => {
+    delete n.peakMeter;
+  });
+}
+
+function cleanPatch(nodes) {  // Remove extra properties and direct object refs
+  for (let nodeIndex in nodes) {
+    const node = nodes[nodeIndex];
+    delete node.env;
+    delete node.phase;
+    delete node.buffer; // but retain node.buffer.id
+
+    node.inputs.forEach(input => {
+      if (input.link) {
+        delete input.link.resolvedOutput;
+      }
+    });
+
+    node.outputs.forEach(output => {
+      delete output.signal;
+    });
+  }
+}
+
 
 const assignLink = (nodes, spec) => {
   const newNodes = [ ...structuredClone(nodes) ];
@@ -99,7 +156,10 @@ export {
   defaultPatchNodes,
 
   getNodeDisplayTitle,
+  valueOfInput,
 
+  clearPeakMeters,
+  cleanPatch,
   assignLink,
   newSynthNode,
 }

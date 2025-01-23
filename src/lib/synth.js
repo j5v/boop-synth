@@ -2,15 +2,16 @@ import { synthNodeTypes, getNodeTypeById } from '../lib/synthNodeTypes.js'
 import { sourceTypeGroups } from '../lib/sourceTypeGroups.js'
 import { sourceFunctions } from '../lib/sourceFunctions.js'
 import { initEnvelope, processEnvelope } from '../nodeTypes/synthEnvelopeAnalog.js'
-import { getItemById } from './utils.js'
-import { encodeWAV } from './wav.js'
-import saveAs from '../lib/FileSaver.js'
 import { getWaveshaperFunctionById } from './waveshaperFunctions.js'
+
+import { getItemById } from './utils.js'
+import { writeFile, playAudio } from './synthGraphIO.js'
+import { clearPeakMeters, cleanPatch, valueOfInput } from './synthGraphUtils.js'
 
 
 const generate = function (params) {
   const { nodes, perf, boop } = params;
-  const { sampleRate, duration, freq, sustainReleaseTime = 0 } = (perf || {});
+  const { sampleRate = 44100, duration = 0.5, freq, sustainReleaseTime = 0 } = (perf || {});
 
   boop.defaultBoopState.outputBuffers = [];
   const outputBuffers = boop.defaultBoopState.outputBuffers;
@@ -21,13 +22,13 @@ const generate = function (params) {
   const TAU = PI * 2;
 
   initPatch(nodes);
-  clearPeakMeters();
+  clearPeakMeters(nodes);
 
   // Generate audio, one channel.
   for (let i = 0; i < sampleFrames; i++) {
     for (let n in nodes) {
       const node = nodes[n];
-      const inputSignals = valuesOfInputs(node);
+      const inputSignals = valuesOfInputs(node, nodes);
       const nodeTypeId = node.nodeTypeId;
 
       if (nodeTypeId == synthNodeTypes.GEN_FM.id) {
@@ -146,65 +147,13 @@ const generate = function (params) {
     outputBuffers
   }
 
-  function clearPeakMeters() {
-    nodes.forEach(n => {
-      delete n.peakMeter;
-    });
-  }
-
-  function valueOfInput(input, node) {
-    if (input && input.link && input.link.synthNodeId) {
-      const link = input.link; // alias
-      if (!link.resolvedOutput) {
-        // cache a direct link as resolvedOutput, so we don't need to look up next time.
-        const outputSynthNode = nodes.find(n => n.id == link.synthNodeId);
-        if (outputSynthNode) {
-          link.resolvedOutput = outputSynthNode && outputSynthNode.outputs.find(output => output.id == link.outputId);
-        }
-      }
-      if (link.resolvedOutput) {
-        return link.resolvedOutput.signal || 0;
-      } else {
-        console.warn('Link failed to resolve, from input:', input);
-        return 0;
-      }
-    } else {
-
-      if (input.value != undefined)
-        return input.value;
-
-      const nodeType = getNodeTypeById(node.nodeTypeId);
-      const nodeTypeInput = getItemById(nodeType.inputs, input.id); // get matching input in synthNodeTypes
-      return nodeTypeInput.defaultValue !== undefined ? nodeTypeInput.defaultValue : 0;
-    }
-  }
-
-  function valuesOfInputs(node) {
-    return node.inputs.map(i => valueOfInput(i, node));
-  }
-
-  function cleanPatch() {  // Remove extra properties and direct object refs
-    for (let nodeIndex in nodes) {
-      const node = nodes[nodeIndex];
-      delete node.env;
-      delete node.phase;
-      delete node.buffer; // but retain node.buffer.id
-
-      node.inputs.forEach(input => {
-        if (input.link) {
-          delete input.link.resolvedOutput;
-        }
-      });
-
-      node.outputs.forEach(output => {
-        delete output.signal;
-      });
-
-    }
+  
+  function valuesOfInputs(node, nodes) {
+    return node.inputs.map(i => valueOfInput(i, node, nodes));
   }
 
   function initPatch(nodes) { // call before generate()
-    cleanPatch();
+    cleanPatch(nodes);
 
     let id = 1;
 
@@ -250,65 +199,19 @@ const generate = function (params) {
   }
 
   function finishPatch() {
-    cleanPatch();
+    cleanPatch(nodes);
   } 
 }
 
 const generateFile = function (params) {
-
   const output = generate(params);
-
-  const { channels, sampleRate, filenameRoot } = params.perf;
-
-  for (let outputBufferIndex in output.outputBuffers) {
-    const samples = output.outputBuffers[outputBufferIndex].samples;
-
-    const dataview = encodeWAV(
-      samples,
-      sampleRate,
-      channels
-    );
-
-    const audioBlob = new Blob([dataview], { type : 'audio/wav' });
-    saveAs(audioBlob, filenameRoot + '.wav');
-  }
+  writeFile(output.outputBuffers, params.perf);
 }
 
+
 const generateAndPlay = function (params) {
-
-  // synthesize a buffer
   const output = generate(params);
-
-  // TODO: use patch data.
-  const { duration, channels, sampleRate } = params.perf;
-
-  for (let outputBufferIndex in output.outputBuffers) {
-
-    const samples = output.outputBuffers[outputBufferIndex].samples;
-
-    const audioCtx = new AudioContext();
-    
-    // Allocate audio buffer. Fractional sample at end is rendered as a whole sample.
-    const sampleFrames = duration * sampleRate;
-    const myArrayBuffer = audioCtx.createBuffer(channels, sampleFrames, sampleRate);
-
-    // Populate audio buffer
-    for (let channel = 0; channel < channels; channel++) {
-      const nowBuffering = myArrayBuffer.getChannelData(channel);
-      for (let i = 0; i < sampleFrames; i++) {
-        nowBuffering[i] = samples[i];
-      }
-    }
-
-    // Play audiio buffer
-    const source = audioCtx.createBufferSource();
-    source.buffer = myArrayBuffer;
-    source.connect(audioCtx.destination);
-    source.start();
-
-  }
-  // TODO: check if context and buffers need async deallocation
-
+  playAudio(output.outputBuffers, params.perf);
 }
 
 export {
