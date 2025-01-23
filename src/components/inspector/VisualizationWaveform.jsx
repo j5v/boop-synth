@@ -27,16 +27,6 @@ function VisualizationWaveform({ buffer, w, h }) {
     stateDirty();
   }
 
-  if (!buffer) {
-    return (
-      <button
-        className="icon" 
-        onClick={() => handleGenerateOnly({ nodes, perf, boop })}
-        title="Refresh previews"
-      ><IconRefresh /></button>
-    )
-  }
-
   // highlight row
   const [ highlightRow, setHighlightRow ] = useState(-1);
 
@@ -53,76 +43,88 @@ function VisualizationWaveform({ buffer, w, h }) {
 
   }
 
-
-  // render inner SVG
-
-  const { duration, sampleRate, freq } = perf;
-  const sampleFrames = sampleRate * duration;
-  const wavelengthAsSamples = sampleRate / freq;
-  
-  const { samples } = buffer;
-
-  // console.log({ duration, sampleRate, freq, wavelengthAsSamples, sampleFrames });
-  
-  const wPx = remAsPx(w);
-  const wPy = remAsPx(h);
-  const margin = remAsPx(0.6);
-  
-  const waveformAmplitude = remAsPx(1.5);
-  const lineLength = wPx * 0.7;
-  
-  const graphOriginX = margin;
-  const graphOriginY = wPy - margin - waveformAmplitude;
-  const scaleX = lineLength / wavelengthAsSamples; // timeline: pixels per sample
-
-
-  const maxLines = 60;
-  const numLinesPossible = samples.length / wavelengthAsSamples;
-  const numLines = Math.min(maxLines, numLinesPossible);
-  
-  const lineIncX = (wPx - margin) * 0.1 / numLines;
-  const lineIncY = - (wPy - (margin + waveformAmplitude) * 2) / numLines;
-
-  const cursorIncPerLine = (samples.length - wavelengthAsSamples) / numLines; // not yet quanitzed to wavelength
+  // declared in this scope, so handleMouseMove can use these:
+  let lineIncY, graphOriginY;
 
   const svg = [];
-  let cursor = 0;
-  let linePhase = 0;
-  let key = 0;
 
-  for (let lineCount = 0; lineCount < numLines; lineCount++) {
+  if (buffer) {
+    // render inner SVG
 
-    const numSamplesThisLine = Math.min(cursor + wavelengthAsSamples, samples.length) - cursor;
-    const path = [ ];
-
-    let lineOriginX = graphOriginX + lineCount * lineIncX;
-    let lineOriginY = graphOriginY + lineCount * lineIncY;
-
-    for (let xc = 0; xc <= numSamplesThisLine; xc++ ) {
-      const sample = Math.min(1, Math.max(-1, samples[Math.floor(cursor + xc)]));
-      path.push( `${xc == 0 ? 'M' : 'L'} ${xc * scaleX + lineOriginX} ${lineOriginY - sample * waveformAmplitude} ` );
-    }
-
-    // error distribution, for the start of the next wavelength
-    linePhase += cursorIncPerLine;
-    cursor += Math.floor((linePhase - cursor) / wavelengthAsSamples) * wavelengthAsSamples;
-
-    const lineClass = lineCount == highlightRow ? 'wf highlight' : 'wf';
+    const { duration, sampleRate, freq } = perf;
+    const sampleFrames = sampleRate * duration;
+    const wavelengthAsSamples = sampleRate / freq;
     
-    svg.push( <path className={lineClass} key={key++} d={path.join('')} /> );
-    svg.push( <line key={key++} className="axis" x1={lineOriginX} y1={lineOriginY} x2={lineOriginX + lineLength} y2={lineOriginY} /> );
+    const { samples } = buffer;
+
+    // console.log({ duration, sampleRate, freq, wavelengthAsSamples, sampleFrames });
+    
+    const wPx = remAsPx(w);
+    const wPy = remAsPx(h);
+    const margin = remAsPx(0.6);
+    
+    const waveformAmplitude = remAsPx(1.5);
+    const lineLength = wPx * 0.7;
+    
+    const graphOriginX = margin;
+    graphOriginY = wPy - margin - waveformAmplitude;
+    const scaleX = lineLength / wavelengthAsSamples; // timeline: pixels per sample
+
+
+    const maxLines = 60;
+    const numLinesPossible = samples.length / wavelengthAsSamples;
+    const numLines = Math.min(maxLines, numLinesPossible);
+    
+    const lineIncX = (wPx - margin) * 0.1 / numLines;
+    lineIncY = - (wPy - (margin + waveformAmplitude) * 2) / numLines;
+
+    const cursorIncPerLine = (samples.length - wavelengthAsSamples) / numLines; // not yet quanitzed to wavelength
+
+    let cursor = 0;
+    let linePhase = 0;
+    let key = 0;
+
+    for (let lineCount = 0; lineCount < numLines; lineCount++) {
+
+      const numSamplesThisLine = Math.min(cursor + wavelengthAsSamples, samples.length) - cursor;
+      const path = [ ];
+
+      let lineOriginX = graphOriginX + lineCount * lineIncX;
+      let lineOriginY = graphOriginY + lineCount * lineIncY;
+
+      for (let xc = 0; xc <= numSamplesThisLine; xc++ ) {
+        const sample = Math.min(1, Math.max(-1, samples[Math.floor(cursor + xc)]));
+        path.push( `${xc == 0 ? 'M' : 'L'} ${xc * scaleX + lineOriginX} ${lineOriginY - sample * waveformAmplitude} ` );
+      }
+
+      // error distribution, for the start of the next wavelength
+      linePhase += cursorIncPerLine;
+      cursor += Math.floor((linePhase - cursor) / wavelengthAsSamples) * wavelengthAsSamples;
+
+      const lineClass = lineCount == highlightRow ? 'wf highlight' : 'wf';
+      
+      svg.push( <path className={lineClass} key={key++} d={path.join('')} /> );
+      svg.push( <line key={key++} className="axis" x1={lineOriginX} y1={lineOriginY} x2={lineOriginX + lineLength} y2={lineOriginY} /> );
+    }
   }
 
-
   return (
-    <div
-      className="visualization small"
-      onMouseMove={handleMouseMove}
-    >
-      <svg id="preview-waveform" className="visualization-svg small" width="17rem" height="16rem">
-        {svg.reverse()}
-      </svg>
-    </div>
+    buffer ? (
+      <div
+        className="visualization small"
+        onMouseMove={handleMouseMove}
+      >
+        <svg id="preview-waveform" className="visualization-svg small" width="17rem" height="16rem">
+          {svg.reverse()}
+        </svg>
+      </div>
+      ) : (
+      <button
+        className="icon" 
+        onClick={() => handleGenerateOnly({ nodes, perf, boop })}
+        title="Refresh previews"
+      ><IconRefresh /></button>
+    )
   )
 
 }
