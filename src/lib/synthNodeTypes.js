@@ -1,6 +1,7 @@
 import { synthNodeTerminalIntents } from '../lib/synthNodeIntents.js'
 import { sourceTypeGroups } from '../lib/sourceTypeGroups.js'
 import { getItemById } from '../lib/utils.js'
+import { synthNodeVisualizationTypes } from './synthNodeVisualizationTypes.js'
 
 const synthNodeTypes = {
   GEN_FM: {
@@ -169,6 +170,9 @@ const synthNodeTypes = {
       }
     ],
     outputs: [],
+    visualizations: [
+      synthNodeVisualizationTypes.WAVEFORM.id
+    ],
     description: 'Collects a signal to be the output for the graph',
   },
   MAPPER: {
@@ -266,6 +270,9 @@ const synthNodeTypes = {
         exposed: true,
         defaultValue: 0,
       }
+    ],
+    visualizations: [
+      // synthNodeVisualizationTypes.WAVESHAPER.id
     ],
     description: 'Changes the range of a signal, and its shape',
   },

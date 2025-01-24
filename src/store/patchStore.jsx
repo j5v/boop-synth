@@ -43,8 +43,7 @@ const usePatchStore = create(
         draggingLinkFromInput: undefined,
         draggingLinkFromOutput: undefined,
         view: structuredClone(defaultView),
-        expandPreviewWaveform: false,
-        expandPreviewSpectrum: false,
+        visualizationState: [],
       },
 
 
@@ -59,21 +58,35 @@ const usePatchStore = create(
 
 
       // UI state
-      togglePreviewSpectrumExpanded: (id) => set((state) => ({
-        ...state,
-        ui: {
-          ...state.ui,
-          expandPreviewSpectrum: !state.ui.expandPreviewSpectrum
-        },
-      })),
+      toggleVisualizationExpanded: (spec) => set((state) => {
+        const id = `${spec.synthNodeId}-${spec.visualizationId}`;
 
-      togglePreviewWaveformExpanded: (id) => set((state) => ({
-        ...state,
-        ui: {
-          ...state.ui,
-          expandPreviewWaveform: !state.ui.expandPreviewWaveform
-        },
-      })),
+
+        // set some state if there is none (and set to not-expanded; toggle afterwards)
+
+        if (!state.ui.visualizationsState)
+          state.ui.visualizationsState = [];
+
+        if (!state.ui.visualizationsState.find(vs => vs.id == id)) {
+          state.ui.visualizationsState.push({ id, isExpanded: false });
+        }
+
+
+        // New state
+
+        return {
+          ...state,
+          ui: {
+            ...state.ui,
+            visualizationsState: state.ui.visualizationsState.map(vs => ({
+              ...vs,
+              isExpanded: (vs.id == id) ?
+                !vs.isExpanded :
+                vs.isExpanded
+            }))
+          },
+        }
+      }),
 
 
       setImportExpanded: (value) => set((state) => ({

@@ -1,64 +1,78 @@
 import './Visualizations.css'
 
-import { useContext } from 'react';
-import { BoopContext } from '../../store/AppContext.js';
-
 import ParameterGroup from '../generic/ParameterGroup.jsx'
 import VisualizationWaveform from './VisualizationWaveform.jsx'
-import { synthNodeTypes } from '../../lib/synthNodeTypes.js'
+import { synthNodeTypes, getNodeTypeById } from '../../lib/synthNodeTypes.js'
+import { synthNodeVisualizationTypes, getSynthNodeVisualizationTypeById } from '../../lib/synthNodeVisualizationTypes.js'
 
 import usePatchStore from '../../store/patchStore.jsx'
 
 
 function Visualizations({ nodeTypeId, synthNodeId }) {
 
-  const previewsAvailable = nodeTypeId == synthNodeTypes.OUTPUT.id;
+  // Event handlers
+  const toggleVisualizationExpanded = usePatchStore((state) => state.toggleVisualizationExpanded);
+  const visualizationsState = usePatchStore((state) => state.ui.visualizationsState) || [];
 
-  // boop state: buffers
-  const { boop, setBoop } = useContext(BoopContext);
+  // Get appropraite visualizations for the node type
+  const synthNodeType = getNodeTypeById(nodeTypeId);
+  const visualizationIds = synthNodeType.visualizations;
 
-  const buffers = boop.defaultBoopState.outputBuffers;
-  const buffer = buffers.find(b => b.nodeId == synthNodeId);
+  if (visualizationIds == undefined || visualizationIds.length == 0) 
+    return <></>;
 
-  // if (!buffer) return <button onClick={console.log('')}>Generate previews</button>
-
-  // UI state
-  const isExpanded = usePatchStore((state) => state.ui.expandPreviewWaveform);
-
-  // console.log('OutputPreviews', isExpanded); 
-
-  // render (don't render if not displayed/expanded)
-  const waveformVisualization = isExpanded ? 
-    <VisualizationWaveform buffer={buffer} w={20} h={16} />
-    : <></>;
-
-
-  // event handlers
-  const toggleHandler = usePatchStore((state) => state.togglePreviewWaveformExpanded);
-
-  const handleToggleExpand = () => {
-    // console.log('+-');
-    toggleHandler();
+  const handleToggleExpand = (spec) => {
+    toggleVisualizationExpanded(spec);
   }
 
+  const visualizationComponents = visualizationIds.map(visualizationId => {
 
-  return (
-    <>
-      <ParameterGroup>
+    const key = `${synthNodeId}-${visualizationId}`;
+
+
+    // is the visualization expanded?
+
+    const vState = visualizationsState.find(vs => vs.id == key);
+    const isExpanded = (vState !== undefined) && vState.isExpanded;
+    
+
+    // Choose component to show, but only compute/render if expanded.
+    
+    let visualizationComponent;
+
+    if (!isExpanded) {
+      visualizationComponent = <></>;
+    } else {
+      if (visualizationId == synthNodeVisualizationTypes.WAVEFORM.id) {
+        visualizationComponent = <VisualizationWaveform synthNodeId={synthNodeId} w={20} h={16} />
+      } else {
+        // ...
+      }
+    }
+
+
+    const visualization = getSynthNodeVisualizationTypeById(visualizationId);
+
+    return (
+      <ParameterGroup key={key}>
         <div className="expandable">
           <button
             className="icon-button-small"
-            onClick={handleToggleExpand}
+            onClick={() => handleToggleExpand({ synthNodeId, visualizationId })}
             title={isExpanded ? 'Hide' : 'Expand'}
           >
             {isExpanded ? <>[&minus;]</> : <>[+]</>}
           </button>
-          <div className="expander-label">Waveform</div>
+          <div className="expander-label">{visualization.name}</div>
         </div>
-        {waveformVisualization}
+        {visualizationComponent}
       </ParameterGroup>
-    </>
-  );
+    );
+  
+
+  });
+
+  return visualizationComponents;
 
 }
 

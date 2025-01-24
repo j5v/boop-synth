@@ -11,23 +11,32 @@ import { useState } from 'react'
 import usePatchStore from '../../store/patchStore.jsx'
 
 
-function VisualizationWaveform({ buffer, w, h }) {
+function VisualizationWaveform({ synthNodeId, w, h }) {
 
-  // Opportunities to refresh state
-
+  // boop state: buffers
   const { boop, setBoop } = useContext(BoopContext);
 
+  const buffers = boop.defaultBoopState.outputBuffers;
+  const buffer = buffers.find(b => b.nodeId == synthNodeId);
+
+  
+  // state
+  
   const stateDirty = usePatchStore((state) => state.stateDirty)
   const state = usePatchStore((state) => state)
   const { nodes, perf } = state;
 
+
+  // events
 
   const handleGenerateOnly = (params) => {
     generate(params);
     stateDirty();
   }
 
+
   // highlight row
+  
   const [ highlightRow, setHighlightRow ] = useState(-1);
 
   const handleMouseMove = (event) => {

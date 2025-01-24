@@ -119,6 +119,7 @@ function cleanStateForExport(workingState) {
   // clean up state
   delete state.ui.draggingLinkFromOutput;
   delete state.ui.draggingLinkFromInput;
+  delete state.ui.expandPreviewWaveworm; // remove at v1.0
 
   state.nodes.forEach(node => {
     delete node.highlighted;

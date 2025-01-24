@@ -1,15 +1,15 @@
-import { getItemById } from '../lib/utils.js'
+import { getItemById } from './utils.js'
 
 const synthNodeVisualizationTypes = {
-  VIS_WAVEFORM: {
+  WAVEFORM: {
     id: 1,
     name: 'Waveform'
   },
-  VIS_SPECTRUM: {
+  SPECTRUM: {
     id: 2,
     name: 'Spectrum'
   },
-  VIS_WAVESHAPER: {
+  WAVESHAPER: {
     id: 3,
     name: 'Waveshaper'
   },
