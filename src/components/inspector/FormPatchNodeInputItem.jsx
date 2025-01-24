@@ -155,7 +155,7 @@ function FormPatchNodeInputItem(props) {
 
   }
 
-  const exposureField = (intent.modulatable) ? (
+  const exposureField = (intent.modulatable && !nodeTypeInput.isParam) ? (
     <input
       type="checkbox"
       checked={inputItem.exposed}

@@ -130,6 +130,11 @@ const generate = function (params) {
           node.outputs[0].signal = Math.random() * (max - min) + min;
         }
 
+      } else if (nodeTypeId == synthNodeTypes.DELAY.id) {
+        const [ signal, isAbsoluteDelay, sizeOctaves, sizeTime, delayOctaves, delayTime, replayPitch, latencyComp, subsample, crossfade ] = inputSignals;
+        // todo: algorithm
+        node.outputs[0].signal = signal;
+
       } else if (nodeTypeId == synthNodeTypes.OUTPUT.id) {
         const [ signal, gain ] = inputSignals;
         const output = signal * gain;
