@@ -102,9 +102,8 @@ function AppHeader() {
           <option
             key={synthNodeTypes[keyName].id}
             value={synthNodeTypes[keyName].id}
-            disabled={synthNodeTypes[keyName].isPlaceholder}
             title={synthNodeTypes[keyName].description || ''}
-          >{synthNodeTypes[keyName].name}</option>
+          >{synthNodeTypes[keyName].name}{synthNodeTypes[keyName].isPlaceholder ? ' [WIP]' : ''}</option>
         )}
       </select>
       <button

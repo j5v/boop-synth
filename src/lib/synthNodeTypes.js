@@ -6,8 +6,9 @@ import { synthNodeVisualizationTypes } from './synthNodeVisualizationTypes.js'
 const synthNodeTypes = {
   GEN_FM: {
     id: 2,
-    nameShort: 'Osc',
     name: 'Oscillator',
+    nameShort: '~',
+    description: 'Generates from a wave source, with optional FM (frequency modulation) and PM (phase modulation)',
     inputs: [
       {
         id: 1,
@@ -105,11 +106,12 @@ const synthNodeTypes = {
         defaultValue: 0,
       }
     ],
-    description: 'Generates from a wave source, with optional FM (frequency modulation) and PM (phase modulation)',
   },
   NOISE: {
     id: 8,
     name: 'Noise',
+    nameShort: 'Nse',
+    description: 'A random number, changing at S/H rate',
     inputs: [
       {
         id: 1,
@@ -146,11 +148,12 @@ const synthNodeTypes = {
         defaultValue: 0,
       }
     ],
-    description: 'A random number, changing at S/H rate',
   },
   OUTPUT: {
     id: 1,
     name: 'Output',
+    nameShort: 'Out',
+    description: 'Collects a signal to be the output for the graph',
     inputs: [
       {
         id: 1,
@@ -182,11 +185,12 @@ const synthNodeTypes = {
     visualizations: [
       synthNodeVisualizationTypes.WAVEFORM.id
     ],
-    description: 'Collects a signal to be the output for the graph',
   },
   MAPPER: {
     id: 9,
-    name: 'Mapper/WS',
+    name: 'Shaper Map',
+    nameShort: 'Map',
+    description: 'A waveshaper that changes the range of a signal, and its shape.',
     inputs: [
       {
         id: 1,
@@ -283,12 +287,12 @@ const synthNodeTypes = {
     visualizations: [
       // synthNodeVisualizationTypes.WAVESHAPER.id
     ],
-    description: 'Changes the range of a signal, and its shape',
   },
   RING: {
     id: 3,
-    nameShort: '×',
     name: 'Multiply/Ring',
+    nameShort: '×',
+    description: 'Multiplies all signals, like digital ring modulation',
     inputs: [
       {
         id: 1,
@@ -343,12 +347,12 @@ const synthNodeTypes = {
         defaultValue: 0,
       }
     ],
-    description: 'Multiplies all signals, like digital ring modulation',
   },
   ADD: {
     id: 4,
-    nameShort: '+',
     name: 'Add/Mix',
+    nameShort: '+',
+    description: 'Adds all signals',
     inputs: [
       {
         id: 1,
@@ -402,11 +406,13 @@ const synthNodeTypes = {
         defaultValue: 0,
       }
     ],
-    description: 'Adds all signals',
   },
   DELAY: {
     id: 10,
     name: 'Delay',
+    nameShort: 'Dly',
+    description: 'Stores a signal, and outputs it after a delay.',
+    isPlaceholder: true,
     inputs: [
       {
         id: 1,
@@ -503,11 +509,12 @@ const synthNodeTypes = {
         defaultValue: 0,
       }
     ],
-    description: 'Stores a signal, and outputs it after a delay.',
   },
   SPLICE: {
     id: 5,
     name: 'Splice',
+    nameShort: 'Spl',
+    description: 'Switches between Source 1 and Source 2, using a switch point at Switch phase (-1 to 1), every cycle at Pitch',
     inputs: [
       {
         id: 1,
@@ -552,11 +559,12 @@ const synthNodeTypes = {
         defaultValue: 0,
       }
     ],
-    description: 'Switches between Source 1 and Source 2, using a switch point at Switch phase (-1 to 1), every cycle at Pitch',
   },
   NUMBER: {
     id: 6,
     name: 'Number',
+    nameShort: '#',
+    description: 'A constant number. For most inputs on other nodes, you can enter a number instead of linking. Use this Number node if you want to use the same number more than one input',
     inputs: [
       {
         id: 1,
@@ -577,11 +585,11 @@ const synthNodeTypes = {
         defaultValue: 0,
       }
     ],
-    description: 'A constant number. For most inputs on other nodes, you can enter a number instead of linking. Use this Number node if you want to use the same number more than one input',
   },
   ENVELOPE_WAHDSR: {
     id: 7,
     name: 'Envelope: analog',
+    description: 'An analog-style envelope, using \'Sustain time\' in Performance properties',
     inputs: [
       {
         id: 1,
@@ -667,6 +675,64 @@ const synthNodeTypes = {
       }
     ],
     description: 'An analog-style envelope, using \'Sustain time\' in Performance properties',
+  },
+  MSEG: {
+    id: 11,
+    name: 'Envelope: MSEG',
+    nameShort: 'MSEG',
+    isPlaceholder: true,
+    description: 'Multi-segment envelope. Use to precisely control a signal over time.',
+    inputs: [
+      {
+        id: 1,
+        displayName: 'Input',
+        intentId: synthNodeTerminalIntents.LEVEL.id,
+        exposed: false,
+        defaultValue: 0,
+      },
+      {
+        id: 10,
+        displayName: 'Mod A',
+        description: 'Shift MSEG points using this modulator',
+        intentId: synthNodeTerminalIntents.LEVEL.id,
+        exposed: false,
+        defaultValue: 0,
+      },
+      {
+        id: 10,
+        displayName: 'Mod B',
+        description: 'Shift MSEG points using this modulator',
+        intentId: synthNodeTerminalIntents.LEVEL.id,
+        exposed: false,
+        defaultValue: 0,
+      },
+      {
+        id: 10,
+        displayName: 'Mod C',
+        description: 'Shift MSEG points using this modulator',
+        intentId: synthNodeTerminalIntents.LEVEL.id,
+        exposed: false,
+        defaultValue: 0,
+      },
+      {
+        id: 10,
+        displayName: 'Mod D',
+        description: 'Shift MSEG points using this modulator',
+        intentId: synthNodeTerminalIntents.LEVEL.id,
+        exposed: false,
+        defaultValue: 0,
+      },
+    ],
+    outputs: [
+      {
+        id: 1,
+        displayName: 'Out',
+        description: 'Link inputs to use this number',
+        intentId: synthNodeTerminalIntents.LEVEL.id,
+        exposed: true,
+        defaultValue: 0,
+      }
+    ],
   },
     
 }

@@ -7,7 +7,7 @@
 
 @media (prefers-color-scheme: light) {
   .SynthNodeTitle {
-    fill: hsl(45, 100%, 20%);
+    fill: hsl(45, 100%, 12%);
     font-weight: bold;
   }
 }

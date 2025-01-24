@@ -53,7 +53,7 @@ function SynthNodeProperties(props) {
     <div className="SynthNodeProperties">
       <Header context="property-sheet">
         <div className="node-title">
-          <div>{expander}{`${synthNode.id}: ${displayName}`}</div>
+          <div>{expander}{`${synthNode.id}: ${displayName}`} {nodeType.isPlaceholder ? <span className="tag-warn">WIP</span> : ''}</div>
           {nodeTypeDescription}
         </div>
       </Header>

@@ -21,17 +21,17 @@
 
   .SynthNodeBox {
     stroke: hsla(0, 0%, 50%, 0.94);
-    fill: hsla(0, 0%, 94%, 0.94);
+    fill: hsla(0, 0%, 90%, 0.94);
   }
 
   .SynthNodeBox.selected {
-    stroke: hsla(0, 0%, 60%, 0.94);
+    stroke: hsla(0, 0%, 20%, 0.94);
     fill: hsla(0, 0%, 94%, 0.97);
     filter: drop-shadow(0px 0.35rem 0.4rem hsla(0,0%,0%,0.15));
   } 
 
   .SynthNodeBox.highlighted {
-    fill: hsla(0, 0%, 80%, 0.97);
+    fill: hsla(45, 60%, 90%, 0.97);
     stroke: hsl(0, 0%, 10%);
   }
     

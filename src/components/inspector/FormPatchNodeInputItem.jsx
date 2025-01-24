@@ -123,8 +123,8 @@ function FormPatchNodeInputItem(props) {
     const options = Object.entries(waveshaperFunctions).map(stg => (
       <option
         key={`stg-${stg[1].id}`}
-        value={stg[1].id} disabled={stg[1].isPlaceholder}
-      >{stg[1].name}</option>
+        value={stg[1].id}
+      >{stg[1].name}{stg[1].isPlaceholder ? ' [WIP]' : ''}</option>
     ));
 
     inputField = <select

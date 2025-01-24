@@ -28,6 +28,16 @@
   margin: 0.2rem 0 0.6rem 0;
 }
 
+.tag-warn {
+  background-color: hsl(45, 100%, 60%);
+  color: black;
+  border-radius: 0.3rem;
+  padding: 0.0rem 0.4rem 0.1rem 0.4rem;
+  margin-left: 0.3rem;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
 @media (prefers-color-scheme: light) {
   .SynthNodeProperties {
     background-color: hsl(240, 2%, 90%);
@@ -36,7 +46,7 @@
 
   .SynthNodeProperties .node-title {
     font-weight: 700;
-    color: hsl(45, 100%, 20%);
+    color: hsl(45, 100%, 12%);
   }
  
   .SynthNodeProperties p {
