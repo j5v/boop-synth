@@ -228,18 +228,36 @@ const usePatchStore = create(
           }
 
         } else if (nodeTypeInput.intentId == synthNodeTerminalIntents.FREQUENCY_ABSOLUTE.id) {
-          const parsed = /([a-g])([#b]?)(\d*)([@]?)([0-9.]*)?/.exec(trimmed);
+          if (trimmed.slice(-2) == 'ms') { // ms
+            const ms = parseFloat(trimmed.slice(0,-2));
+            writeValue = (ms == 0) ? ms : 1000 / ms;
 
-          if (parsed) {
-            const [ignore, letter, accidental, octave, ignore2, freqOfA] = parsed;
-            if (letter) { // minimum spec
-              const semitones = [0, 2, 4, 5, 7, 9, 11]['cdefgab'.indexOf(letter)];
-              const accidentalInc = accidental == '#' ? 1 : (accidental == 'b' ? -1 : 0);
-              // @ts-ignore
-              writeValue = Math.pow(2, (octave || 4) - 4 + (accidentalInc + semitones - 9) / 12 ) * (parseFloat(freqOfA || '440'));
-            }
+          } else if (trimmed.slice(-2) == 'ns') { // ms
+            const ns = parseFloat(trimmed.slice(0,-2));
+            writeValue = (ns == 0) ? ns : 1000000 / ns;
+
+          } else if (trimmed.slice(-1) == 's') { // s
+            const s = parseFloat(trimmed.slice(0,-1));
+            writeValue = (s == 0) ? s : 1 / s;
+
+          } else if (trimmed.slice(-3) == 'bpm') { // s
+            const bpm = parseFloat(trimmed.slice(0,-3));
+            writeValue = bpm / 60;
+
           } else {
-            writeValue = parseFloat(trimmed);
+            const parsed = /([a-g])([#b]?)(\d*)([@]?)([0-9.]*)?/.exec(trimmed);
+
+            if (parsed) {
+              const [ignore, letter, accidental, octave, ignore2, freqOfA] = parsed;
+              if (letter) { // minimum spec
+                const semitones = [0, 2, 4, 5, 7, 9, 11]['cdefgab'.indexOf(letter)];
+                const accidentalInc = accidental == '#' ? 1 : (accidental == 'b' ? -1 : 0);
+                // @ts-ignore
+                writeValue = Math.pow(2, (octave || 4) - 4 + (accidentalInc + semitones - 9) / 12 ) * (parseFloat(freqOfA || '440'));
+              }
+            } else {
+              writeValue = parseFloat(trimmed);
+            }
           }
 
         } else if (nodeTypeInput.intentId == synthNodeTerminalIntents.CHECK_BOOL.id) {
