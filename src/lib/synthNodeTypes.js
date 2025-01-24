@@ -167,6 +167,15 @@ const synthNodeTypes = {
         intentId: synthNodeTerminalIntents.LEVEL.id,
         exposed: false,
         defaultValue: 0.125,
+      },
+      {
+        id: 3,
+        displayName: 'Filename part',
+        description: 'Added into your project name, to make up a filename',
+        intentId: synthNodeTerminalIntents.FILENAME_PART.id,
+        exposed: false,
+        isParam: true,
+        defaultValue: 'output',
       }
     ],
     outputs: [],

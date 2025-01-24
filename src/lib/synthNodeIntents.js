@@ -77,6 +77,13 @@ const synthNodeTerminalIntents = { // draft only
     classCSS: 'enum',
     description: 'Choose a wave shape for the function',
   },  
+  FILENAME_PART: {
+    id: 12,
+    name: 'Filename part',
+    units: '',
+    classCSS: '',
+    description: '',
+  }, 
 }
 
 const getSynthNodeTerminalIntentsById = id => {

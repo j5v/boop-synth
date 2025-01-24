@@ -16,7 +16,7 @@ const defaultOutputSpec = {
   sampleRate: 44100, // sps
   duration: 0.5, // seconds
   channels: 1,
-  filenameRoot: `${appInfo.appName} - output`,
+  filenameRoot: `${appInfo.appName}`,
   sustainReleaseTime: 400, // ms
   depth: BITDEPTH_16,
 

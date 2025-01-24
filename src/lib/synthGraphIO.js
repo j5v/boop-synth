@@ -1,5 +1,5 @@
 import { cleanStateForExport } from './synthGraphUtils.js'
-import { appInfo } from './appInfo.js'
+import { joinItems } from './utils.js'
 
 import { encodeWAV } from './wav.js'
 import saveAs from '../lib/FileSaver.js'
@@ -18,7 +18,11 @@ function writeFile(outputBuffers, perf) {
     );
 
     const audioBlob = new Blob([dataview], { type : 'audio/wav' });
-    saveAs(audioBlob, filenameRoot + '.wav');
+
+    saveAs(
+      audioBlob,
+      joinItems([filenameRoot, outputBuffers[outputBufferIndex].filenamePart || ''], '-') + '.wav'
+    );
   }
 }
 

@@ -159,13 +159,17 @@ const generate = function (params) {
 
     nodes.forEach(node => {
 
-      // initialize output buffers
+      // Initialize output buffers
       if (node.nodeTypeId == synthNodeTypes.OUTPUT.id) {
+
+        const [ forget, forget2, filenamePart ] = valuesOfInputs(node, nodes);
+
         const newBuffer = {
           id: id++,
           nodeId: node.id,
+          filenamePart,
           samples: []
-        };
+        };        
         outputBuffers.push(newBuffer);
 
         node.bufferId = newBuffer.id;
