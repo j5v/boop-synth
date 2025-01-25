@@ -6,7 +6,7 @@ import { getWaveshaperFunctionById } from './waveshaperFunctions.js'
 import { getDefaultInput } from './synthGraphUtils.js'
 
 import { writeFile, playAudio } from './synthGraphIO.js'
-import { clearPeakMeters, cleanPatch, valueOfInput } from './synthGraphUtils.js'
+import { clearPeakMeters, cleanPatch, valuesOfInputs } from './synthGraphUtils.js'
 
 
 const generate = function (params) {
@@ -153,9 +153,7 @@ const generate = function (params) {
   }
 
   
-  function valuesOfInputs(node, nodes) {
-    return node.inputs.map(i => valueOfInput(i, node, nodes));
-  }
+
 
   function initPatch(nodes) { // call before generate()
     cleanPatch(nodes);

@@ -7,6 +7,11 @@ html {
   stroke-width: 1px;
   fill: none;
 }
+.ws .function-path {
+  stroke: hsl(var(--axis-hue), 90%, 90%);
+  stroke-width: 1.5px;
+  fill: none;
+}
 
 .ws .dim {
   stroke: hsla(var(--axis-hue), 100%, 70%, 0.8);
@@ -40,6 +45,9 @@ html {
 .ws .dim-text {
   fill: hsl(var(--axis-hue), 10%, 80%);
   text-anchor: middle;
+}
+.ws .dim-text.signal {
+  fill: hsl(var(--axis-hue), 10%, 60%);
 }
 .ws .dim-text.v {
   text-anchor: end;

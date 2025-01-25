@@ -26,21 +26,21 @@ const waveshaperFunctions = {
   },
 }
 
-// not used yet - some dependencies to work out.
-const waveShaperPreviewData = (inputSignals, steps = 200) => {
-  const [ signal, inMin, inMax, outMin, outMax, preAmp, offset, threshold, shaperId, doClipInput, doClipOutput ] = inputSignals;
- 
+const waveShaperPreviewData = ({ wsId = 1, steps = 200, first = -1, last = 1 }) => {
+  // Returns (steps + 1) values
+  const ws = getWaveshaperFunctionById(wsId);
+
   const outputs = [];
 
-  for (i = 0; i < steps; i++) {
-    const x = inMin + (inMax - inMin) * i;
-    outputs.push(
-      doShaper({
-        ...inputSignals,
-        signal: x
-      })
-    );
+  for (let i = 0; i <= steps; i++) {
+    const x = first + (last - first) * (i / steps);
+    outputs.push({
+      i,
+      x,
+      y: ws.fn(x)
+    });
   }
+  return outputs;
 }
 
 const getWaveshaperFunctionById = id => {
@@ -56,5 +56,6 @@ const getWaveshaperFunctionById = id => {
 
 export {
   waveshaperFunctions,
+  waveShaperPreviewData,
   getWaveshaperFunctionById
 }

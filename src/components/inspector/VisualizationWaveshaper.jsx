@@ -1,5 +1,7 @@
 import './VisualizationWaveShaper.css'
-import { remAsPx } from '../../lib/utils.js'
+import { remAsPx, joinItems } from '../../lib/utils.js'
+import { valuesOfInputsNoLinks } from '../../lib/synthGraphUtils.js'
+import { waveShaperPreviewData } from '../../lib/waveshaperFunctions.js'
 
 import { useState } from 'react'
 import usePatchStore from '../../store/patchStore.jsx'
@@ -14,8 +16,7 @@ function VisualizationWaveform({ synthNodeId, w, h }) {
   
   const state = usePatchStore((state) => state)
   const { nodes, perf } = state;
-
-
+  const node = nodes.find(n => n.id == synthNodeId)
   // events
 
 
@@ -35,6 +36,9 @@ function VisualizationWaveform({ synthNodeId, w, h }) {
     };
 
   }
+
+  const [ signal, inMin, inMax, outMin, outMax, preAmp, offset, threshold, shaperId, doClipInput, doClipOutput ] = valuesOfInputsNoLinks(node, nodes);
+
 
   const svg = [];
 
@@ -65,8 +69,6 @@ function VisualizationWaveform({ synthNodeId, w, h }) {
   const inNormedY = inDotY + scalerSize;
 
   const outDotX = x2 * 1.8;
-  const outDotY1 = y1 * 1.0;
-  const outDotY2 = 0;
 
   const pipelineItemMargin = remAsPx(0.4); // gap between pipeline steps
   const numPipelineItems = 4;
@@ -77,26 +79,21 @@ function VisualizationWaveform({ synthNodeId, w, h }) {
   const pipelineItemSize = pipelineItemStepSize - pipelineItemMargin;
 
   const signalValue = 0.5; // for WIP only ...
-  const inMinValue = -1.5; 
-  const inMaxValue = 1.8; 
-  const outMinValue = 0.5; 
-  const outMaxValue = 0.5; 
-  const preampValue = 0.8; 
-  const offsetValue = 0.1; 
-  const thresholdValue = 0.2; 
 
+
+  // Pipeline before waveshaper
 
   let sig1 = -1;
   let sig2 = 1;
   const pipelineItems = [];
   pipelineItems.push({ inputIds: [11, 12], name: '', x1: sig1, x2: sig2 });
 
-  sig1 *= preampValue;
-  sig2 *= preampValue;
+  sig1 *= preAmp;
+  sig2 *= preAmp;
   pipelineItems.push({ inputId: 20, name: 'Pre-amp', x1: sig1, x2: sig2 });
 
-  sig1 += offsetValue;
-  sig2 += offsetValue;
+  sig1 += offset;
+  sig2 += offset;
   pipelineItems.push({ inputId: 21, name: 'Offset', x1: sig1, x2: sig2 });
 
   const calcThreshold = (sig, threshold) => {
@@ -108,13 +105,13 @@ function VisualizationWaveform({ synthNodeId, w, h }) {
       return threshold;
     }
   }
-  sig1 = calcThreshold(sig1, thresholdValue);
-  sig2 = calcThreshold(sig2, thresholdValue);
+  sig1 = calcThreshold(sig1, threshold);
+  sig2 = calcThreshold(sig2, threshold);
   pipelineItems.push({ inputId: 22, name: 'Threshold', x1: sig1, x2: sig2 });
   
   let itemY = pipelineY1;
-  let prevX1 = inMinValue;
-  let prevX2 = inMaxValue;
+  let prevX1 = inMin;
+  let prevX2 = inMax;
   const pipelineItemsSVG = pipelineItems.map(item => {
     // y1: pipelineY1, y2: pipelineY1
     const ItemYBottom = itemY + pipelineItemSize;
@@ -139,31 +136,20 @@ function VisualizationWaveform({ synthNodeId, w, h }) {
 
   const arrowInPointY = inDotY + pipelineItemSize + pipelineItemMargin;
 
+  // waveshaper mapping graph
+  const wsData = waveShaperPreviewData({ wsId: shaperId, steps: 200, first: -1, last: 1 });
+  const shaperPath = joinItems(wsData.map(i => (
+    `${i.i == 0 ? 'M' : 'L'} ${x2 * i.x} ${y1 * i.y}  `
+  )), '');
+  const shaper = <path className="ws function-path" d={shaperPath} />
+
   return (
     <div
       className="visualization small"
       onMouseMove={handleMouseMove}
     >
-      <svg id="preview-waveshaper" className="visualization-svg ws small" width="15rem" height="17rem">
+      <svg id="preview-waveshaper" className="visualization-svg ws small" width="15.3rem" height="18rem">
         <g transform={`translate( ${wPx * 0.41} ${wPy * 0.77} )`} >
-
-
-          {/* input scaler */}
-          {/* <path className="scaler" d={`
-            M ${inDotX1} ${inDotY}
-            L ${inDotX2} ${inDotY}  
-            L ${x2} ${inNormedY}    
-            L ${x2} ${inNormedY + dimLength + textLH}  
-            L ${x2 * 1.4} ${inNormedY + dimLength + textLH * 1.75}  
-            L ${x2 * 1.6} ${inNormedY + dimLength + textLH * 2.75}  
-            L ${x2 * 1.3} ${inNormedY + dimLength + textLH * 3.75}  
-
-            L ${x1 * 0.7} ${inNormedY + dimLength + textLH * 3.75}  
-            L ${x1 * 1.2} ${inNormedY + dimLength + textLH * 2.75}  
-            L ${x1 * 1.4} ${inNormedY + dimLength + textLH * 1.75}  
-            L ${x1} ${inNormedY + dimLength + textLH}  
-            L ${x1} ${inNormedY}
-          `} /> */}
 
           {/* Pipeline items*/}
           {pipelineItemsSVG}          
@@ -176,15 +162,14 @@ function VisualizationWaveform({ synthNodeId, w, h }) {
             L ${remAsPx(-0.3)} ${arrowInPointY - remAsPx(0.6)}
             `} />
           
-
           {/* input labels */}
-          <text className="dim-text h-over" x={0} y={inDotY - dimTextOffset * 0.6}>Signal</text>
+          <text className="dim-text h-over signal" x={0} y={inDotY - dimTextOffset * 0.6}>Signal</text>
 
-          <text className="dim-text h-over" x={sAsX(inMinValue)} y={inDotY - dimTextOffset * 0.6}>In min</text>
-          <circle className="dot" cx={sAsX(inMinValue)} cy={inDotY} r={dotRadius} />
+          <text className="dim-text h-over" x={sAsX(Math.min(-1, Math.max(-1.4, inMin)))} y={inDotY - dimTextOffset * 0.6}>In min</text>
+          <circle className="dot" cx={sAsX(inMin)} cy={inDotY} r={dotRadius} />
 
-          <text className="dim-text h-over" x={sAsX(inMaxValue)} y={inDotY - dimTextOffset * 0.6}>In max</text>
-          <circle className="dot" cx={sAsX(inMaxValue)} cy={inDotY} r={dotRadius} />
+          <text className="dim-text h-over" x={sAsX(Math.min(2, Math.max(1, inMax)))} y={inDotY - dimTextOffset * 0.6}>In max</text>
+          <circle className="dot" cx={sAsX(inMax)} cy={inDotY} r={dotRadius} />
 
           {/* scaled to -1..1 bounds */}
           {/* <line className="dim" x1={x1} y1={inNormedY + dimMargin + dimLength} x2={x1} y2={inNormedY + dimMargin} />
@@ -208,14 +193,14 @@ function VisualizationWaveform({ synthNodeId, w, h }) {
 
           {/* scaler out */}
           <path className="scaler" d={`
-            M ${outDotX} ${outDotY1}
-            L ${outDotX} ${outDotY2}  
-            L ${x2 + dimMargin} ${y2}    
+            M ${outDotX} ${outMin * y1}
+            L ${outDotX} ${outMax * y1}  
             L ${x2 + dimMargin} ${y1}  
+            L ${x2 + dimMargin} ${y2}    
           `} />
-          <line className="scaler-edge" x1={x2 + dimMargin} y1={y1} x2={outDotX} y2={outDotY1} />
-          <line className="scaler-edge" x1={x2 + dimMargin} y1={y2} x2={outDotX} y2={outDotY2} />
-          
+          <line className="scaler-edge" x1={x2 + dimMargin} y1={y1} x2={outDotX} y2={outMax * y1} />
+          <line className="scaler-edge" x1={x2 + dimMargin} y1={y2} x2={outDotX} y2={outMin * y1} />
+      
 
           <line className="dim" x1={x1 - dimMargin} y1={y1} x2={x1 - dimMargin - dimLength } y2={y1} />
           <text className="dim-text v" x={x1 - dimMargin - dimTextOffset} y={y1}>+1</text>
@@ -234,14 +219,15 @@ function VisualizationWaveform({ synthNodeId, w, h }) {
           <line className="flow" x1={x2 * 2.5} y1={y1 * 0.25} x2={x2 * 2.5 - remAsPx(0.7)} y2={y1 * 0.25 - remAsPx(0.3)} />
 
           {/* output bounds */}
-          <circle className="dot" cx={outDotX} cy={outDotY1} r={dotRadius} />
-          <text className="dim-text h-over" x={outDotX} y={outDotY1 - remAsPx(0.5)}>Out max</text>
+          <circle className="dot" cx={outDotX} cy={outMax * y1} r={dotRadius} />
+          <text className="dim-text h-over" x={outDotX} y={y1 * (Math.min(3, Math.max(-1.2, outMax))) - remAsPx(0.5)}>Out max</text>
 
-          <circle className="dot" cx={outDotX} cy={outDotY2} r={dotRadius} />
-          <text className="dim-text h-under" x={outDotX} y={outDotY2 + remAsPx(0.3)}>Out min</text>
+          <circle className="dot" cx={outDotX} cy={outMin * y1} r={dotRadius} />
+          <text className="dim-text h-under" x={outDotX} y={y1 * (Math.min(3.2, Math.max(-1.2, outMin))) + remAsPx(0.3)}>Out min</text>
 
-          <text className="dim-text v" x={x2 * 2.5} y={y1 * 0.55}>Out</text>
+          <text className="dim-text v signal" x={x2 * 2.5} y={y1 * 0.55}>Out</text>
 
+          {shaper}
         </g>
       </svg>
     </div>

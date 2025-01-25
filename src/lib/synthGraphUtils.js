@@ -69,14 +69,25 @@ const valueOfInput = (input, node, nodes) => {
       console.warn('Link failed to resolve, from input:', input);
       return 0;
     }
-  } else {
-
-    if (input.value != undefined)
-      return input.value;
-
-    const nodeTypeInput =  getDefaultInput(node, input);
-    return nodeTypeInput.defaultValue !== undefined ? nodeTypeInput.defaultValue : 0;
+  } else {    
+    return valueOfInputNoLinks(input, node, nodes);
   }
+}
+
+const valueOfInputNoLinks = (input, node, nodes) => {
+  if (input.value != undefined)
+    return input.value;
+
+  const nodeTypeInput =  getDefaultInput(node, input);
+  return nodeTypeInput.defaultValue !== undefined ? nodeTypeInput.defaultValue : 0;
+}
+
+function valuesOfInputs(node, nodes) {
+  return node.inputs.map(i => valueOfInput(i, node, nodes));
+}
+
+function valuesOfInputsNoLinks(node, nodes) {
+  return node.inputs.map(i => valueOfInputNoLinks(i, node, nodes));
 }
 
 const getDefaultInput = (synthNode, input) => { // get matching input in synthNodeTypes
@@ -235,6 +246,9 @@ export {
 
   getNodeDisplayTitle,
   valueOfInput,
+  valueOfInputNoLinks,
+  valuesOfInputs,
+  valuesOfInputsNoLinks,
   getDefaultInput,
 
   clearPeakMeters,
