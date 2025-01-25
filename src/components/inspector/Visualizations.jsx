@@ -2,6 +2,7 @@ import './Visualizations.css'
 
 import ParameterGroup from '../generic/ParameterGroup.jsx'
 import VisualizationWaveform from './VisualizationWaveform.jsx'
+import VisualizationWaveshaper from './VisualizationWaveshaper.jsx'
 import { synthNodeTypes, getNodeTypeById } from '../../lib/synthNodeTypes.js'
 import { synthNodeVisualizationTypes, getSynthNodeVisualizationTypeById } from '../../lib/synthNodeVisualizationTypes.js'
 
@@ -45,8 +46,8 @@ function Visualizations({ nodeTypeId, synthNodeId }) {
     } else {
       if (visualizationId == synthNodeVisualizationTypes.WAVEFORM.id) {
         visualizationComponent = <VisualizationWaveform synthNodeId={synthNodeId} w={20} h={16} />
-      } else {
-        // ...
+      } if (visualizationId == synthNodeVisualizationTypes.WAVESHAPER.id) {
+        visualizationComponent = <VisualizationWaveshaper synthNodeId={synthNodeId} w={16} h={17} />
       }
     }
 

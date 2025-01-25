@@ -2,7 +2,6 @@ import './VisualizationWaveform.css'
 import { remAsPx } from '../../lib/utils.js'
 import { generate } from '../../lib/synth.js'
 
-import ParameterGroup from '../generic/ParameterGroup.jsx'
 import IconRefresh from '../generic/IconRefresh.jsx'
 
 import { useContext } from 'react';

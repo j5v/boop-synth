@@ -1,0 +1,80 @@
+html {
+  --axis-hue: 120;
+  --dim-label-color: hsl(var(--axis-hue), 10%, 70%);
+}
+
+.ws .frame {
+  stroke: hsla(var(--axis-hue), 100%, 70%, 0.4);
+  stroke-width: 1px;
+  fill: none;
+}
+
+.ws .dim {
+  stroke: hsla(var(--axis-hue), 100%, 70%, 0.3);
+  stroke-width: 1px;
+  fill: none;
+}
+
+.ws .axis {
+  stroke: hsla(var(--axis-hue), 100%, 70%, 0.2);
+  stroke-width: 1px;
+  fill: none;
+}
+
+.ws .flow {
+  stroke: hsl(var(--axis-hue), 10%, 80%);
+  stroke-width: 1px;
+  fill: none;
+}
+
+.ws .dot {
+  fill: hsl(var(--axis-hue), 10%, 80%);
+  stroke: none;
+}
+
+.ws .dim-text {
+  fill: var(--dim-label-color);
+  text-anchor: middle;
+}
+.ws .dim-text.v {
+  text-anchor: end;
+  dominant-baseline: middle;
+}
+.ws .dim-text.v.after {
+  text-anchor: start;
+}
+.ws .dim-text.h-under {
+  dominant-baseline: hanging;
+}
+.ws .dim-text.h-over {
+  dominant-baseline: auto;
+}
+
+.ws .scaler {
+  fill: hsla(var(--axis-hue), 40%, 70%, 0.17);
+  stroke: none;
+}
+.ws .scaler-edge {
+  fill: none;
+  stroke: hsla(var(--axis-hue), 100%, 70%, 0.3);
+  stroke-width: 1px;
+  stroke-dasharray: 4 4;
+}
+
+.wf {
+  stroke: hsla(var(--hue), 100%, 85%, 0.5);
+  stroke-width: 1px;
+  fill: none;
+}
+.wf.highlight {
+  stroke: hsla(var(--hue), 100%, 95%, 1);
+}
+
+@media (prefers-color-scheme: light) {
+  .axis {
+    stroke: hsla(var(--hue), 40%, 0%, 0.2);
+  }
+  .wf {
+    stroke: hsla(var(--hue), 100%, 20%, 0.8);
+  }
+}

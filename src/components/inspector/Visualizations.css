@@ -22,7 +22,7 @@
 
 .visualization.small {
   margin: 0.15rem 0.6rem 0.15rem 0.6rem;
-  border: 1px hsl(0,0%,20%) solid;
+  border: 1px hsl(0,0%,14%) solid;
 }
 
 @media (prefers-color-scheme: light) {

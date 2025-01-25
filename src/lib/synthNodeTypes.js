@@ -168,7 +168,6 @@ const synthNodeTypes = {
         displayName: 'Gain',
         description: 'Less than 1.0 is quieter, more than 1.0 is louder',
         intentId: synthNodeTerminalIntents.LEVEL.id,
-        exposed: false,
         defaultValue: 0.125,
       },
       {
@@ -176,10 +175,9 @@ const synthNodeTypes = {
         displayName: 'Filename part',
         description: 'Added into your project name, to make up a filename',
         intentId: synthNodeTerminalIntents.FILENAME_PART.id,
-        exposed: false,
         isParam: true,
         defaultValue: 'output',
-      }
+      },
     ],
     outputs: [],
     visualizations: [
@@ -285,7 +283,7 @@ const synthNodeTypes = {
       }
     ],
     visualizations: [
-      // synthNodeVisualizationTypes.WAVESHAPER.id
+      synthNodeVisualizationTypes.WAVESHAPER.id
     ],
   },
   RING: {
@@ -411,7 +409,7 @@ const synthNodeTypes = {
     id: 10,
     name: 'Delay',
     nameShort: 'Dly',
-    description: 'Stores a signal, and outputs it after a delay.',
+    description: 'Stores a signal, and outputs it after a delay',
     isPlaceholder: true,
     inputs: [
       {
