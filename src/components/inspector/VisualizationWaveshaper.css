@@ -1,22 +1,21 @@
 html {
   --axis-hue: 120;
-  --dim-label-color: hsl(var(--axis-hue), 10%, 70%);
 }
 
 .ws .frame {
-  stroke: hsla(var(--axis-hue), 100%, 70%, 0.4);
+  stroke: hsla(var(--axis-hue), 100%, 70%, 0.8);
   stroke-width: 1px;
   fill: none;
 }
 
 .ws .dim {
-  stroke: hsla(var(--axis-hue), 100%, 70%, 0.3);
+  stroke: hsla(var(--axis-hue), 100%, 70%, 0.8);
   stroke-width: 1px;
   fill: none;
 }
 
 .ws .axis {
-  stroke: hsla(var(--axis-hue), 100%, 70%, 0.2);
+  stroke: hsla(var(--axis-hue), 100%, 70%, 0.4);
   stroke-width: 1px;
   fill: none;
 }
@@ -28,12 +27,18 @@ html {
 }
 
 .ws .dot {
-  fill: hsl(var(--axis-hue), 10%, 80%);
+  fill: hsl(var(--axis-hue), 10%, 100%);
   stroke: none;
 }
 
+.ws .dot.soft {
+  fill: hsl(var(--axis-hue), 10%, 0%);
+  stroke-width: 1px;
+  stroke: hsl(var(--axis-hue), 10%, 100%);
+}
+
 .ws .dim-text {
-  fill: var(--dim-label-color);
+  fill: hsl(var(--axis-hue), 10%, 80%);
   text-anchor: middle;
 }
 .ws .dim-text.v {
@@ -51,14 +56,14 @@ html {
 }
 
 .ws .scaler {
-  fill: hsla(var(--axis-hue), 40%, 70%, 0.17);
+  fill: hsla(var(--axis-hue), 40%, 50%, 0.25);
   stroke: none;
 }
 .ws .scaler-edge {
   fill: none;
-  stroke: hsla(var(--axis-hue), 100%, 70%, 0.3);
+  stroke: hsla(var(--axis-hue), 100%, 70%, 0.8);
   stroke-width: 1px;
-  stroke-dasharray: 4 4;
+  stroke-dasharray: 3 3;
 }
 
 .wf {
@@ -67,13 +72,42 @@ html {
   fill: none;
 }
 .wf.highlight {
-  stroke: hsla(var(--hue), 100%, 95%, 1);
+  stroke: hsl(var(--hue), 100%, 95%);
 }
 
 @media (prefers-color-scheme: light) {
-  .axis {
-    stroke: hsla(var(--hue), 40%, 0%, 0.2);
+  .ws .frame {
+    stroke: hsl(var(--axis-hue), 30%, 60%);
   }
+  
+  .ws .dim {
+    stroke: hsl(var(--axis-hue), 50%, 30%);
+  }
+  
+  .ws .axis {
+    stroke: hsl(var(--axis-hue), 50%, 40%);
+  }
+  
+  .ws .flow {
+    stroke: hsl(var(--axis-hue), 10%, 20%);
+  }
+  
+  .ws .dot {
+    fill: hsl(var(--axis-hue), 10%, 0%);
+  }
+  
+  .ws .dim-text {
+    fill: hsl(var(--axis-hue), 10%, 0%)
+  }
+
+  .ws .scaler {
+    fill: hsla(var(--axis-hue), 40%, 70%, 0.3);
+  }
+  .ws .scaler-edge {
+    stroke: hsla(var(--axis-hue), 50%, 30%);
+  }
+  
+
   .wf {
     stroke: hsla(var(--hue), 100%, 20%, 0.8);
   }

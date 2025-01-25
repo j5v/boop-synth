@@ -17,7 +17,6 @@
 
 .visualization {
   background-color: black;
-  /* filter: blur(0.707px); */
 }
 
 .visualization.small {
@@ -27,9 +26,14 @@
 
 @media (prefers-color-scheme: light) {
   .visualization {
-    background-color: white;
+    background-color: hsl(0,0%,100%);
   }
-  .icon-button-small {
+  .visualization.small {
+    margin: 0.15rem 0.6rem 0.15rem 0.6rem;
+    border: 1px hsl(0,0%,80%) solid;
+  }
+  
+    .icon-button-small {
     color: hsl(0,0%,40%);
   }
 }
