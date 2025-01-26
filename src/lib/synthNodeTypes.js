@@ -467,7 +467,6 @@ const synthNodeTypes = {
         displayName: 'Replay pitch',
         description: 'Changes the speed of playback. Might create broken sound.',
         intentId: synthNodeTerminalIntents.PITCH_OFFSET_OCTAVES.id,
-        isPlaceholder: true,
         defaultValue: 0,
       },
       {
@@ -483,8 +482,8 @@ const synthNodeTypes = {
         displayName: 'Latency comp',
         description: 'Offset the read of the buffer, in samples. For example, 1 outputs the sound sooner by 1 sample, to compensate for a feedback loop.',
         intentId: synthNodeTerminalIntents.LEVEL.id,
-        isParam: true,
         isPlaceholder: true,
+        isParam: true,
         defaultValue: 0,
       },
       {
@@ -493,8 +492,21 @@ const synthNodeTypes = {
         description: 'Enable for more time precision, with signal interpolation. Might reduce the brightness of the output.',
         intentId: synthNodeTerminalIntents.CHECK_BOOL.id,
         isParam: true,
-        isPlaceholder: true,
+        defaultValue: true,
+      },
+      {
+        id: 12,
+        displayName: 'Dry passthrough',
+        description: 'Passes the dry signal through',
+        intentId: synthNodeTerminalIntents.LEVEL.id,
         defaultValue: 0,
+      },
+      {
+        id: 13,
+        displayName: 'Wet signal',
+        description: 'Level for the delayed signal',
+        intentId: synthNodeTerminalIntents.LEVEL.id,
+        defaultValue:1,
       },
     ],
     outputs: [

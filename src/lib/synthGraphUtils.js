@@ -109,7 +109,8 @@ function cleanPatch(nodes) {  // Remove extra properties and direct object refs
     const node = nodes[nodeIndex];
     delete node.env;
     delete node.phase;
-    delete node.buffer; // but retain node.buffer.id
+    delete node.buffer; // we retain node.bufferId
+    delete node.proc;
 
     node.inputs.forEach(input => {
       if (input.link) {

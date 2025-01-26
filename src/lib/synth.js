@@ -3,10 +3,9 @@ import { sourceTypeGroups } from '../lib/sourceTypeGroups.js'
 import { sourceFunctions } from '../lib/sourceFunctions.js'
 import { initEnvelope, processEnvelope } from '../nodeTypes/synthEnvelopeAnalog.js'
 import { getWaveshaperFunctionById } from './waveshaperFunctions.js'
-import { getDefaultInput } from './synthGraphUtils.js'
 
 import { writeFile, playAudio } from './synthGraphIO.js'
-import { clearPeakMeters, cleanPatch, valuesOfInputs } from './synthGraphUtils.js'
+import { clearPeakMeters, cleanPatch, getDefaultInput, valuesOfInputs, valuesOfInputsNoLinks } from './synthGraphUtils.js'
 
 
 const generate = function (params) {
@@ -131,9 +130,38 @@ const generate = function (params) {
         }
 
       } else if (nodeTypeId == synthNodeTypes.DELAY.id) {
-        const [ signal, isAbsoluteDelay, sizeOctaves, sizeTime, delayOctaves, delayTime, replayPitch, latencyComp, subsample, crossfade ] = inputSignals;
-        // todo: algorithm
-        node.outputs[0].signal = signal;
+        const [ signal, isAbsoluteDelay, sizeOctaves, sizeTime,
+          delayOctaves, delayTime, replayPitch, crossfade,
+          latencyComp, subsample, dryPassthrough, wet ] = inputSignals;
+
+        let readSignal;
+        
+        const bs = node.proc.bufferSize;
+        
+        if (subsample) {
+          const readHeadFloor = (Math.floor(node.proc.readHead) % bs + bs) % bs;
+          const readHeadCeil = (Math.ceil(node.proc.readHead) % bs + bs) % bs;
+
+          const readFloorSignal = node.proc.buffer[readHeadFloor];
+          const readCeilSignal = node.proc.buffer[readHeadCeil];
+
+          readSignal = readFloorSignal + (readCeilSignal - readFloorSignal) * (node.proc.readHead % 1);
+
+        } else {
+          readSignal = node.proc.buffer[(Math.floor(node.proc.readHead) % bs + bs) % bs]
+        }
+
+        node.proc.buffer[node.proc.writeHead] = signal;
+
+        node.proc.readHead += Math.pow(2, replayPitch);
+        node.proc.writeHead = ((node.proc.writeHead + 1) % bs + bs) % bs;
+        
+        node.outputs[0].signal = readSignal * wet + signal * dryPassthrough;
+
+        // if (readSignal !== 0) {
+        //   node.proc.dCount = (node.proc.dCount || 0) + 1;
+        //   if (node.proc.dCount < 50) console.log('delay found');
+        // }
 
       } else if (nodeTypeId == synthNodeTypes.OUTPUT.id) {
         const [ signal, gain ] = inputSignals;
@@ -151,8 +179,6 @@ const generate = function (params) {
     sampleFrames,
     outputBuffers
   }
-
-  
 
 
   function initPatch(nodes) { // call before generate()
@@ -181,6 +207,31 @@ const generate = function (params) {
         node.buffer = newBuffer; 
       }
 
+      // Initialize delay buffers
+      if (node.nodeTypeId == synthNodeTypes.DELAY.id) {
+
+        const [ signal, isAbsoluteDelay, sizeOctaves, sizeTime, delayOctaves, delayTime, replayPitch, latencyComp, subsample, crossfade ] = valuesOfInputsNoLinks(node, nodes);
+
+        const sizeFrequency = isAbsoluteDelay ?
+          sizeTime :
+          (freq * Math.pow(2, sizeOctaves));
+        
+          const frequency = isAbsoluteDelay ?
+          delayTime :
+          (freq * Math.pow(2, delayOctaves));
+        
+          const bufferSize = sampleRate / sizeFrequency; // float
+          const readPos = sampleRate / frequency; // float
+
+        node.proc = {
+          bufferSize,
+          buffer: Array(Math.ceil(bufferSize)).fill(0),
+          readHead: (-readPos % bufferSize + bufferSize) % bufferSize,
+          writeHead: 0
+        }
+
+      }
+      
       // misc
       node.phase = 0;
 
