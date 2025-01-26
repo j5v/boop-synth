@@ -3,14 +3,14 @@ import { remAsPx, joinItems } from '../../lib/utils.js'
 import { valuesOfInputsNoLinks } from '../../lib/synthGraphUtils.js'
 import { waveShaperPreviewData } from '../../lib/waveshaperFunctions.js'
 
-import { useState } from 'react'
+// import { useState } from 'react'
 import usePatchStore from '../../store/patchStore.jsx'
 
-
-function VisualizationWaveform({ synthNodeId, w, h }) {
+import { memo } from 'react';
+const VisualizationWaveshaper = memo(function VisualizationWaveshaper(props) {
 
   // boop state: buffers
-
+  const { synthNodeId, w, h } = props;
   
   // state
   
@@ -22,7 +22,7 @@ function VisualizationWaveform({ synthNodeId, w, h }) {
 
   // highlight row
   
-  const [ highlightRow, setHighlightRow ] = useState(-1);
+  // const [ highlightRow, setHighlightRow ] = useState(-1);
 
   const handleMouseMove = (event) => {
 
@@ -112,11 +112,12 @@ function VisualizationWaveform({ synthNodeId, w, h }) {
   let itemY = pipelineY1;
   let prevX1 = inMin;
   let prevX2 = inMax;
+  let id = 0;
   const pipelineItemsSVG = pipelineItems.map(item => {
     // y1: pipelineY1, y2: pipelineY1
     const ItemYBottom = itemY + pipelineItemSize;
     const itemSVG = (
-      <g>
+      <g key={id}>
         <path className="scaler" d={`
           M ${sAsX(prevX1)} ${itemY}
           L ${sAsX(prevX2)} ${itemY}  
@@ -131,6 +132,7 @@ function VisualizationWaveform({ synthNodeId, w, h }) {
     itemY += pipelineItemStepSize;
     prevX1 = item.x1;
     prevX2 = item.x2;
+    id++;
     return itemSVG
   });
 
@@ -233,6 +235,6 @@ function VisualizationWaveform({ synthNodeId, w, h }) {
     </div>
   )
 
-}
+})
 
-export default VisualizationWaveform
+export default VisualizationWaveshaper

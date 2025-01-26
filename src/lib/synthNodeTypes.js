@@ -258,7 +258,7 @@ const synthNodeTypes = {
       {
         id: 40,
         displayName: 'Clip input',
-        description: 'Clips to In min and In max',
+        description: 'Clips to In min and In max. Useful for limiting repeating shapes',
         intentId: synthNodeTerminalIntents.CHECK_BOOL.id,
         isParam: true,
         defaultValue: false,
