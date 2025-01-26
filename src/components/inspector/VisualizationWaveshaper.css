@@ -73,6 +73,10 @@ html {
   stroke-width: 1px;
   stroke-dasharray: 3 3;
 }
+.ws .scaler-edge.clip {
+  stroke-width: 2px;
+  stroke-dasharray: none;
+}
 
 .wf {
   stroke: hsla(var(--hue), 100%, 85%, 0.5);

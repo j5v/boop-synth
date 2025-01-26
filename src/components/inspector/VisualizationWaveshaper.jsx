@@ -124,8 +124,8 @@ const VisualizationWaveshaper = memo(function VisualizationWaveshaper(props) {
           L ${sAsX(item.x2)} ${ItemYBottom}
           L ${sAsX(item.x1)} ${ItemYBottom}
         `} />
-        <line className="scaler-edge" x1={sAsX(prevX1)} y1={itemY} x2={sAsX(item.x1)} y2={ItemYBottom} />
-        <line className="scaler-edge" x1={sAsX(prevX2)} y1={itemY} x2={sAsX(item.x2)} y2={ItemYBottom} />
+        <line className={`scaler-edge ${id == 0 && doClipInput ? 'clip' : ''}`} x1={sAsX(prevX1)} y1={itemY} x2={sAsX(item.x1)} y2={ItemYBottom} />
+        <line className={`scaler-edge ${id == 0 && doClipInput ? 'clip' : ''}`} x1={sAsX(prevX2)} y1={itemY} x2={sAsX(item.x2)} y2={ItemYBottom} />
         <text className="dim-text h-under" x={0} y={itemY + remAsPx(0.2)}>{item.name}</text>
       </g>
     );
