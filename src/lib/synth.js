@@ -223,9 +223,10 @@ const generate = function (params) {
           delayTime :
           (freq * Math.pow(2, delayOctaves));
         
-          const bufferSize = sampleRate / sizeFrequency; // float
+          const GIGA = 1000000000
+          const bufferSize = Math.max(1, Math.min(0.2 * GIGA, sampleRate / sizeFrequency)); // float
           const readPos = sampleRate / frequency; // float
-
+          
         node.proc = {
           bufferSize,
           buffer: Array(Math.ceil(bufferSize)).fill(0),
