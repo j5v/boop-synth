@@ -60,7 +60,7 @@ const generate = function (params) {
         node.outputs[0].signal = inputSignals[0];
 
       } else if (nodeTypeId == synthNodeTypes.ENVELOPE_WAHDSR.id) {
-        const env = node.env;
+        const env = node.proc;
         processEnvelope(env, inputSignals, sampleRate); // mutates env
         node.outputs[0].signal = env.outValue;
 
@@ -138,9 +138,9 @@ const generate = function (params) {
         
         const bs = node.proc.bufferSize;
         
-        if (subsample) {
-          const readHeadFloor = (Math.floor(node.proc.readHead) % bs + bs) % bs;
-          const readHeadCeil = (Math.ceil(node.proc.readHead) % bs + bs) % bs;
+        if (subsample) { // linear interpolation
+          const readHeadFloor = (Math.floor(node.proc.readHead + latencyComp) % bs + bs) % bs;
+          const readHeadCeil = (Math.ceil(node.proc.readHead + latencyComp) % bs + bs) % bs;
 
           const readFloorSignal = node.proc.buffer[readHeadFloor];
           const readCeilSignal = node.proc.buffer[readHeadCeil];
@@ -154,6 +154,7 @@ const generate = function (params) {
         node.proc.buffer[node.proc.writeHead] = signal;
 
         node.proc.readHead += Math.pow(2, replayPitch);
+        node.proc.readHead = ((node.proc.readHead) % bs + bs) % bs;
         node.proc.writeHead = ((node.proc.writeHead + 1) % bs + bs) % bs;
         
         node.outputs[0].signal = readSignal * wet + signal * dryPassthrough;
@@ -187,6 +188,8 @@ const generate = function (params) {
     let id = 1;
 
     nodes.forEach(node => {
+
+      // Ideal convention: processing state for a nodeType is stored in `node.proc`
 
       // Initialize output buffers
       if (node.nodeTypeId == synthNodeTypes.OUTPUT.id) {

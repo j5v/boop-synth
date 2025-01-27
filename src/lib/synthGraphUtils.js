@@ -107,7 +107,6 @@ function clearPeakMeters(nodes) {
 function cleanPatch(nodes) {  // Remove extra properties and direct object refs
   for (let nodeIndex in nodes) {
     const node = nodes[nodeIndex];
-    delete node.env;
     delete node.phase;
     delete node.buffer; // we retain node.bufferId
     delete node.proc;

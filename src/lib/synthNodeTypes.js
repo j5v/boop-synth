@@ -482,7 +482,6 @@ const synthNodeTypes = {
         displayName: 'Latency comp',
         description: 'Offset the read of the buffer, in samples. For example, 1 outputs the sound sooner by 1 sample, to compensate for a feedback loop.',
         intentId: synthNodeTerminalIntents.LEVEL.id,
-        isPlaceholder: true,
         isParam: true,
         defaultValue: 0,
       },

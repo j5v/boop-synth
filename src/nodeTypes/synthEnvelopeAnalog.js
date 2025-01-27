@@ -8,7 +8,7 @@ const stagesWAHDSR = {
 }
 
 const initEnvelope = (node, sustainReleaseTime) => {
-  node.env = {
+  node.proc = {
     stage: stagesWAHDSR.WAIT,
     timeMs: 0,
     startTime: 0,
