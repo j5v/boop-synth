@@ -14,11 +14,16 @@ function SynthNodeLinks() {
       let py = nodeVOffset;
 
       if (!node.inputs || node.inputs.length == 0) return;
+      let inputIndex = 0;
 
       return (node.inputs.map(i => {
         const key=`${node.id}-${i.id}`;
 
-        if (i.exposed) py += nodeVSpacing;
+        if (i.exposed) {
+          py += nodeVSpacing;
+          inputIndex++;
+
+        }
 
         const inputPos = {
           x: node.x, 
@@ -52,6 +57,10 @@ function SynthNodeLinks() {
               outputPos={outputPos}
               inputPos={inputPos}
               isFeedback={isFeedback}
+              outputBox={{ x: outputNode.x, y: outputNode.y, w: outputNode.w, h: outputNode.h }}
+              inputBox={{ x: node.x, y: node.y, w: node.w, h: node.h}}
+              outputIndex={outputIndex}
+              inputIndex={inputIndex}
             />
           );
         }

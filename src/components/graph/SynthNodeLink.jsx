@@ -1,7 +1,12 @@
 import './SynthNodeLink.css'
 import { remAsPx } from '../../lib/utils.js'
 
-function SynthNodeLink({ outputPos, inputPos, isFeedback }) {
+function SynthNodeLink({
+  outputPos, inputPos,
+  isFeedback,
+  outputIndex, inputIndex,
+  outputBox, inputBox
+}) {
 
   const midpointPos = {
     x: inputPos.x * 0.5 + outputPos.x * 0.5,
