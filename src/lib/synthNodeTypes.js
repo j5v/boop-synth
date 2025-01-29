@@ -3,6 +3,16 @@ import { sourceTypeGroups } from '../lib/sourceTypeGroups.js'
 import { getItemById } from '../lib/utils.js'
 import { synthNodeVisualizationTypes } from './synthNodeVisualizationTypes.js'
 
+/*
+  # Order of inputs
+
+  Inputs are displayed in the order written here, unless you specify `.order`.
+
+  Ideally, write non-param inputs first (.isParam = false or not defined),
+  and in the synth loop, only destructure the inputs you need.
+  
+*/
+
 const synthNodeTypes = {
   GEN_FM: {
     id: 2,

@@ -42,13 +42,15 @@ function SynthNodeLinks() {
             if (outputItem == outputOutput) {
               break;
             }
-            outputIndex++;
-            if (outputItem.exposed) py += nodeVSpacing;
+            if (outputItem.exposed) {
+              py += nodeVSpacing;
+              outputIndex++;
+            }
           }
         
           const outputPos = {
             x: outputNode.x + outputNode.w,
-            y: outputNode.y + outputIndex * nodeVSpacing + nodeVOffset
+            y: outputNode.y + (1 + outputIndex) * nodeVSpacing + nodeVOffset
           };
 
           return (
