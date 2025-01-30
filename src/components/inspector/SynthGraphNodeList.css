@@ -9,11 +9,11 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: baseline;
-  margin-bottom: 0.4rem;
-  padding: 0.2rem 0.8rem 0.3rem 0.8rem;
-  background-color: hsla(0, 0%, 0%, 0.2);
-  border: 1px solid hsla(0, 0%, 100%, 0.3);
-  /* border-radius: 0.5rem; */
+  margin-bottom: 0.1rem;
+  padding: 0.1rem 0.8rem 0.2rem 0.8rem;
+  background-color: hsla(0, 0%, 0%, 0.7);
+  /* border: 1px solid hsla(0, 0%, 100%, 0.3); */
+  border-radius: 0.5rem;
   cursor: default;
 }
 
@@ -47,9 +47,8 @@
 
 @media (prefers-color-scheme: light) {
   .SynthGraphNodeList .item {
-    margin-bottom: 0.2rem;
-    background-color: hsla(0, 0%, 0%, 0.05);
-    border: 1px solid hsla(0, 0%, 0%, 0.3);
+    background-color: hsl(0, 0%, 95%);
+    /* border: 1px solid hsla(0, 0%, 0%, 0.3); */
   }
 
   .SynthGraphNodeList .item.highlighted {
