@@ -163,7 +163,7 @@ const synthNodeTypes = {
     id: 1,
     name: 'Output',
     nameShort: 'Out',
-    description: 'Collects a signal for file output, audio output, or visualizations.',
+    description: 'Collects a signal for file output, audio output, or visualizations',
     inputs: [
       {
         id: 1,
@@ -194,7 +194,7 @@ const synthNodeTypes = {
         id: 10,
         order: 1,
         displayName: 'Output file/audio',
-        description: 'If unselected, prevent Play audio and Download audio file.',
+        description: 'If unselected, prevent Play audio and Download audio file',
         intentId: synthNodeTerminalIntents.CHECK_BOOL.id,
         isParam: true,
         defaultValue: true,

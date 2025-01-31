@@ -59,7 +59,6 @@ function SynthNodeLink({
   const iG = (inputIndex - 1) * gangGap;
   const oG = (outputIndex - 1) * gangGap;
 
-
   const outT = outputBox.y - conduitSpaceV;
   const outR = outputBox.x + outputBox.w + conduitSpaceH;
   const outB = outputBox.y + outputBox.h + conduitSpaceV;
@@ -77,9 +76,6 @@ function SynthNodeLink({
   const outIsNorthern = (outputBox.y + outputBox.h + conduitSpaceV * 2) < (inputBox.y)
   const outIsSouthern = (inputBox.y + conduitSpaceV) < (outputBox.y)
   
-  // console.log({ outIsWestern });
-
-
   const routes = {
     LEGACY: {
       id: 1, d: 'legacy'
@@ -111,145 +107,10 @@ function SynthNodeLink({
   }
 
 
-  const routeId = outIsWestern ? routes.LEGACY.id : (
-    outIsEastern ? (
-      outIsNorthern ?
-        routes.AROUND_BOTTOM_OF_OUT_AND_OVER_IN.id :
-        outIsSouthern ? 
-          routes.AROUND_BOTTOM_OF_OUT_AND_UNDER_IN.id :
-          routes.AROUND_TOP_OF_OUT_AND_OVER_IN.id
-    ) : (
-      outIsSouthern ? (
-        lowerDiag.x > lowerDiag.y && outT < inB + conduitSpaceV ?
-          routes.AROUND_BOTTOM_OF_OUT_AND_UNDER_IN.id :
-          outL < inL ?
-            routes.AROUND_TOP_OF_OUT_AND_STAY_LEFT_OF_IN.id :
-            routes.AROUND_TOP_OF_OUT_AND_STAY_LEFT_OF_IN.id
-      ) : ( 
-        upperDiag.x > -upperDiag.y ? (
-          outB > inT - conduitSpaceV * 2 ?
-            routes.AROUND_TOP_OF_OUT_AND_STAY_LEFT_OF_IN.id :
-            routes.AROUND_BOTTOM_OF_OUT_AND_UNDER_IN.id
-        ) :
-        routes.LEGACY.id
-      )
-    )
-  );
+  const routeId = getRouteId();
 
 
-  let path;
-
-  switch(routeId) {
-    case routes.LEGACY.id:
-      path = `
-        M ${remAsPx(outputPos.x)}, ${remAsPx(outputPos.y)}
-
-        L ${remAsPx(outputPos.x + hangOut)}, ${remAsPx(outputPos.y)}
-
-        S ${remAsPx(outputPos.x + hangOut * 4)}, ${remAsPx(outputPos.y)}
-          ${remAsPx(midpointPos.x)}, ${remAsPx(midpointPos.y)}
-          
-        S ${remAsPx(inputPos.x - hangOut)}, ${remAsPx(inputPos.y)}
-          ${remAsPx(inputPos.x - hangOut)}, ${remAsPx(inputPos.y)}
-
-        L ${remAsPx(inputPos.x)}, ${remAsPx(inputPos.y)}
-      `;
-      break;
-    case routes.AROUND_TOP_OF_OUT_AND_OVER_IN.id: 
-      path = `
-        M ${remAsPx(outputPos.x)}, ${remAsPx(outputPos.y)}
-        L ${remAsPx(outR)}, ${remAsPx(outputPos.y)}
-        
-        L ${remAsPx(outR)}, ${remAsPx(outT)}
-        L ${remAsPx(outR)}, ${remAsPx(outT)}
-        L ${remAsPx(inL)}, ${remAsPx(outT)}
-        L ${remAsPx(inL)}, ${remAsPx(inputPos.y)}
-
-        L ${remAsPx(inputPos.x)}, ${remAsPx(inputPos.y)}
-      `;
-      break;
-    case routes.AROUND_BOTTOM_OF_OUT_AND_OVER_IN.id: // ./
-      path = `
-        M ${remAsPx(outputPos.x)}, ${remAsPx(outputPos.y)}
-        S ${remAsPx(outR + hangOut + oG - iG)}, ${remAsPx(outputPos.y)}
-          ${remAsPx(outR + hangOut + oG - iG)}, ${remAsPx(lerp(Math.max(inT, outB), outputPos.y), 0.3)}
-
-        S ${remAsPx(outR + oG - iG)}, ${remAsPx(Math.max(inT, outB) - iG)}
-          ${remAsPx(Math.max(outR - hangOut * 2, lerp(outR, inL, 0.5)) + oG - iG)}, ${remAsPx(Math.max(inT, outB) - iG)}
-
-        ${outL < inL ? `
-            L ${remAsPx(outL)}, ${remAsPx(outT)}
-            S ${remAsPx(inL - iG)}, ${remAsPx(inT - iG)}
-          `: `
-            L ${remAsPx(lerp(outR, inL, 0.1))}, ${remAsPx(inT - iG)}
-            S ${remAsPx(inL - iG)}, ${remAsPx(inT - iG)}
-          `}
-        
-          ${remAsPx(inL - iG)}, ${remAsPx(lerp(inT - iG, inputPos.y))}
-          
-        Q ${remAsPx(inL - iG)}, ${remAsPx(inputPos.y)}
-          ${remAsPx(lerp(inL - iG, inputPos.x, 0.2))}, ${remAsPx(inputPos.y)}
-        L ${remAsPx(inputPos.x)}, ${remAsPx(inputPos.y)}
-      `;
-      break;
-    case routes.AROUND_BOTTOM_OF_OUT_AND_UNDER_IN.id: // ./
-      path = `
-        M ${remAsPx(outputPos.x)}, ${remAsPx(outputPos.y)}
-        S ${remAsPx(outR + hangOut + oG - iG)}, ${remAsPx(outputPos.y)}
-          ${remAsPx(outR + hangOut + oG - iG)}, ${remAsPx(lerp(Math.max(inT, outB), outputPos.y), 0.5)}
-
-        S ${remAsPx(outR + oG - iG)}, ${remAsPx(Math.max(inT - iG, outB + iG))}
-          ${remAsPx(Math.max(outR - hangOut * 2, lerp(outR, inL, 0.5)) - iG)}, ${remAsPx(Math.max(inT - iG, outB + iG))}
-        ${outIsSouthern ? `
-            L ${remAsPx(lerp(outL, outR, 0.9))}, ${remAsPx(Math.max(inT - iG, outB + iG))}
-            S ${remAsPx(Math.min(inputPos.x - hangOut, outL) - iG)}, ${remAsPx(Math.max(inT - iG, outB + iG))}
-              ${remAsPx(Math.min(inputPos.x - hangOut, outL) - iG)}, ${remAsPx(lerp(Math.max(inT - iG, outB + iG), inputPos.y))}
-            S ${remAsPx(Math.min(inputPos.x - hangOut, outL) - iG)}, ${remAsPx(inputPos.y)}
-              ${remAsPx(inputPos.x)}, ${remAsPx(inputPos.y)}
-          `: `
-            L ${remAsPx(lerp(inL, outR, 0.9))}, ${remAsPx(Math.max(inT - iG, outB + iG))}
-            S ${remAsPx(Math.min(inputPos.x - hangOut, inL) - iG)}, ${remAsPx(Math.max(inT - iG, outB + iG))}
-              ${remAsPx(Math.min(inputPos.x - hangOut, inL) - iG)}, ${remAsPx(lerp(Math.max(inT - iG, outB + iG), inputPos.y))}
-            S ${remAsPx(Math.min(inputPos.x - hangOut, inL) - iG)}, ${remAsPx(inputPos.y)}
-              ${remAsPx(inputPos.x)}, ${remAsPx(inputPos.y)}
-          `}
-        
-
-        L ${remAsPx(inputPos.x)}, ${remAsPx(inputPos.y)}
-      `;
-      break;
-    case routes.AROUND_TOP_OF_OUT_AND_STAY_LEFT_OF_IN.id: 
-      path = `
-        M ${remAsPx(outputPos.x)}, ${remAsPx(outputPos.y)}
-        L ${remAsPx(outR)}, ${remAsPx(outputPos.y)}
-
-        L ${remAsPx(outR)}, ${remAsPx(outT - outboundOffset)}
-
-        ${outIsSouthern && outL < inL ? `
-          L ${remAsPx(Math.max(outL, inL))}, ${remAsPx(outT - outboundOffset)}
-          L ${remAsPx(Math.max(outL, inL))}, ${remAsPx(inputPos.y)}
-        `: `
-          L ${remAsPx(Math.min(outL - outboundOffset, inL))}, ${remAsPx(outT - outboundOffset)}
-          L ${remAsPx(Math.min(outL - outboundOffset, inL))}, ${remAsPx(inputPos.y)}
-        `}        
-        
-        L ${remAsPx(inputPos.x)}, ${remAsPx(inputPos.y)}
-      `;
-      break;
-    case routes.SWEEP_BETWEEN.id: 
-      path = `
-        M ${remAsPx(outputPos.x)} ${remAsPx(outputPos.y)}  
-        L ${remAsPx(outR)} ${remAsPx(outputPos.y)}  
-
-        L ${remAsPx(outR)} ${remAsPx(outB)}  
-        L ${remAsPx(inL)} ${remAsPx(inT)}  
-
-        L ${remAsPx(inL)} ${remAsPx(inputPos.y)}
-        L ${remAsPx(inputPos.x)} ${remAsPx(inputPos.y)}
-      `;
-      break;
-    default: path = '';
-  }
+  const path = pathForRoute();
   
   const routeDesc = Object.entries(routes).find(i => i[1].id == routeId)[1].d;
 
@@ -272,6 +133,150 @@ function SynthNodeLink({
   );
 
   function lerp(a, b, f = 0.5) { return a * f + b * (1 - f) };
+
+  function getRouteId() {
+    return outIsWestern ? routes.LEGACY.id : (
+      outIsEastern ? (
+        outIsNorthern ?
+          routes.AROUND_BOTTOM_OF_OUT_AND_OVER_IN.id :
+          outIsSouthern ? 
+            routes.AROUND_BOTTOM_OF_OUT_AND_UNDER_IN.id :
+            routes.AROUND_TOP_OF_OUT_AND_OVER_IN.id
+      ) : (
+        outIsSouthern ? (
+          lowerDiag.x > lowerDiag.y && outT < inB + conduitSpaceV ?
+            routes.AROUND_BOTTOM_OF_OUT_AND_UNDER_IN.id :
+            outL < inL ?
+              routes.AROUND_TOP_OF_OUT_AND_STAY_LEFT_OF_IN.id :
+              routes.AROUND_TOP_OF_OUT_AND_STAY_LEFT_OF_IN.id
+        ) : ( 
+          upperDiag.x > -upperDiag.y ? (
+            outB > inT - conduitSpaceV * 2 ?
+              routes.AROUND_TOP_OF_OUT_AND_STAY_LEFT_OF_IN.id :
+              routes.AROUND_BOTTOM_OF_OUT_AND_UNDER_IN.id
+          ) :
+          routes.LEGACY.id
+        )
+      )
+    );
+  }
+
+  function pathForRoute() {
+    let path;
+    switch(routeId) {
+      case routes.LEGACY.id:
+        path = `
+          M ${remAsPx(outputPos.x)}, ${remAsPx(outputPos.y)}
+  
+          L ${remAsPx(outputPos.x + hangOut)}, ${remAsPx(outputPos.y)}
+  
+          S ${remAsPx(outputPos.x + hangOut * 4)}, ${remAsPx(outputPos.y)}
+            ${remAsPx(midpointPos.x)}, ${remAsPx(midpointPos.y)}
+            
+          S ${remAsPx(inputPos.x - hangOut)}, ${remAsPx(inputPos.y)}
+            ${remAsPx(inputPos.x - hangOut)}, ${remAsPx(inputPos.y)}
+  
+          L ${remAsPx(inputPos.x)}, ${remAsPx(inputPos.y)}
+        `;
+        break;
+      case routes.AROUND_TOP_OF_OUT_AND_OVER_IN.id: 
+        path = `
+          M ${remAsPx(outputPos.x)}, ${remAsPx(outputPos.y)}
+          L ${remAsPx(outR)}, ${remAsPx(outputPos.y)}
+          
+          L ${remAsPx(outR)}, ${remAsPx(outT)}
+          L ${remAsPx(outR)}, ${remAsPx(outT)}
+          L ${remAsPx(inL)}, ${remAsPx(outT)}
+          L ${remAsPx(inL)}, ${remAsPx(inputPos.y)}
+  
+          L ${remAsPx(inputPos.x)}, ${remAsPx(inputPos.y)}
+        `;
+        break;
+      case routes.AROUND_BOTTOM_OF_OUT_AND_OVER_IN.id: // ./
+        path = `
+          M ${remAsPx(outputPos.x)}, ${remAsPx(outputPos.y)}
+          S ${remAsPx(outR + hangOut + oG - iG)}, ${remAsPx(outputPos.y)}
+            ${remAsPx(outR + hangOut + oG - iG)}, ${remAsPx(lerp(Math.max(inT, outB), outputPos.y), 0.3)}
+  
+          S ${remAsPx(outR + oG - iG)}, ${remAsPx(Math.max(inT, outB) - iG)}
+            ${remAsPx(Math.max(outR - hangOut * 2, lerp(outR, inL, 0.5)) + oG - iG)}, ${remAsPx(Math.max(inT, outB) - iG)}
+  
+          ${outL < inL ? `
+              L ${remAsPx(outL)}, ${remAsPx(outT)}
+              S ${remAsPx(inL - iG)}, ${remAsPx(inT - iG)}
+            `: `
+              L ${remAsPx(lerp(outR, inL, 0.1))}, ${remAsPx(inT - iG)}
+              S ${remAsPx(inL - iG)}, ${remAsPx(inT - iG)}
+            `}
+          
+            ${remAsPx(inL - iG)}, ${remAsPx(lerp(inT - iG, inputPos.y))}
+            
+          Q ${remAsPx(inL - iG)}, ${remAsPx(inputPos.y)}
+            ${remAsPx(lerp(inL - iG, inputPos.x, 0.2))}, ${remAsPx(inputPos.y)}
+          L ${remAsPx(inputPos.x)}, ${remAsPx(inputPos.y)}
+        `;
+        break;
+      case routes.AROUND_BOTTOM_OF_OUT_AND_UNDER_IN.id: // ./
+        path = `
+          M ${remAsPx(outputPos.x)}, ${remAsPx(outputPos.y)}
+          S ${remAsPx(outR + hangOut + oG - iG)}, ${remAsPx(outputPos.y)}
+            ${remAsPx(outR + hangOut + oG - iG)}, ${remAsPx(lerp(Math.max(inT, outB), outputPos.y), 0.5)}
+  
+          S ${remAsPx(outR + oG - iG)}, ${remAsPx(Math.max(inT - iG, outB + iG))}
+            ${remAsPx(Math.max(outR - hangOut * 2, lerp(outR, inL, 0.5)) - iG)}, ${remAsPx(Math.max(inT - iG, outB + iG))}
+          ${outIsSouthern ? `
+              L ${remAsPx(lerp(outL, outR, 0.9))}, ${remAsPx(Math.max(inT - iG, outB + iG))}
+              S ${remAsPx(Math.min(inputPos.x - hangOut, outL) - iG)}, ${remAsPx(Math.max(inT - iG, outB + iG))}
+                ${remAsPx(Math.min(inputPos.x - hangOut, outL) - iG)}, ${remAsPx(lerp(Math.max(inT - iG, outB + iG), inputPos.y))}
+              S ${remAsPx(Math.min(inputPos.x - hangOut, outL) - iG)}, ${remAsPx(inputPos.y)}
+                ${remAsPx(inputPos.x)}, ${remAsPx(inputPos.y)}
+            `: `
+              L ${remAsPx(lerp(inL, outR, 0.9))}, ${remAsPx(Math.max(inT - iG, outB + iG))}
+              S ${remAsPx(Math.min(inputPos.x - hangOut, inL) - iG)}, ${remAsPx(Math.max(inT - iG, outB + iG))}
+                ${remAsPx(Math.min(inputPos.x - hangOut, inL) - iG)}, ${remAsPx(lerp(Math.max(inT - iG, outB + iG), inputPos.y))}
+              S ${remAsPx(Math.min(inputPos.x - hangOut, inL) - iG)}, ${remAsPx(inputPos.y)}
+                ${remAsPx(inputPos.x)}, ${remAsPx(inputPos.y)}
+            `}
+          
+  
+          L ${remAsPx(inputPos.x)}, ${remAsPx(inputPos.y)}
+        `;
+        break;
+      case routes.AROUND_TOP_OF_OUT_AND_STAY_LEFT_OF_IN.id: 
+        path = `
+          M ${remAsPx(outputPos.x)}, ${remAsPx(outputPos.y)}
+          L ${remAsPx(outR)}, ${remAsPx(outputPos.y)}
+  
+          L ${remAsPx(outR)}, ${remAsPx(outT - outboundOffset)}
+  
+          ${outIsSouthern && outL < inL ? `
+            L ${remAsPx(Math.max(outL, inL))}, ${remAsPx(outT - outboundOffset)}
+            L ${remAsPx(Math.max(outL, inL))}, ${remAsPx(inputPos.y)}
+          `: `
+            L ${remAsPx(Math.min(outL - outboundOffset, inL))}, ${remAsPx(outT - outboundOffset)}
+            L ${remAsPx(Math.min(outL - outboundOffset, inL))}, ${remAsPx(inputPos.y)}
+          `}        
+          
+          L ${remAsPx(inputPos.x)}, ${remAsPx(inputPos.y)}
+        `;
+        break;
+      case routes.SWEEP_BETWEEN.id: 
+        path = `
+          M ${remAsPx(outputPos.x)} ${remAsPx(outputPos.y)}  
+          L ${remAsPx(outR)} ${remAsPx(outputPos.y)}  
+  
+          L ${remAsPx(outR)} ${remAsPx(outB)}  
+          L ${remAsPx(inL)} ${remAsPx(inT)}  
+  
+          L ${remAsPx(inL)} ${remAsPx(inputPos.y)}
+          L ${remAsPx(inputPos.x)} ${remAsPx(inputPos.y)}
+        `;
+        break;
+      default: path = '';
+    }    
+
+    return path;
+  }
 
 }
 
