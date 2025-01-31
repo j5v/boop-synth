@@ -109,7 +109,6 @@ function SynthNodeLink({
 
   const routeId = getRouteId();
 
-
   const path = pathForRoute();
   
   const routeDesc = Object.entries(routes).find(i => i[1].id == routeId)[1].d;

@@ -43,13 +43,38 @@ function AppHeader() {
     stateDirty();
   }
 
-  const handleReset = (event) => {
+  const handleReset = () => {
     if (window.confirm('Continue to reset? This will load the default starting patch.')) reset();
   }
 
   const handleSelect = (event) => {
     addNode(event.target.value);
     event.target.value = '';
+  }
+
+  const handleSelectAction = (event) => {
+    const selectedItemIndex = event.target.value;
+    switch(selectedItemIndex) {
+      case "zoom all":
+        handleZoomAll();
+        break;
+      
+      case "reset":
+        handleReset();
+        break;
+      
+      case "tidy inputs":
+        break;
+      
+      case "order nodes":
+        break;
+      
+      case "tidy nodes":
+        break;
+      
+    }
+    event.target.value = "";
+    console.log(selectedItemIndex)
   }
 
   const handleZoomAll = () => {
@@ -69,6 +94,7 @@ function AppHeader() {
 
   return (
     <Header context="button-bar">
+
       <div className="title">{appInfo.appName}</div>
 
       <div className="button-separator" />   
@@ -79,11 +105,13 @@ function AppHeader() {
         onClick={() => handleGenerateAndPlay({ nodes, perf, boop })} 
         title="Play audio"
       ><IconPlay /></button>
+
       <button
         className="icon" 
         onClick={() => handleGenerateFile({ nodes, perf, boop })}
         title="Download audio file"
       ><IconDownload /></button>
+
       <button
         className="icon" 
         onClick={() => handleGenerateOnly({ nodes, perf, boop })}
@@ -106,12 +134,14 @@ function AppHeader() {
           >{synthNodeTypes[keyName].name}{synthNodeTypes[keyName].isPlaceholder ? ' [WIP]' : ''}</option>
         )}
       </select>
+
       <button
         className="icon" 
         onClick={duplicateSelectedNodes}
         disabled={noNodesSelected}
         title="Duplicate selected nodes [V]"
       ><IconDuplicate /></button>
+
       <button
         className="icon" 
         onClick={removeSelectedNodes}
@@ -121,18 +151,24 @@ function AppHeader() {
 
       <div className="button-separator" />      
 
-      <button
-          onClick={handleZoomAll}
-          title="Zoom to view all nodes [Ctrl]+[0]"
-        >Zoom all</button>
+      <select id="actionsMenu"
+        onChange={handleSelectAction}
+        title="Actions"
+        defaultValue=""
+      >
+        <option value="" disabled hidden>&nbsp; Actions</option>              
+          <option value="zoom all" title="Zoom to view all nodes [Ctrl]+[0]"> Zoom all</option>
+          <option value="reset" title="Reset the patch [R]"> Reset</option>
+          <option value="tidy inputs" title="" disabled> Tidy inputs</option>
+          <option value="order nodes" title="" disabled> Order nodes</option>
+          <option value="tidy graph" title="" disabled> Tidy graph</option>
+          <option value="normalize" title="" disabled> Normalilze outputs</option>
+      </select>
 
       <div className="button-separator" />      
 
       <a href={appInfo.helpURL} target="_blank" title="Help"><button tabIndex={-1} className="text-as-icon link-cursor">?</button></a>
-      <button
-          onClick={handleReset}
-          title="Reset all nodes [R]"
-        >Reset</button>
+
     </Header>
   )
 }
