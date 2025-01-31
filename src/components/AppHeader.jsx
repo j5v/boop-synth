@@ -25,6 +25,7 @@ function AppHeader() {
   const removeSelectedNodes = usePatchStore((state) => state.removeSelectedNodes)
   const duplicateSelectedNodes = usePatchStore((state) => state.duplicateSelectedNodes)
   const viewAll = usePatchStore((state) => state.viewAll)
+  const selectAllNodes = usePatchStore((state) => state.selectAllNodes)
   const reset = usePatchStore((state) => state.reset)
   const tidyInputs = usePatchStore((state) => state.tidyInputs)
   const stateDirty = usePatchStore((state) => state.stateDirty)
@@ -59,8 +60,12 @@ function AppHeader() {
       case "zoom all":
         handleZoomAll();
         break;
+    
+      case "select all":
+        selectAllNodes();
+        break;
       
-      case "reset":
+        case "reset":
         handleReset();
         break;
       
@@ -76,7 +81,7 @@ function AppHeader() {
       
     }
     event.target.value = "";
-    console.log(selectedItemIndex)
+    // console.log(selectedItemIndex)
   }
 
   const handleZoomAll = () => {
@@ -159,12 +164,13 @@ function AppHeader() {
         defaultValue=""
       >
         <option value="" disabled hidden>&nbsp; Actions</option>              
-          <option value="zoom all" title="Zoom to view all nodes [Ctrl]+[0]"> Zoom all</option>
-          <option value="reset" title="Reset the patch [R]"> Reset</option>
-          <option value="tidy inputs" title="Unexpose unconnected inputs"> Tidy inputs</option>
-          <option value="order nodes" title="" disabled> Order nodes</option>
-          <option value="tidy graph" title="" disabled> Tidy graph</option>
-          <option value="normalize" title="" disabled> Normalilze outputs</option>
+        <option value="zoom all" title="Zoom to view all nodes [Ctrl]+[0]"> Zoom all</option>
+        <option value="select all" title="Select all nodes [Ctrl]+[A]"> Select all</option>
+        <option value="reset" title="Reset the patch [R]"> Reset</option>
+        <option value="tidy inputs" title="Unexpose unconnected inputs"> Tidy inputs</option>
+        <option value="order nodes" title="" disabled> Order nodes</option>
+        <option value="tidy graph" title="" disabled> Tidy graph</option>
+        <option value="normalize" title="" disabled> Normalilze outputs</option>
       </select>
 
       <div className="button-separator" />      
