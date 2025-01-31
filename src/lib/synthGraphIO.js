@@ -11,18 +11,23 @@ function writeFile(outputBuffers, perf) {
   const { channels, sampleRate, filenameRoot } = perf;
 
   for (let outputBufferIndex in outputBuffers) {
-    const dataview = encodeWAV(
-      outputBuffers[outputBufferIndex].samples,
-      sampleRate,
-      channels
-    );
 
-    const audioBlob = new Blob([dataview], { type : 'audio/wav' });
+    const buffer = outputBuffers[outputBufferIndex];
 
-    saveAs(
-      audioBlob,
-      joinItems([filenameRoot, outputBuffers[outputBufferIndex].filenamePart || ''], '-') + '.wav'
-    );
+    if (buffer.doOutput) {
+      const dataview = encodeWAV(
+          buffer.samples,
+          sampleRate,
+          channels
+      );
+
+      const audioBlob = new Blob([dataview], { type : 'audio/wav' });
+
+      saveAs(
+        audioBlob,
+        joinItems([filenameRoot, outputBuffers[outputBufferIndex].filenamePart || ''], '-') + '.wav'
+      );
+    }
   }
 }
 
@@ -33,28 +38,33 @@ function playAudio(outputBuffers, perf) {
 
   for (let outputBufferIndex in outputBuffers) {
 
-    const samples = outputBuffers[outputBufferIndex].samples;
+    const buffer = outputBuffers[outputBufferIndex];
 
-    const audioCtx = new AudioContext();
-    
-    // Allocate audio buffer. Fractional sample at end is rendered as a whole sample.
-    const sampleFrames = duration * sampleRate;
-    const myArrayBuffer = audioCtx.createBuffer(channels, sampleFrames, sampleRate);
+    if (buffer.doOutput) {
 
-    // Populate audio buffer
-    for (let channel = 0; channel < channels; channel++) {
-      const nowBuffering = myArrayBuffer.getChannelData(channel);
-      for (let i = 0; i < sampleFrames; i++) {
-        nowBuffering[i] = samples[i];
+      const samples = buffer.samples;
+
+      const audioCtx = new AudioContext();
+      
+      // Allocate audio buffer. Fractional sample at end is rendered as a whole sample.
+      const sampleFrames = duration * sampleRate;
+      const myArrayBuffer = audioCtx.createBuffer(channels, sampleFrames, sampleRate);
+
+      // Populate audio buffer
+      for (let channel = 0; channel < channels; channel++) {
+        const nowBuffering = myArrayBuffer.getChannelData(channel);
+        for (let i = 0; i < sampleFrames; i++) {
+          nowBuffering[i] = samples[i];
+        }
       }
+
+      // Play audiio buffer
+      const source = audioCtx.createBufferSource();
+      source.buffer = myArrayBuffer;
+      source.connect(audioCtx.destination);
+      source.start();
+      
     }
-
-    // Play audiio buffer
-    const source = audioCtx.createBufferSource();
-    source.buffer = myArrayBuffer;
-    source.connect(audioCtx.destination);
-    source.start();
-
   }
 }
 

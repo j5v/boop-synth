@@ -34,20 +34,28 @@ function FormPatchNodeInputItem(props) {
     setInputExposed(inputItem, event.target.checked);
   }
 
-  const displayUnits = (nodeTypeInput.displayUnits) ? (
-    // not using this yet
-    <div className="units">{nodeTypeInput.displayUnits}</div>
-  ) : <></>
+  // const displayUnits = (nodeTypeInput.displayUnits) ? (
+  //   // not using this yet
+  //   <div className="units">{nodeTypeInput.displayUnits}</div>
+  // ) : <></>
 
   let hideInput = false;
   if (nodeTypeInput.onlyShowIf !== undefined) {
+
     const otherInput = getItemById(synthNode.inputs, nodeTypeInput.onlyShowIf.inputId);
     if (otherInput) {
       const otherInputType = getItemById(nodeType.inputs, otherInput.id);
-      if ((!otherInput || otherInput.value || !otherInputType || otherInputType.defaultValue) != nodeTypeInput.onlyShowIf.hasValue) {
+      const hasValue = nodeTypeInput.onlyShowIf.hasValue;
+
+      const value = (otherInput.value !== undefined)
+        ? otherInput.value
+        : otherInputType.defaultValue;
+
+      if (value !== hasValue) {
         hideInput = true;
       }
     }
+
   }
 
   if (hideInput) {

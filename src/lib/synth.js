@@ -194,12 +194,12 @@ const generate = function (params) {
       // Initialize output buffers
       if (node.nodeTypeId == synthNodeTypes.OUTPUT.id) {
 
-        const [ forget, forget2, filenamePart ] = valuesOfInputs(node, nodes);
-
+        const [ forget, forget2, filenamePart, doOutput ] = valuesOfInputs(node, nodes);
         const newBuffer = {
           id: id++,
           nodeId: node.id,
           filenamePart,
+          doOutput,
           samples: []
         };        
         outputBuffers.push(newBuffer);
@@ -219,14 +219,14 @@ const generate = function (params) {
           sizeTime :
           (freq * Math.pow(2, sizeOctaves));
         
-          const frequency = isAbsoluteDelay ?
+        const frequency = isAbsoluteDelay ?
           delayTime :
           (freq * Math.pow(2, delayOctaves));
         
-          const GIGA = 1000000000
-          const bufferSize = Math.max(1, Math.min(0.2 * GIGA, sampleRate / sizeFrequency)); // float
-          const readPos = sampleRate / frequency; // float
-          
+        const GIGA = 1000000000
+        const bufferSize = Math.max(1, Math.min(0.2 * GIGA, sampleRate / sizeFrequency)); // float
+        const readPos = sampleRate / frequency; // float
+        
         node.proc = {
           bufferSize,
           buffer: Array(Math.ceil(bufferSize)).fill(0),
