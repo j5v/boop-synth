@@ -776,7 +776,12 @@ const usePatchStore = create(
             // merge inputs
             const inputs = structuredClone(nodeType.inputs).map(i => {
               const importInput = n.inputs.find(input => input.id == i.id);
-              return (importInput ? { ...importInput, ...i } : i)
+              const newInput = importInput ? { ...importInput, ...i } : i;
+
+              // tidying of legacy patch; remove at v1.0.
+              if (newInput.link && !newInput.link.synthNodeId) delete newInput.link;
+
+              return newInput;
             });
 
             // merge outputs
