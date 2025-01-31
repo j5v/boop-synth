@@ -163,7 +163,7 @@ const synthNodeTypes = {
     id: 1,
     name: 'Output',
     nameShort: 'Out',
-    description: 'Collects a signal to be the output for the graph',
+    description: 'Collects a signal for file output, audio output, or visualizations.',
     inputs: [
       {
         id: 1,
@@ -420,7 +420,6 @@ const synthNodeTypes = {
     name: 'Delay',
     nameShort: 'Dly',
     description: 'Stores a signal, and outputs it after a delay',
-    isPlaceholder: true,
     inputs: [
       {
         id: 1,
@@ -700,14 +699,14 @@ const synthNodeTypes = {
     name: 'Envelope: MSEG',
     nameShort: 'MSEG',
     isPlaceholder: true,
-    description: 'Multi-segment envelope. Use to precisely control a signal over time.',
+    description: 'Multi-segment envelope. Use to precisely control a signal over time',
     inputs: [
       {
         id: 1,
-        displayName: 'Input',
+        displayName: 'Signal',
         intentId: synthNodeTerminalIntents.LEVEL.id,
         exposed: false,
-        defaultValue: 0,
+        defaultValue: 1,
       },
       {
         id: 10,
@@ -718,7 +717,7 @@ const synthNodeTypes = {
         defaultValue: 0,
       },
       {
-        id: 10,
+        id: 11,
         displayName: 'Mod B',
         description: 'Shift MSEG points using this modulator',
         intentId: synthNodeTerminalIntents.LEVEL.id,
@@ -726,7 +725,7 @@ const synthNodeTypes = {
         defaultValue: 0,
       },
       {
-        id: 10,
+        id: 12,
         displayName: 'Mod C',
         description: 'Shift MSEG points using this modulator',
         intentId: synthNodeTerminalIntents.LEVEL.id,
@@ -734,12 +733,20 @@ const synthNodeTypes = {
         defaultValue: 0,
       },
       {
-        id: 10,
+        id: 13,
         displayName: 'Mod D',
         description: 'Shift MSEG points using this modulator',
         intentId: synthNodeTerminalIntents.LEVEL.id,
         exposed: false,
         defaultValue: 0,
+      },
+      {
+        id: 20,
+        displayName: 'Amp',
+        description: 'Scales the node output, same effect as Signal',
+        intentId: synthNodeTerminalIntents.LEVEL.id,
+        exposed: false,
+        defaultValue: 1,
       },
     ],
     outputs: [
