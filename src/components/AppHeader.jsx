@@ -164,13 +164,13 @@ function AppHeader() {
         defaultValue=""
       >
         <option value="" disabled hidden>&nbsp; Actions</option>              
-        <option value="zoom all" title="Zoom to view all nodes [Ctrl]+[0]"> Zoom all</option>
+        <option value="zoom all" title="Zoom to view all nodes. [Ctrl]+[Alt]+[0]"> Zoom all</option>
         <option value="select all" title="Select all nodes [Ctrl]+[A]"> Select all</option>
         <option value="reset" title="Reset the patch [R]"> Reset</option>
         <option value="tidy inputs" title="Unexpose unconnected inputs"> Tidy inputs</option>
         <option value="order nodes" title="" disabled> Order nodes</option>
         <option value="tidy graph" title="" disabled> Tidy graph</option>
-        <option value="normalize" title="" disabled> Normalilze outputs</option>
+        <option value="normalize" title="" disabled> Normalize outputs</option>
       </select>
 
       <div className="button-separator" />      

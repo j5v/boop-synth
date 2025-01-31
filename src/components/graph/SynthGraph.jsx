@@ -219,8 +219,22 @@ function SynthGraph() {
       event.stopPropagation();
       event.preventDefault();
 
-    } else if (k == '0') {
+    } else if (k == '0' && event.ctrlKey == true && event.altKey == true) {
       handleViewAll();
+      event.preventDefault();
+
+    } else if (k == '-' && event.ctrlKey == true && event.altKey == true) {
+      setViewScale(
+        view.scale * Math.pow(2, -0.2), // zoom smaller
+        mousePos || { x:0, y:0 } // This default { x, y } is not ideal.
+      );
+      event.preventDefault();
+
+    } else if (k == '=' && event.ctrlKey == true && event.altKey == true) {
+      setViewScale(
+        view.scale * Math.pow(2, 0.2), // zoom bigger
+        mousePos || { x:0, y:0 } // This default { x, y } is not ideal.
+      );
       event.preventDefault();
 
     }
