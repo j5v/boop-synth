@@ -345,6 +345,20 @@ const usePatchStore = create(
 
       }),
 
+      tidyInputs: () => set((state) => {
+        return {
+          ...state,
+          nodes: state.nodes.map(node => ({
+            ...node,
+            inputs: node.inputs.map(input => ({
+              ...input,
+              exposed: input.link && input.link != {}
+            }))
+          }))
+        }
+
+      }),
+
 
       // Drag new links
 
@@ -623,6 +637,7 @@ const usePatchStore = create(
       })),
 
       
+
       updateNode: (nodeId, obj) => set((state) => ({
         ...state,
         nodes: state.nodes.map((node) =>

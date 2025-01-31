@@ -26,6 +26,7 @@ function AppHeader() {
   const duplicateSelectedNodes = usePatchStore((state) => state.duplicateSelectedNodes)
   const viewAll = usePatchStore((state) => state.viewAll)
   const reset = usePatchStore((state) => state.reset)
+  const tidyInputs = usePatchStore((state) => state.tidyInputs)
   const stateDirty = usePatchStore((state) => state.stateDirty)
 
   const handleGenerateAndPlay = (params) => {
@@ -64,6 +65,7 @@ function AppHeader() {
         break;
       
       case "tidy inputs":
+        tidyInputs();
         break;
       
       case "order nodes":
@@ -159,7 +161,7 @@ function AppHeader() {
         <option value="" disabled hidden>&nbsp; Actions</option>              
           <option value="zoom all" title="Zoom to view all nodes [Ctrl]+[0]"> Zoom all</option>
           <option value="reset" title="Reset the patch [R]"> Reset</option>
-          <option value="tidy inputs" title="" disabled> Tidy inputs</option>
+          <option value="tidy inputs" title="Unexpose unconnected inputs"> Tidy inputs</option>
           <option value="order nodes" title="" disabled> Order nodes</option>
           <option value="tidy graph" title="" disabled> Tidy graph</option>
           <option value="normalize" title="" disabled> Normalilze outputs</option>
