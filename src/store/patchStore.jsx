@@ -12,6 +12,7 @@ import { synthNodeTerminalIntents } from '../lib/synthNodeIntents';
 import { getNodeTypeById } from '../lib/synthNodeTypes';
 
 import {
+  rectanglesIntersect,
   swapItemsInArray,
   cleanNodeLinks,
   remAsPx,
@@ -682,35 +683,38 @@ const usePatchStore = create(
         }
       })),
 
-      dragSelectionBox: (x2, y2) => set((state) => ({
-        ...state,
-        ui: {
-          ...state.ui,
-          selectionBounds: {
-            ...state.ui.selectionBounds,
-            x2, y2
+      dragSelectionBox: (nx2, ny2) => set((state) => {
+
+        const b = state.ui.selectionBounds;
+
+        const { panX, panY, scale } = state.ui.view || { panX: 0, panY: 0, scale: 1 };
+
+        const x1 = pxAsRem(Math.min(b.x1, nx2) - panX) / scale;
+        const x2 = pxAsRem(Math.max(b.x1, nx2) - panX) / scale;
+      
+        const y1 = pxAsRem(Math.min(b.y1, ny2) - panY) / scale;
+        const y2 = pxAsRem(Math.max(b.y1, ny2) - panY) / scale;
+      
+        return {
+          ...state,
+          nodes: state.nodes.map(node => ({
+            ...node,
+            highlighted: rectanglesIntersect(
+              x1, y1, x2, y2, 
+              node.x, node.y, node.x + node.w, node.y + node.h, 
+            ),
+          })),
+          ui: {
+            ...state.ui,
+            selectionBounds: {
+              ...state.ui.selectionBounds,
+              x2: nx2, y2: ny2
+            }
           }
         }
-      })),
+      }),
 
       endSelectionBox: () => set((state) => {
-
-        const rectanglesIntersect = ( 
-           minAx, minAy, maxAx, maxAy,
-           minBx, minBy, maxBx, maxBy
-        ) => {
-
-          const aLeftOfB = maxAx < minBx;
-          const aRightOfB = minAx > maxBx;
-          const aAboveB = minAy > maxBy;
-          const aBelowB = maxAy < minBy;
-      
-          const result = !( aLeftOfB || aRightOfB || aAboveB || aBelowB )
-          
-          const dp=1;
-
-          return result;
-        }
 
         const b = state.ui.selectionBounds;
 

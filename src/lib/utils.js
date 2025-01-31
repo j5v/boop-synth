@@ -47,6 +47,22 @@ const pxAsRem = pix => {
   return pix / (parseFloat(getComputedStyle(document.documentElement).fontSize) || 16);
 }
 
+
+const rectanglesIntersect = ( 
+  minAx, minAy, maxAx, maxAy,
+  minBx, minBy, maxBx, maxBy
+) => {
+
+ const aLeftOfB = maxAx < minBx;
+ const aRightOfB = minAx > maxBx;
+ const aAboveB = minAy > maxBy;
+ const aBelowB = maxAy < minBy;
+
+ const result = !( aLeftOfB || aRightOfB || aAboveB || aBelowB )
+ 
+ return result;
+}
+
 function swapItemsInArray(items, firstIndex, secondIndex) {
   // source: https://stackoverflow.com/questions/41127548/how-do-i-swap-array-elements-in-an-immutable-fashion-within-a-redux-reducer
   const results = items.slice();
@@ -98,6 +114,7 @@ export {
   signalToDecibelsFS,
   DecibelsFSToSignal,
 
+  rectanglesIntersect,
   swapItemsInArray,
   joinItems,
   cleanNodeLinks,
