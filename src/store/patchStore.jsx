@@ -353,7 +353,7 @@ const usePatchStore = create(
             ...node,
             inputs: node.inputs.map(input => ({
               ...input,
-              exposed: input.link && input.link != {}
+              exposed: input.link && input.link.synthNodeId
             }))
           }))
         }
