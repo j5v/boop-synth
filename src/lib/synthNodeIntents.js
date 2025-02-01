@@ -83,6 +83,10 @@ const synthNodeTerminalIntents = { // draft only
     units: '',
     classCSS: '',
     description: '',
+  },  
+  SAMPLE_RESOLUTION: {
+    id: 13,
+    name: 'Sample resolution',
   }, 
 }
 

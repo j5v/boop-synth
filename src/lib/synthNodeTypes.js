@@ -1,5 +1,6 @@
 import { synthNodeTerminalIntents } from '../lib/synthNodeIntents.js'
 import { sourceTypeGroups } from '../lib/sourceTypeGroups.js'
+import { sampleResolutions } from '../lib/sampleResolutions.js'
 import { getItemById } from '../lib/utils.js'
 import { synthNodeVisualizationTypes } from './synthNodeVisualizationTypes.js'
 
@@ -198,6 +199,17 @@ const synthNodeTypes = {
         intentId: synthNodeTerminalIntents.CHECK_BOOL.id,
         isParam: true,
         defaultValue: true,
+      },
+      {
+        id: 4,
+        order: 3,
+        displayName: 'Resolution',
+        description: 'The format for each sample',
+        intentId: synthNodeTerminalIntents.SAMPLE_RESOLUTION.id,
+        isParam: true,
+        isPlaceholder: true,
+        onlyShowIf: { inputId: 10, hasValue: true },
+        defaultValue: sampleResolutions.BIT_16.id,
       },
     ],
     outputs: [],

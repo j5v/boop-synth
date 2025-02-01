@@ -7,6 +7,7 @@ import { getSynthNodeTerminalIntentsById, synthNodeTerminalIntents } from '../..
 import { sourceTypeGroups } from '../../lib/sourceTypeGroups.js'
 import { sourceFunctions } from '../../lib/sourceFunctions.js'
 import { waveshaperFunctions } from '../../lib/waveshaperFunctions.js'
+import { sampleResolutions } from '../../lib/sampleResolutions.js';
 
 function FormPatchNodeInputItem(props) {
 
@@ -148,6 +149,29 @@ function FormPatchNodeInputItem(props) {
       {options}
     </select>
 
+  } else if (intent == synthNodeTerminalIntents.SAMPLE_RESOLUTION) { 
+
+    const options = Object.entries(sampleResolutions).map(stg => (
+      <option
+        key={`stg-${stg[1].id}`}
+        value={stg[1].id}
+        disabled={stg[1].isPlaceholder}
+      >{stg[1].name}</option>
+    ));
+
+    inputField = <select
+      defaultValue={
+        (inputItem.userValue !== undefined) ? inputItem.userValue :
+        (inputItem.value !== undefined) ? inputItem.value :
+        nodeTypeInput.defaultValue
+      }
+      className="select"
+      onChange={(e) => handleChangeValue(e)}
+      title={hint}
+    >
+      {options}
+    </select>
+
   } else { // Default to a text input.
    
     inputField = <input
@@ -162,6 +186,7 @@ function FormPatchNodeInputItem(props) {
     ></input>
 
   }
+
 
   const exposureField = (intent.modulatable && !nodeTypeInput.isParam) ? (
     <input
