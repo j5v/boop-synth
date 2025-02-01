@@ -141,6 +141,7 @@ function cleanStateForExport(workingState) {
   state.nodes.forEach(node => {
     delete node.highlighted;
     delete node.selected;
+    if (node.bypassed == false) delete node.bypassed;
 
     // Remove excess decimal places (units: rem; pixel at 100% is near 0.06)
     node.x = Number(node.x.toFixed(4));

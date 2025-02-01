@@ -23,12 +23,8 @@ function FormPatchNodeInputItem(props) {
   const { name, description } = intent;
   const hint = joinItems([name, description], ': ');
 
-  // bypass
   const isInputBypassed = (synthNode.bypassed && nodeType.inputIdForBypass !== undefined && nodeType.inputIdForBypass != inputItem.id);
 
-  // const bypassIcon = (isInputBypassed && !nodeTypeInput.isParam) ?
-  //   <>❌ </> :
-  //   <></>
 
   // event handlers
 

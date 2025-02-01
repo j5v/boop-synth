@@ -36,7 +36,6 @@ function SynthNodeLinks() {
             y: node.y + py
           };
 
-
           // If appropriate, draw a link from the bypass input to the output.
           const bypassLink = (node.bypassed && synthNodeType.inputIdForBypass == i.id) ?
           // Assume node output is the first output. This might be wrong in future.
@@ -78,7 +77,7 @@ function SynthNodeLinks() {
                 <SynthNodeLink
                   k={key}
                   outputPos={outputPos}
-                  inputPos={inputPos}
+                  inputPos={i.exposed ? inputPos : { x: inputPos.x, y: node.y + nodeVOffset }}
                   isFeedback={isFeedback}
                   outputBox={{ x: outputNode.x, y: outputNode.y, w: outputNode.w, h: outputNode.h }}
                   inputBox={{ x: node.x, y: node.y, w: node.w, h: node.h}}
