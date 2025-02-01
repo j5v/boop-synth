@@ -8,13 +8,18 @@ const sampleResolutions = {
     id: 2,
     name: '16-bit',
   },  
-  BIT_32: {
+  BIT_24: {
     id: 3,
+    name: '24-bit',
+    isPlaceholder: true,
+  },  
+  BIT_32: {
+    id: 4,
     name: '32-bit',
     isPlaceholder: true,
   },
   FLOAT_32: {
-    id: 5,
+    id: 6,
     name: '32-bit float',
     isPlaceholder: true,
   },  

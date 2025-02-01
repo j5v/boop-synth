@@ -87,90 +87,16 @@ function FormPatchNodeInputItem(props) {
     ></input>
 
   } else if (intent == synthNodeTerminalIntents.SOURCE_TYPE_GROUP) { 
-
-    const options = Object.entries(sourceTypeGroups).map(stg => (
-      <option key={`stg-${stg[1].id}`} value={stg[1].id} disabled={stg[1].isPlaceholder}>{stg[1].name}</option>
-    ));
-
-    inputField = <select
-      defaultValue={
-        (inputItem.userValue !== undefined) ? inputItem.userValue :
-        (inputItem.value !== undefined) ? inputItem.value :
-        nodeTypeInput.defaultValue
-      }
-      className="select"
-      onChange={(e) => handleChangeValue(e)}
-      title={hint}
-    >
-      {options}
-    </select>
+    inputField = dropdown(sourceTypeGroups, hint, handleChangeValue);
 
   } else if (intent == synthNodeTerminalIntents.SOURCE_TYPE_FUNCTION) { 
-
-    const options = Object.entries(sourceFunctions).map(stg => (
-      <option
-        key={`stg-${stg[1].id}`}
-        value={stg[1].id} disabled={stg[1].isPlaceholder}
-      >{stg[1].name}</option>
-    ));
-
-    inputField = <select
-      defaultValue={
-        (inputItem.userValue !== undefined) ? inputItem.userValue :
-        (inputItem.value !== undefined) ? inputItem.value :
-        nodeTypeInput.defaultValue
-      }
-      className="select"
-      onChange={(e) => handleChangeValue(e)}
-      title={hint}
-    >
-      {options}
-    </select>
+    inputField = dropdown(sourceFunctions, hint, handleChangeValue);
 
   } else if (intent == synthNodeTerminalIntents.WAVESHAPER_FUNCTION) { 
-
-    const options = Object.entries(waveshaperFunctions).map(stg => (
-      <option
-        key={`stg-${stg[1].id}`}
-        value={stg[1].id}
-      >{stg[1].name}{stg[1].isPlaceholder ? ' [WIP]' : ''}</option>
-    ));
-
-    inputField = <select
-      defaultValue={
-        (inputItem.userValue !== undefined) ? inputItem.userValue :
-        (inputItem.value !== undefined) ? inputItem.value :
-        nodeTypeInput.defaultValue
-      }
-      className="select"
-      onChange={(e) => handleChangeValue(e)}
-      title={hint}
-    >
-      {options}
-    </select>
+    inputField = dropdown(waveshaperFunctions, hint, handleChangeValue);
 
   } else if (intent == synthNodeTerminalIntents.SAMPLE_RESOLUTION) { 
-
-    const options = Object.entries(sampleResolutions).map(stg => (
-      <option
-        key={`stg-${stg[1].id}`}
-        value={stg[1].id}
-        disabled={stg[1].isPlaceholder}
-      >{stg[1].name}</option>
-    ));
-
-    inputField = <select
-      defaultValue={
-        (inputItem.userValue !== undefined) ? inputItem.userValue :
-        (inputItem.value !== undefined) ? inputItem.value :
-        nodeTypeInput.defaultValue
-      }
-      className="select"
-      onChange={(e) => handleChangeValue(e)}
-      title={hint}
-    >
-      {options}
-    </select>
+    inputField = dropdown(sampleResolutions, hint, handleChangeValue);
 
   } else { // Default to a text input.
    
@@ -186,7 +112,6 @@ function FormPatchNodeInputItem(props) {
     ></input>
 
   }
-
 
   const exposureField = (intent.modulatable && !nodeTypeInput.isParam) ? (
     <input
@@ -221,8 +146,34 @@ function FormPatchNodeInputItem(props) {
       </div>
       {trueValue}
     </>
-  )
-  
+  );
+
+  function dropdown(listObject, hint, onChange) { // TODO: component
+    const options = Object.keys(listObject).map((keyName, keyIndex) => (
+      <option
+        key={`stg-${listObject[keyName].id}`}
+        value={listObject[keyName].id}
+        disabled={listObject[keyName].isPlaceholder}
+      >{listObject[keyName].name}</option>
+    ));
+
+    return (
+      <select
+        defaultValue={
+          (inputItem.userValue !== undefined) ? inputItem.userValue :
+          (inputItem.value !== undefined) ? inputItem.value :
+          nodeTypeInput.defaultValue
+        }
+        className="select"
+        onChange={(e) => onChange(e)}
+        title={hint}
+      >
+        {options}
+      </select>
+    );
+  }
+
+
 }
 
 export default FormPatchNodeInputItem
