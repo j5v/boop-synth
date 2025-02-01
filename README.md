@@ -1,4 +1,4 @@
-Boop is an offline sample generator that runs in a web browser. It uses the core design of my [https://github.com/j5v/FMC-Amiga](FMC Amiga) synth.
+Boop is an offline sample generator that runs in a web browser. It uses the core design of my [FMC Amiga](https://github.com/j5v/FMC-Amiga) synth.
 
 [Boop homepage](https://johnvalentine.co.uk/?art=boop)
 
