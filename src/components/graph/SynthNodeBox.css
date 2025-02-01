@@ -18,6 +18,7 @@
 
 .SynthNodeBox.bypassed {
   stroke-dasharray: 4 4;
+  opacity: 0.8;
 }
 
 

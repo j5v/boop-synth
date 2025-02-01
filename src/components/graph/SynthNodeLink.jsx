@@ -2,6 +2,7 @@ import './SynthNodeLink.css'
 import { remAsPx } from '../../lib/utils.js'
 
 function SynthNodeLink({
+  k,
   outputPos, inputPos,
   isFeedback,
   outputIndex, inputIndex,
@@ -128,7 +129,7 @@ function SynthNodeLink({
       <text x={remAsPx(midpointPos.x)} y={remAsPx(midpointPos.y + 1)} fill="white">Southern: {outIsSouthern ? 'Y':'N'}</text>
       <text x={remAsPx(midpointPos.x)} y={remAsPx(midpointPos.y + 2)} fill="white">Northern: {outIsNorthern ? 'Y':'N'}</text> */}
       {/* <text x={remAsPx(outputPos.x + 1)} y={remAsPx(outputPos.y + 0.3)} fill="white">Route: {routeDesc}</text> */}
-      </>
+    </>
   );
 
   function lerp(a, b, f = 0.5) { return a * f + b * (1 - f) };

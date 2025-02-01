@@ -568,6 +568,15 @@ const usePatchStore = create(
         }),
       })),
 
+      setBypassNode: (synthNodeId, value) => set((state) => ({
+        ...state,
+        nodes: state.nodes.map((node) => {
+          return (
+            node.id == synthNodeId ? { ...node, bypassed: value } : { ...node }
+          );
+        }),
+      })),
+
       
 
       updateNode: (nodeId, obj) => set((state) => ({

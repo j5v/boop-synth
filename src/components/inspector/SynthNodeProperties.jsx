@@ -6,6 +6,7 @@ import { getNodeTypeById, synthNodeTypes } from '../../lib/synthNodeTypes.js'
 import React from 'react' // not needed to build; satisfies a code checker
 import Header from '../layout/Header.jsx'
 import FormPatchNodeInputList from './FormPatchNodeInputList.jsx'
+import FormPatchNodeBypass from './FormPatchNodeBypass.jsx'
 import Visualizations from './Visualizations.jsx'
 import ParameterGroup from '../generic/ParameterGroup.jsx'
 
@@ -57,6 +58,12 @@ function SynthNodeProperties(props) {
           {nodeTypeDescription}
         </div>
       </Header>
+
+      <ParameterGroup>
+        <div className="parameters">
+          <FormPatchNodeBypass synthNode={synthNode}/>
+        </div>
+      </ParameterGroup>
 
       {hasConfiguration ? (
       <ParameterGroup>

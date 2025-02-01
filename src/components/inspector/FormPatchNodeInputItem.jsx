@@ -26,13 +26,9 @@ function FormPatchNodeInputItem(props) {
   // bypass
   const isInputBypassed = (synthNode.bypassed && nodeType.inputIdForBypass !== undefined && nodeType.inputIdForBypass != inputItem.id);
 
-  // console.log({ isInputBypassed, inputId: inputItem.id });
-
-  const bypassIcon = (isInputBypassed && !nodeTypeInput.isParam) ?
-    <>❌ </> :
-    <></>
-
-
+  // const bypassIcon = (isInputBypassed && !nodeTypeInput.isParam) ?
+  //   <>❌ </> :
+  //   <></>
 
   // event handlers
 
@@ -137,7 +133,7 @@ function FormPatchNodeInputItem(props) {
 
 
   const rowClassNames = ['form-input-row'];
-  if (nodeTypeInput.isPlaceholder) rowClassNames.push('placeholder');
+  if (nodeTypeInput.isPlaceholder || isInputBypassed) rowClassNames.push('placeholder');
 
   const effectiveStateValue = (inputItem.value !== undefined && inputItem.value !== null) ?
     inputItem.value :
@@ -155,7 +151,7 @@ function FormPatchNodeInputItem(props) {
     <>
       <div className={rowClassNames.join(' ')} key={inputItem.id} role='listitem'>
         <div className="exposure">{exposureField}</div>
-        <div className="label" title={nodeTypeInput.description}>{bypassIcon}{nodeTypeInput.displayName}</div>
+        <div className="label" title={nodeTypeInput.description}>{nodeTypeInput.displayName}</div>
         {inputField}
       </div>
       {trueValue}
