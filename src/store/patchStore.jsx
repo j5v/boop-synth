@@ -512,15 +512,12 @@ const usePatchStore = create(
         ...state,
         nodes: state.nodes.map((node) => {
           const newSelectionState = !node.selected;
-          if (node.id === nodeId) 
-            console.log(newSelectionState);
-
           return (
             node.id === nodeId ? { ...node, selected: newSelectionState } : { ...node }
           );
         }),
       })),
-
+      
       selectAllNodes: (nodeId) => set((state) => ({
         ...state,
         nodes: state.nodes.map((node) => ({ ...node, selected: true }))
@@ -560,6 +557,15 @@ const usePatchStore = create(
             ? { ...node, highlighted: true }
             : { ...node, highlighted: false }
         ),
+      })),
+
+      toggleBypassSelectedNodes: () => set((state) => ({
+        ...state,
+        nodes: state.nodes.map((node) => {
+          return (
+            node.selected ? { ...node, bypassed: !node.bypassed } : { ...node }
+          );
+        }),
       })),
 
       

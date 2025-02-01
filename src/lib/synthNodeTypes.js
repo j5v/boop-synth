@@ -20,6 +20,7 @@ const synthNodeTypes = {
     name: 'Oscillator',
     nameShort: '~',
     description: 'Generates from a wave source, with optional FM (frequency modulation) and PM (phase modulation)',
+    inputIdForBypass: 5,
     inputs: [
       {
         id: 1,
@@ -120,12 +121,14 @@ const synthNodeTypes = {
   },
   NOISE: {
     id: 8,
-    name: 'Noise',
+    name: 'Noise S/H',
     nameShort: 'Nse',
     description: 'A random number, changing at S/H rate',
+    inputIdForBypass: 4,
     inputs: [
       {
         id: 1,
+        order: 2,
         displayName: 'S/H rate',
         description: 'Double the highest frequency it can generate.',
         intentId: synthNodeTerminalIntents.FREQUENCY_ABSOLUTE.id,
@@ -134,6 +137,7 @@ const synthNodeTypes = {
       },
       {
         id: 2,
+        order: 3,
         displayName: 'Min signal',
         description: 'Minimum value',
         intentId: synthNodeTerminalIntents.LEVEL.id,
@@ -142,11 +146,21 @@ const synthNodeTypes = {
       },
       {
         id: 3,
+        order: 4,
         displayName: 'Max signal',
         description: 'Maximum value',
         intentId: synthNodeTerminalIntents.LEVEL.id,
         exposed: false,
         defaultValue: 1,
+      },
+      {
+        id: 4,
+        order: 1,
+        displayName: 'Pre-mix',
+        description: 'Signal to add, before sample-and-hold',
+        intentId: synthNodeTerminalIntents.LEVEL.id,
+        exposed: false,
+        defaultValue: 0,
       },
     ],
     outputs: [
@@ -222,6 +236,7 @@ const synthNodeTypes = {
     name: 'Shaper Map',
     nameShort: 'Map',
     description: 'A waveshaper that changes the range of a signal, and its shape.',
+    inputIdForBypass: 1,
     inputs: [
       {
         id: 1,
@@ -324,6 +339,7 @@ const synthNodeTypes = {
     name: 'Multiply/Ring',
     nameShort: '×',
     description: 'Multiplies all signals, like digital ring modulation',
+    inputIdForBypass: 1,
     inputs: [
       {
         id: 1,
@@ -384,6 +400,7 @@ const synthNodeTypes = {
     name: 'Add/Mix',
     nameShort: '+',
     description: 'Adds all signals',
+    inputIdForBypass: 1,
     inputs: [
       {
         id: 1,
@@ -443,6 +460,7 @@ const synthNodeTypes = {
     name: 'Delay',
     nameShort: 'Dly',
     description: 'Stores a signal, and outputs it after a delay',
+    inputIdForBypass: 1,
     inputs: [
       {
         id: 1,
@@ -556,6 +574,7 @@ const synthNodeTypes = {
     name: 'Splice',
     nameShort: 'Spl',
     description: 'Switches between Source 1 and Source 2, using a switch point at Switch phase (-1 to 1), every cycle at Pitch',
+    inputIdForBypass: 2,
     inputs: [
       {
         id: 1,
@@ -606,6 +625,7 @@ const synthNodeTypes = {
     name: 'Number',
     nameShort: '#',
     description: 'A constant number. For most inputs on other nodes, you can enter a number instead of linking. Use this Number node if you want to use the same number more than one input',
+    inputIdForBypass: 1,
     inputs: [
       {
         id: 1,
@@ -631,6 +651,7 @@ const synthNodeTypes = {
     id: 7,
     name: 'Envelope: analog',
     description: 'An analog-style envelope, using \'Sustain time\' in Performance properties',
+    inputIdForBypass: 1,
     inputs: [
       {
         id: 1,
@@ -723,6 +744,7 @@ const synthNodeTypes = {
     nameShort: 'MSEG',
     isPlaceholder: true,
     description: 'Multi-segment envelope. Use to precisely control a signal over time',
+    inputIdForBypass: 1,
     inputs: [
       {
         id: 1,

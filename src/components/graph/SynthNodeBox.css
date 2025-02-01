@@ -16,6 +16,10 @@
   stroke: hsl(0, 0%, 80%);
 }
 
+.SynthNodeBox.bypassed {
+  stroke-dasharray: 4 4;
+}
+
 
 @media (prefers-color-scheme: light) {
 

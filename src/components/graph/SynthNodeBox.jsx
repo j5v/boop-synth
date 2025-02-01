@@ -51,6 +51,7 @@ function SynthNodeBox(props) {
   const classNames = ['SynthNodeBox'];
   if (synthNode.selected) classNames.push('selected');
   if (synthNode.highlighted) classNames.push('highlighted');
+  if (synthNode.bypassed) classNames.push('bypassed');
 
   return (
     <rect

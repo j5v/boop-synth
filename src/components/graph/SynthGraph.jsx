@@ -180,6 +180,7 @@ function SynthGraph() {
 
   const removeSelectedNodes = usePatchStore((state) => state.removeSelectedNodes)
   const duplicateSelectedNodes = usePatchStore((state) => state.duplicateSelectedNodes)
+  const toggleBypassSelectedNodes = usePatchStore((state) => state.toggleBypassSelectedNodes)
   const selectAllNodes = usePatchStore((state) => state.selectAllNodes)
   const reset = usePatchStore((state) => state.reset)
   const setViewScale = usePatchStore((state) => state.setViewScale)
@@ -202,6 +203,10 @@ function SynthGraph() {
 
     } else if (k == 'a' && event.ctrlKey == true) {
       selectAllNodes();
+      event.preventDefault();
+
+    } else if (k == 'b') {
+      toggleBypassSelectedNodes();
       event.preventDefault();
 
     } else if (k == 'insert' || k == 'a') {
