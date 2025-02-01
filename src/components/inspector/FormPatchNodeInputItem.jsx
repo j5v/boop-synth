@@ -21,7 +21,20 @@ function FormPatchNodeInputItem(props) {
 
   const intent = getSynthNodeTerminalIntentsById(nodeTypeInput.intentId);
   const { name, description } = intent;
-  const hint = joinItems([name, description], ': ');;
+  const hint = joinItems([name, description], ': ');
+
+  // bypass
+  const isInputBypassed = (synthNode.bypassed && nodeType.inputIdForBypass !== undefined && nodeType.inputIdForBypass != inputItem.id);
+
+  // console.log({ isInputBypassed, inputId: inputItem.id });
+
+  const bypassIcon = (isInputBypassed && !nodeTypeInput.isParam) ?
+    <>❌ </> :
+    <></>
+
+
+
+  // event handlers
 
   const handleChangeValue = (event) => {
     setInputValue(inputItem, event.target.value, nodeTypeInput);
@@ -122,6 +135,7 @@ function FormPatchNodeInputItem(props) {
     ></input>
   ) : <></>
 
+
   const rowClassNames = ['form-input-row'];
   if (nodeTypeInput.isPlaceholder) rowClassNames.push('placeholder');
 
@@ -141,7 +155,7 @@ function FormPatchNodeInputItem(props) {
     <>
       <div className={rowClassNames.join(' ')} key={inputItem.id} role='listitem'>
         <div className="exposure">{exposureField}</div>
-        <div className="label" title={nodeTypeInput.description}>{nodeTypeInput.displayName}</div>
+        <div className="label" title={nodeTypeInput.description}>{bypassIcon}{nodeTypeInput.displayName}</div>
         {inputField}
       </div>
       {trueValue}

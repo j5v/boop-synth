@@ -45,7 +45,9 @@ const generate = function (params) {
           const input = node.inputs.find(i => i.id == nt.inputIdForBypass);
           value = valueOfInput(input, node, nodes);
         }
-        node.outputs[0].signal = value;
+        
+        if (nodeTypeId !== synthNodeTypes.OUTPUT.id)
+          node.outputs[0].signal = value;
 
       } else {
 
