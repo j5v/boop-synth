@@ -15,8 +15,8 @@ const PerformancePropertiesForm = memo(function PerformancePropertiesForm(props)
         <>{(perf.sampleRate || defaultOutputSpec.sampleRate)}</>
       </div>
       <div className="form-input-row">
-        <div className="label">Channels</div>
-        <>{(perf.channels || defaultOutputSpec.channels)}</>
+        <div className="label">Oversample<span className="units">, factor</span></div>
+        <>{(perf.oversample || defaultOutputSpec.oversample)}</>
       </div>
       <div className="form-input-row">
         <div className="label">Duration<span className="units">, s</span></div>

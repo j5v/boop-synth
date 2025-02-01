@@ -14,6 +14,7 @@ const BITDEPTH_16 = 0;
 const defaultOutputSpec = {
   // TODO: refactor these into Output node and Performance parmaters
   sampleRate: 44100, // sps
+  oversample: 1.0, // multiplier
   duration: 0.5, // seconds
   channels: 1,
   filenameRoot: `${appInfo.appName}`,
@@ -44,6 +45,11 @@ const defaultPatchNodes = () => {
   return nodes; 
 }
 
+const defaultView = {
+  scale: 1,
+  panX: 0, // screen coords (logical pixels)
+  panY: 0 // screen coords (logical pixels)
+};
 
 // Query functons
   
@@ -243,6 +249,7 @@ const newSynthNode = (nodes = [], nodeTypeId, overrides = {}) => {
 export {
   defaultOutputSpec,
   defaultPatchNodes,
+  defaultView,
 
   getNodeDisplayTitle,
   valueOfInput,

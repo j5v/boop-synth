@@ -5,10 +5,11 @@ import {
   assignLink,
   newSynthNode,
   defaultOutputSpec,
-  defaultPatchNodes
+  defaultPatchNodes,
+  defaultView,
 } from '../lib/synthGraphUtils.js'
 
-import { synthNodeTerminalIntents } from '../lib/synthNodeIntents';
+import { parseUserInput } from '../lib/synthNodeIntents';
 import { getNodeTypeById } from '../lib/synthNodeTypes';
 
 import {
@@ -19,11 +20,7 @@ import {
   pxAsRem
 } from "../lib/utils.js";
 
-const defaultView = {
-  scale: 1,
-  panX: 0, // screen coords (logical pixels)
-  panY: 0 // screen coords (logical pixels)
-};
+
 
 const usePatchStore = create(
   // @ts-ignore
@@ -31,15 +28,14 @@ const usePatchStore = create(
     (set, get) => ({
       nodes: defaultPatchNodes(),
 
-      /* TODO: Move { perf, prefs, ui } out into separate stores,
-         if they're not part of a patch
-      */
       perf: {
         ...defaultOutputSpec
       },
+
       prefs: {
         hideNodeDescription: false, // in instpector panel
       },
+
       ui: {
         draggingLinkFromInput: undefined,
         draggingLinkFromOutput: undefined,
@@ -187,90 +183,7 @@ const usePatchStore = create(
 
         targetInput.userValue = value; // re-displayed in form input, for editing again
 
-        // Interpret input
-        // TODO: move into parse function if DRY needed
-
-        let writeValue = value !== undefined ? value : 0; // best guess so far; improve below with parsing
-
-        const trimmed = value.toString().trim().toLowerCase();
-
-        if (nodeTypeInput.intentId == synthNodeTerminalIntents.PITCH_OFFSET_OCTAVES.id) {
-          if (trimmed.slice(-1) == 'c') { // cents
-            writeValue = parseFloat(trimmed.slice(0,-1)) / 1200;
-
-          } else if (trimmed.slice(-1) == 'd') { // ET12 notes
-            writeValue = parseFloat(trimmed.slice(0,-1)) / 12;
-
-          } else if (trimmed.indexOf('/') > -1) { // fraction of numbers (slash divide)
-            const parts = trimmed.split('/').map(n => parseFloat(n));
-            if (parts[1] !== 0) writeValue = Math.log(parts[0] / parts[1]) / Math.log(2);
-
-          } else if (trimmed.indexOf(':') > -1) { // fraction of numbers (colon ratio)
-            const parts = trimmed.split(':').map(n => parseFloat(n));
-            if (parts[1] !== 0) writeValue = Math.log(parts[0] / parts[1]) / Math.log(2);
-          } else {
-            writeValue = parseFloat(trimmed);
-          }
-
-        } else if (nodeTypeInput.intentId == synthNodeTerminalIntents.LEVEL.id) {
-          if (trimmed.slice(-2) == 'db') { // dB
-            const dB = parseFloat(trimmed.slice(0,-2));
-            writeValue = Math.pow(10, dB * 0.1);
-
-          } else if (trimmed.indexOf('/') > -1) { // fraction of numbers (slash divide)
-            const parts = trimmed.split('/').map(n => parseFloat(n));
-            if (parts[1] !== 0) writeValue = parts[0] / parts[1];
-
-          } else if (trimmed.indexOf(':') > -1) { // fraction of numbers (colon ratio)
-            const parts = trimmed.split(':').map(n => parseFloat(n));
-            if (parts[1] !== 0) writeValue = parts[0] / parts[1];
-          } else {
-            writeValue = parseFloat(trimmed);
-          }
-
-        } else if (nodeTypeInput.intentId == synthNodeTerminalIntents.FREQUENCY_ABSOLUTE.id) {
-          if (trimmed.slice(-2) == 'ms') { // ms
-            const ms = parseFloat(trimmed.slice(0,-2));
-            writeValue = (ms == 0) ? ms : 1000 / ms;
-
-          } else if (trimmed.slice(-2) == 'ns') { // ms
-            const ns = parseFloat(trimmed.slice(0,-2));
-            writeValue = (ns == 0) ? ns : 1000000 / ns;
-
-          } else if (trimmed.slice(-1) == 's') { // s
-            const s = parseFloat(trimmed.slice(0,-1));
-            writeValue = (s == 0) ? s : 1 / s;
-
-          } else if (trimmed.slice(-3) == 'bpm') { // s
-            const bpm = parseFloat(trimmed.slice(0,-3));
-            writeValue = bpm / 60;
-
-          } else {
-            const parsed = /([a-g])([#b]?)(\d*)([@]?)([0-9.]*)?/.exec(trimmed);
-
-            if (parsed) {
-              const [ignore, letter, accidental, octave, ignore2, freqOfA] = parsed;
-              if (letter) { // minimum spec
-                const semitones = [0, 2, 4, 5, 7, 9, 11]['cdefgab'.indexOf(letter)];
-                const accidentalInc = accidental == '#' ? 1 : (accidental == 'b' ? -1 : 0);
-                // @ts-ignore
-                writeValue = Math.pow(2, (octave || 4) - 4 + (accidentalInc + semitones - 9) / 12 ) * (parseFloat(freqOfA || '440'));
-              }
-            } else {
-              writeValue = parseFloat(trimmed);
-            }
-          }
-
-        } else if (nodeTypeInput.intentId == synthNodeTerminalIntents.CHECK_BOOL.id) {
-          writeValue = value; // Boolean
-
-        } else if (nodeTypeInput.intentId == synthNodeTerminalIntents.SOURCE_TYPE_GROUP.id) {
-          writeValue = parseInt(value, 10);
-
-        } else if (nodeTypeInput.intentId == synthNodeTerminalIntents.SOURCE_TYPE_FUNCTION.id) {
-          writeValue = parseInt(value, 10);
-
-        }
+        const writeValue = parseUserInput({ intentId: nodeTypeInput.intentId, value });
 
         return {
           ...state,
