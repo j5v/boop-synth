@@ -4,7 +4,7 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 import {
   assignLink,
   newSynthNode,
-  defaultOutputSpec,
+  defaultPerf,
   defaultPatchNodes,
   defaultView,
 } from '../lib/synthGraphUtils.js'
@@ -21,7 +21,6 @@ import {
 } from "../lib/utils.js";
 
 
-
 const usePatchStore = create(
   // @ts-ignore
   persist( // Used to maintain current state in localStorage
@@ -29,7 +28,7 @@ const usePatchStore = create(
       nodes: defaultPatchNodes(),
 
       perf: {
-        ...defaultOutputSpec
+        ...defaultPerf
       },
 
       prefs: {
@@ -42,6 +41,19 @@ const usePatchStore = create(
         view: structuredClone(defaultView),
         visualizationState: [],
       },
+
+      
+      // Perf
+      setPerf: (key, value) => set((state) => {
+
+        const newPerf = structuredClone(state.perf);
+
+        newPerf[key] = value.toString().trim().toLowerCase();
+        return ({
+          ...state,
+          perf: newPerf,
+        })
+      }),
 
 
       // UI Prefs
@@ -407,7 +419,7 @@ const usePatchStore = create(
       reset: () => set((state) => ({
         ...state,
         nodes: defaultPatchNodes(),
-        perf: { ...defaultOutputSpec },
+        perf: { ...defaultPerf },
         ui: {
           draggingLinkFromInput: undefined,
         },

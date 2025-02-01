@@ -11,7 +11,7 @@ import { synthNodeTypes, getNodeTypeById } from '../lib/synthNodeTypes.js'
 
 const BITDEPTH_16 = 0;
 
-const defaultOutputSpec = {
+const defaultPerf = {
   // TODO: refactor these into Output node and Performance parmaters
   sampleRate: 44100, // sps
   oversample: 1.0, // multiplier
@@ -247,7 +247,7 @@ const newSynthNode = (nodes = [], nodeTypeId, overrides = {}) => {
 }
 
 export {
-  defaultOutputSpec,
+  defaultPerf,
   defaultPatchNodes,
   defaultView,
 
