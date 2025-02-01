@@ -44,3 +44,8 @@
   width: 4rem;
   text-align: right;
 }
+
+.form-input-row input.string {
+  flex-basis: 4rem;
+  width: 7rem;
+}
