@@ -30,7 +30,7 @@ These are the major design and coding directions, at various stages of implement
 
 2. Modularize node types and parameter intents.
     - `src/nodeTypes` is intended to contain a module per node type, each module publishing a function to initialize, process a step, and clean up. The aim is to help contributors code their own node type processor modules, isolating concerns by having a standard interface and a manifest of node types. Dynamic runtime scanning is not a priority.
-    - Input intents mean we design an input component once, rather than re-implementing it for every instance. Each input intent lets the user edit a parmeter differently, or parse formatted numbers. Additionally, I expect to extend the 'signal' to different types, like parallel streams, or non-PCM data, which will affect node interfaces.
+    - Input intents mean we design an input component once, rather than re-implementing it for every instance. Each input intent lets the user edit a parameter differently, or parse formatted numbers. Additionally, I expect to extend the 'signal' to different types, like parallel streams, or non-PCM data, which will affect node interfaces.
 
 3. It's unlikely that this web browser execution environment will be suitable for real-time synthesis and performance, so I haven't deliberately optimized for performance. For that, I expect a conventional audio plugin (like CLAP, VST, AU) is needed.
 

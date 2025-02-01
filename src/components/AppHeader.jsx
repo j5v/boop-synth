@@ -132,7 +132,7 @@ function AppHeader() {
         title="Add node"
         defaultValue=""
       >
-        <option value="" disabled hidden>&nbsp;Add node</option>              
+        <option value="" disabled hidden>Add node</option>              
         {Object.keys(synthNodeTypes).map( (keyName, keyIndex) =>
           <option
             key={synthNodeTypes[keyName].id}
@@ -163,7 +163,7 @@ function AppHeader() {
         title="Actions"
         defaultValue=""
       >
-        <option value="" disabled hidden>&nbsp; Actions</option>              
+        <option value="" disabled hidden>Actions</option>              
         <option value="zoom all" title="Zoom to view all nodes. [Ctrl]+[Alt]+[0]"> Zoom all</option>
         <option value="select all" title="Select all nodes [Ctrl]+[A]"> Select all</option>
         <option value="reset" title="Reset the patch [R]"> Reset</option>

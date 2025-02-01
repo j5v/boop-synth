@@ -51,6 +51,7 @@ select {
   height: 2.66rem;
   background-color: #1a1a1a;
   border-radius: 8px;
+  padding: 0rem 0rem 0rem 0.7rem;
   border: 1px solid hsl(0, 0%, 30%);
 }
 select:hover {
