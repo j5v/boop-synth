@@ -28,7 +28,7 @@ const PerformancePropertiesForm = memo(function PerformancePropertiesForm(props)
           title="Base sample rate. Ensure this rate is supported by your devices."
         ></input>
       </div>
-      <div className="form-input-row">
+      <div className="form-input-row placeholder">
         <div className="label">Oversample<span className="units">, factor</span></div>
         <input
           className={`number`}
