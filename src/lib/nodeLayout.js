@@ -9,6 +9,7 @@ const nodeLayout = {
   dragTop : 0.8,
   dragBottom : 0.8,
   displayNameMaxLength: 15,
+  maxViewScale: 5,
 };
 
 export { nodeLayout };

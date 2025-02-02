@@ -11,6 +11,7 @@ import {
 
 import { parseUserInput } from '../lib/synthNodeIntents';
 import { getNodeTypeById } from '../lib/synthNodeTypes';
+import { nodeLayout } from '../lib/nodeLayout';
 
 import {
   rectanglesIntersect,
@@ -125,7 +126,9 @@ const usePatchStore = create(
 
       setViewScale: (newScale, mousePos) => set((state) => {
         const view = state.ui.view || defaultView;
-        const scaleFactor = (newScale - view.scale) / view.scale;
+        const clampedScale = Math.min(nodeLayout.maxViewScale, newScale);
+        const scaleFactor = (clampedScale - view.scale) / view.scale;
+
         
         return {
           ...state,
@@ -133,7 +136,7 @@ const usePatchStore = create(
             ...state.ui,
             view: {
               ...view,
-              scale: newScale,
+              scale: clampedScale,
               panX: view.panX - ( mousePos.x - view.panX ) * scaleFactor,
               panY: view.panY - ( mousePos.y - view.panY ) * scaleFactor,
             }
@@ -170,11 +173,12 @@ const usePatchStore = create(
           vw / remAsPx(bounds.right - bounds.left),
           vh / remAsPx(bounds.bottom - bounds.top)
         );
+        const clampedScale = Math.min(nodeLayout.maxViewScale, scale);
 
         const newView = {
-          panX: scale * -remAsPx(bounds.left),
-          panY: scale * -remAsPx(bounds.top),
-          scale
+          panX: clampedScale * -remAsPx(bounds.left),
+          panY: clampedScale * -remAsPx(bounds.top),
+          scale: clampedScale
         }
 
         return {
