@@ -3,6 +3,7 @@ import usePatchStore from '../../store/patchStore.jsx'
 import { getNodeDisplayTitle } from '../../lib/synthGraphUtils.js'
 import IconMoveUp from '../generic/IconMoveUp.jsx';
 import IconMoveDown from '../generic/IconMoveDown.jsx';
+import { nodeLayout } from '../../lib/nodeLayout.js'
 
 function SynthGraphNodeList() {
 
@@ -18,7 +19,9 @@ function SynthGraphNodeList() {
     <div className='SynthGraphNodeList' role='list'>
       {nodes.map(synthNode => {
         const displayName = getNodeDisplayTitle(synthNode);
-
+        const clippedDisplayName = displayName.slice(0, nodeLayout.displayNameMaxLength);
+        const displayNameEllipsis = displayName.length > nodeLayout.displayNameMaxLength ? '…' : '';
+        
         const handleClick = (event) => {
           event.stopPropagation();
           selectThisNode(synthNode.id);
@@ -64,7 +67,7 @@ function SynthGraphNodeList() {
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
           >
-            <div>{`${synthNode.id}: ${displayName}`}</div>
+            <div title={`${synthNode.id}: ${displayName}`}>{`${synthNode.id}: ${clippedDisplayName}${displayNameEllipsis}`}</div>
             <div className="iconGroup">
               <button 
                 className={hideUpOption} 

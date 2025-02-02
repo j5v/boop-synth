@@ -8,6 +8,7 @@ const nodeLayout = {
   dragRight : 1,
   dragTop : 0.8,
   dragBottom : 0.8,
+  displayNameMaxLength: 15,
 };
 
 export { nodeLayout };

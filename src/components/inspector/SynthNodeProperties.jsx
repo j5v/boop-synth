@@ -9,6 +9,7 @@ import FormPatchNodeInputList from './FormPatchNodeInputList.jsx'
 import FormPatchNodeBypass from './FormPatchNodeBypass.jsx'
 import Visualizations from './Visualizations.jsx'
 import ParameterGroup from '../generic/ParameterGroup.jsx'
+import { nodeLayout } from '../../lib/nodeLayout.js'
 
 import usePatchStore from '../../store/patchStore.jsx'
 import { useState } from 'react'
@@ -18,15 +19,21 @@ function SynthNodeProperties(props) {
 
   const { synthNode } = props;
   const displayName = getNodeDisplayTitle(synthNode);
+  const clippedDisplayName = displayName.slice(0, nodeLayout.displayNameMaxLength);
+  const displayNameEllipsis = displayName.length > nodeLayout.displayNameMaxLength ? '…' : '';
 
   const nodeType = getNodeTypeById(synthNode.nodeTypeId);
   const runCount = usePatchStore((state) => state.runCount);
   
+
   // edit name
+  
   const setNodeDisplayName = usePatchStore((state) => state.setNodeDisplayName);
   const [ editingTitle, setEditingTitle ] = useState(false);
-  const handleEditTitle = () => {
+
+  const handleEditTitle = (e) => {
     setEditingTitle(true);
+    e.target.focus();
   }
   const changeDisplayName = (e) => {
     setNodeDisplayName(synthNode.id, e.target.value);
@@ -40,7 +47,7 @@ function SynthNodeProperties(props) {
     }
 }
 
-  // Node description.
+  // Node description
 
   const hideNodeDescription = usePatchStore((state) => state.prefs.hideNodeDescription);
   const toggleHideNodeDescription = usePatchStore((state) => state.toggleHideNodeDescription);
@@ -76,12 +83,16 @@ function SynthNodeProperties(props) {
               <input
                 id="displayNameInput"
                 type="text"
+                maxLength="60"
                 value={synthNode.displayName}
                 onChange={changeDisplayName}
                 onKeyDown={handleKeypress}
                 onBlur={endEditDisplayName}
               ></input> :
-              <><span onClick={handleEditTitle}>{displayName}</span></>
+              <><span
+                onClick={handleEditTitle}
+                title={`${synthNode.id}: ${displayName}`}
+              >{clippedDisplayName}{displayNameEllipsis}</span></>
             }           
             
             {nodeType.isPlaceholder ? <span className="tag-warn">WIP</span> : ''}
