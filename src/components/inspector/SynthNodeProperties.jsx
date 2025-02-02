@@ -33,7 +33,6 @@ function SynthNodeProperties(props) {
 
   const handleEditTitle = (e) => {
     setEditingTitle(true);
-    e.target.focus();
   }
   const changeDisplayName = (e) => {
     setNodeDisplayName(synthNode.id, e.target.value);
@@ -83,6 +82,7 @@ function SynthNodeProperties(props) {
               <input
                 id="displayNameInput"
                 type="text"
+                autoFocus
                 maxLength="60"
                 value={synthNode.displayName}
                 onChange={changeDisplayName}
