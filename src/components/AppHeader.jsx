@@ -5,6 +5,7 @@ import { synthNodeTypes } from '../lib/synthNodeTypes.js'
 import { generate, generateAndPlay, generateFile } from '../lib/synth.js'
 
 import Header from './layout/Header.jsx'
+
 import IconPlay from './generic/IconPlay.jsx'
 import IconDownload from './generic/IconDownload.jsx'
 import IconRefresh from './generic/IconRefresh.jsx'

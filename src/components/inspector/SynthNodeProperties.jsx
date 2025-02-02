@@ -11,6 +11,7 @@ import Visualizations from './Visualizations.jsx'
 import ParameterGroup from '../generic/ParameterGroup.jsx'
 
 import usePatchStore from '../../store/patchStore.jsx'
+import { useState } from 'react'
 
 
 function SynthNodeProperties(props) {
@@ -19,13 +20,30 @@ function SynthNodeProperties(props) {
   const displayName = getNodeDisplayTitle(synthNode);
 
   const nodeType = getNodeTypeById(synthNode.nodeTypeId);
-
+  const runCount = usePatchStore((state) => state.runCount);
+  
+  // edit name
+  const setNodeDisplayName = usePatchStore((state) => state.setNodeDisplayName);
+  const [ editingTitle, setEditingTitle ] = useState(false);
+  const handleEditTitle = () => {
+    setEditingTitle(true);
+  }
+  const changeDisplayName = (e) => {
+    setNodeDisplayName(synthNode.id, e.target.value);
+  }
+  const endEditDisplayName = () => {
+    setEditingTitle(false);
+  }
+  function handleKeypress(e) {
+    if (e.keyCode == 13) {
+      setEditingTitle(false);
+    }
+}
 
   // Node description.
 
   const hideNodeDescription = usePatchStore((state) => state.prefs.hideNodeDescription);
   const toggleHideNodeDescription = usePatchStore((state) => state.toggleHideNodeDescription);
-  const runCount = usePatchStore((state) => state.runCount);
 
   const expanderTitle = hideNodeDescription ? 'Show description' : 'Hide description';
   const expander = 
@@ -48,13 +66,26 @@ function SynthNodeProperties(props) {
     i => getDefaultInput(synthNode, i).isParam == true
   ).length > 0;
 
-
- 
   return (
     <div className="SynthNodeProperties">
       <Header context="property-sheet">
         <div className="node-title">
-          <div>{expander}{`${synthNode.id}: ${displayName}`} {nodeType.isPlaceholder ? <span className="tag-warn">WIP</span> : ''}</div>
+          <div>
+            {expander}{`${synthNode.id}: `}
+            {editingTitle ?
+              <input
+                id="displayNameInput"
+                type="text"
+                value={synthNode.displayName}
+                onChange={changeDisplayName}
+                onKeyDown={handleKeypress}
+                onBlur={endEditDisplayName}
+              ></input> :
+              <><span onClick={handleEditTitle}>{displayName}</span></>
+            }           
+            
+            {nodeType.isPlaceholder ? <span className="tag-warn">WIP</span> : ''}
+            </div>
           {nodeTypeDescription}
         </div>
       </Header>

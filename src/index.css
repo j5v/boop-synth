@@ -19,6 +19,7 @@ html {
 
 select, input {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-size: 1em;
 }
 
 a {
@@ -47,7 +48,6 @@ h1 {
 }
 
 select {
-  font-size: 1em;
   height: 2.66rem;
   background-color: #1a1a1a;
   border-radius: 8px;

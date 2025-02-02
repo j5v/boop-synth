@@ -577,7 +577,12 @@ const usePatchStore = create(
         }),
       })),
 
-      
+      setNodeDisplayName: (nodeId, value) => set((state) => ({
+        ...state,
+        nodes: state.nodes.map((node) =>
+          node.id === nodeId ? { ...node, displayName: value } : { ...node }
+        ),
+      })),
 
       updateNode: (nodeId, obj) => set((state) => ({
         ...state,
