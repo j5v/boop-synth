@@ -7,7 +7,7 @@ function IconRefresh(props) {
     height="1.5rem" 
     width="1.5rem">
       <path
-        d="M 0.7 0.1  A 0.5 0.5 0 1 1  0.5 0.0  L 0.3 0.3"
+        d="M 0.2 0.1  A 0.5 0.5 0 1 0  0.5 0.0  L 0.7 0.3"
       />
   </svg>
 
