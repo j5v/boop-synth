@@ -32,7 +32,7 @@ const SynthGraphProperties = () => {
         onClick={handleToggleImportExpand}
         title="Show importer, as the next control"
       >
-        Import [{importExpanded ? '-': '+'}]
+        Import [{importExpanded ? '−': '+'}]
       </button>
     </div>
   )

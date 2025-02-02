@@ -13,7 +13,6 @@
   padding: 0.1rem 0.8rem 0.2rem 0.8rem;
   color: hsl(45, 100%, 60%);
   background-color: hsl(0, 0%, 15%);
-  /* border: 1px solid hsla(0, 0%, 100%, 0.3); */
   border-radius: 0.5rem;
   cursor: default;
 }
@@ -49,7 +48,8 @@
 @media (prefers-color-scheme: light) {
   .SynthGraphNodeList .item {
     background-color: hsl(0, 0%, 95%);
-    /* border: 1px solid hsla(0, 0%, 0%, 0.3); */
+    font-weight: 600;
+    color: hsl(45, 100%, 15%);
   }
 
   .SynthGraphNodeList .item.highlighted {

@@ -8,6 +8,6 @@
 @media (prefers-color-scheme: light) {
   .SynthNodeTitle {
     fill: hsl(45, 100%, 12%);
-    font-weight: bold;
+    font-weight: 600;
   }
 }
