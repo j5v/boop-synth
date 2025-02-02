@@ -30,8 +30,10 @@ function SynthNodeProperties(props) {
   
   const setNodeDisplayName = usePatchStore((state) => state.setNodeDisplayName);
   const [ editingTitle, setEditingTitle ] = useState(false);
+  const [ previousTitle, setPreviousTitle ] = useState(false);
 
   const handleEditTitle = (e) => {
+    setPreviousTitle(synthNode.displayName);
     setEditingTitle(true);
   }
   const changeDisplayName = (e) => {
@@ -41,8 +43,14 @@ function SynthNodeProperties(props) {
     setEditingTitle(false);
   }
   function handleKeypress(e) {
+
     if (e.keyCode == 13) {
       setEditingTitle(false);
+
+    } else if (e.keyCode == 27) {
+      setNodeDisplayName(synthNode.id, previousTitle);
+      setEditingTitle(false);
+
     }
 }
 
