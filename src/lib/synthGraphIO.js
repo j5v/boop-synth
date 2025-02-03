@@ -15,11 +15,11 @@ function writeFile(outputBuffers, perf) {
     const buffer = outputBuffers[outputBufferIndex];
 
     if (buffer.doOutput) {
-      const dataview = encodeWAV(
-          buffer.samples,
-          sampleRate,
-          channels
-      );
+      const dataview = encodeWAV({
+        samples: buffer.samples,
+        sampleRate,
+        channelCount: channels
+      });
 
       const audioBlob = new Blob([dataview], { type : 'audio/wav' });
 
