@@ -15,7 +15,7 @@ function SynthNodeTitle(props) {
             x={remAsPx(synthNode.x)}
             y={remAsPx(synthNode.y)}
             width={remAsPx(synthNode.w - 0.5)}
-            height={remAsPx(synthNode.y + 2)}
+            height={remAsPx(2)}
             fill="none"
           />
         </clipPath>

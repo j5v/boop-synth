@@ -46,7 +46,7 @@ const sampleResolutions = {
     bytesPerSample: 4,
     isPlaceholder: true,
   },  
-  // FLOAT_64: { // now you're just being silly
+  // FLOAT_64: {
   //   id: 26,
   //   name: '64-bit float',
   //   bytesPerSample: 8,
