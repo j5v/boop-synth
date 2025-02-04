@@ -45,7 +45,7 @@ const generate = function (params) {
           const input = node.inputs.find(i => i.id == nt.inputIdForBypass);
           value = valueOfInput(input, node, nodes);
         }
-        
+
         if (nodeTypeId !== synthNodeTypes.OUTPUT.id)
           node.outputs[0].signal = value;
 
@@ -216,12 +216,14 @@ const generate = function (params) {
       // Initialize output buffers
       if (node.nodeTypeId == synthNodeTypes.OUTPUT.id) {
 
-        const [ forget, forget2, filenamePart, doOutput ] = valuesOfInputs(node, nodes);
+        const [ forget, forget2, filenamePart, sampleResolutionId, doOutput ] = valuesOfInputs(node, nodes);
+
         const newBuffer = {
           id: id++,
           nodeId: node.id,
           filenamePart,
           doOutput,
+          sampleResolutionId,
           samples: []
         };        
         outputBuffers.push(newBuffer);

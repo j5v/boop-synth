@@ -1,50 +1,7 @@
 /* utility - Wave file writing */
 // modified by j5v, from: http://stackoverflow.com/questions/28804356/how-to-export-timbre-js-buffer-to-wav-or-any-other-audio-file-format
 import { appInfo } from './appInfo.js'
-import { sampleResolutions } from './sampleResolutions.js'
-
-// WIP: Delegate all these floatTo...() functions to data-driven from sampleResolutions.
-
-function floatTo8BitPCM(output, offset, input, fromFloat) {
-	var bytesPerSample = 1;
-	for (var i = 0; i < input.length; i++, offset += bytesPerSample) {
-		var s = Math.max(-1, Math.min(1, input[i]));
-		output.setInt8(offset, s * 0x7F, true);
-	}
-}
-
-function floatTo16BitPCM(output, offset, input, fromFloat) {
-	var bytesPerSample = 2;
-	for (var i = 0; i < input.length; i++, offset += bytesPerSample) {
-		var s = Math.max(-1, Math.min(1, input[i]));
-		output.setInt16(offset, s * 0x7FFF, true);
-	}
-}
-
-function floatTo24BitPackedPCM(output, offset, input, fromFloat) {
-	var bytesPerSample = 3;
-	for (var i = 0; i < input.length; i++, offset += bytesPerSample) {
-		var s = Math.max(-1, Math.min(1, input[i]));
-		// output.setInt(offset, s * 0x7FFFFF, true);
-		// TODO: pack into bytes: 1231 2312 3123 (appropriate Endian)
-	}
-}
-
-function floatTo24BitWorkingPCM(output, offset, input, fromFloat) {
-	var bytesPerSample = 3;
-	for (var i = 0; i < input.length; i++, offset += bytesPerSample) {
-		var s = Math.max(-1, Math.min(1, input[i]));
-		output.setInt32(offset, s * 0x7FFFFFFF, true);
-	}
-}
-
-function floatTo32BitPCM(output, offset, input, fromFloat) { // TODO: test
-	var bytesPerSample = 4;
-	for (var i = 0; i < input.length; i++, offset += bytesPerSample) {
-		var s = Math.max(-1, Math.min(1, input[i]));
-		output.setInt32(offset, s * 0x7FFFFFFF, true);
-	}
-}
+import { getSampleResolutionById, sampleResolutions } from './sampleResolutions.js'
 
 function writeString(view, offset, string) {
 	for (var i = 0; i < string.length; i++) {
@@ -52,16 +9,23 @@ function writeString(view, offset, string) {
 	}
 }
 
+function floatToPCM({ res, view, offset, samples }) {
+	for (var i = 0; i < samples.length; i++, offset += res.storageBytes) {
+		var s = Math.max(-1, Math.min(1, samples[i]));
+		view[res.writeFnName](offset, res.fromFloat(s), true);
+	}
+}
+
+
 function encodeWAV({ 
 	samples, 
 	sampleRate = 44100, 
 	channelCount = 1, 
 	sampleResolutionId = sampleResolutions.BIT_16.id,
 }) {
-	const bytesOfDataPerSample = 2;
-	const bytesOfStoragePerSample = 2;
-	const bitsPerSample = 16;
+	const res = getSampleResolutionById(sampleResolutionId);
 
+	const { storageBytes, bitsPerSample, format } = res;
 
 	const sizeOfRIFFHeader = 12;
 
@@ -70,7 +34,7 @@ function encodeWAV({
 	const sizeOfFmtChunk = sizeOfFmt + 8;
 
 	const offsetData = offsetFmt + sizeOfFmtChunk;
-	const audioDataLength = samples.length * channelCount * bytesOfDataPerSample;
+	const audioDataLength = samples.length * channelCount * storageBytes;
 	const sizeOfDataChunk = audioDataLength + 8;
 
 	const offsetList = offsetData + sizeOfDataChunk;
@@ -82,7 +46,6 @@ function encodeWAV({
 
 	const buffer = new ArrayBuffer (sizeOfRIFF);
 	const view = new DataView(buffer);
-
 
 	// RIFF header (size: 12)
 	/* RIFF identifier */
@@ -102,20 +65,20 @@ function encodeWAV({
 	/* format chunk length */
 	view.setUint32(offsetFmt + 4, sizeOfFmt, true);
 
-	/* sample format (raw) */
-	view.setUint16(offsetFmt + 8, 1, true);
+	/* sample format */
+	view.setUint16(offsetFmt + 8, format, true);
 
 	/* channel count */
-	view.setUint16(offsetFmt + 10, 1, true);
+	view.setUint16(offsetFmt + 10, channelCount, true);
 
 	/* sample rate */
 	view.setUint32(offsetFmt + 12, sampleRate, true);
 
 	/* byte rate (sample rate * block align) */
-	view.setUint32(offsetFmt + 16, sampleRate * 2, true);
+	view.setUint32(offsetFmt + 16, sampleRate * storageBytes, true);
 
 	/* block align (channel count * bytes per sample) */
-	view.setUint16(offsetFmt + 20, bytesOfDataPerSample, true);
+	view.setUint16(offsetFmt + 20, storageBytes * channelCount, true);
 
 	/* bits per sample */
 	view.setUint16(offsetFmt + 22, bitsPerSample, true);
@@ -129,7 +92,8 @@ function encodeWAV({
 	view.setUint32(offsetData + 4, audioDataLength, true);
 
 	/* PCM data */
-	floatTo16BitPCM(view, offsetData + 8, samples);
+	// floatTo16BitPCM(view, offsetData + 8, samples );
+	floatToPCM({ res, view, offset: offsetData + 8, samples });
 
 
 	// chunk: LIST

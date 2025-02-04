@@ -8,7 +8,7 @@ import saveAs from '../lib/FileSaver.js'
 
 function writeFile(outputBuffers, perf) {
 
-  const { channels, sampleRate, filenameRoot } = perf;
+  const { channels, sampleRate, filenameRoot, sampleResolution } = perf;
 
   for (let outputBufferIndex in outputBuffers) {
 
@@ -17,6 +17,7 @@ function writeFile(outputBuffers, perf) {
     if (buffer.doOutput) {
       const dataview = encodeWAV({
         samples: buffer.samples,
+        sampleResolutionId: buffer.sampleResolutionId,
         sampleRate,
         channelCount: channels
       });

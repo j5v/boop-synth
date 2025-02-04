@@ -182,6 +182,7 @@ const synthNodeTypes = {
     inputs: [
       {
         id: 1,
+        order: 1,
         displayName: 'Signal',
         displayNameShort: 'In',
         intentId: synthNodeTerminalIntents.LEVEL.id,
@@ -190,6 +191,7 @@ const synthNodeTypes = {
       },
       {
         id: 2,
+        order: 2,
         displayName: 'Gain',
         description: 'Less than 1.0 is quieter, more than 1.0 is louder',
         intentId: synthNodeTerminalIntents.LEVEL.id,
@@ -197,7 +199,7 @@ const synthNodeTypes = {
       },
       {
         id: 3,
-        order: 2,
+        order: 12,
         displayName: 'Filename part',
         description: 'Added into your project name, to make up a filename',
         intentId: synthNodeTerminalIntents.FILENAME_PART.id,
@@ -207,7 +209,7 @@ const synthNodeTypes = {
       },
       {
         id: 10,
-        order: 1,
+        order: 11,
         displayName: 'Output file/audio',
         description: 'If unselected, prevent Play audio and Download audio file',
         intentId: synthNodeTerminalIntents.CHECK_BOOL.id,
@@ -216,12 +218,11 @@ const synthNodeTypes = {
       },
       {
         id: 4,
-        order: 3,
+        order: 13,
         displayName: 'Resolution',
         description: 'The format for each sample',
         intentId: synthNodeTerminalIntents.SAMPLE_RESOLUTION.id,
         isParam: true,
-        isPlaceholder: true,
         onlyShowIf: { inputId: 10, hasValue: true },
         defaultValue: sampleResolutions.BIT_16.id,
       },
