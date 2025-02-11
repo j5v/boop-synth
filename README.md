@@ -13,9 +13,3 @@ This is a web browser app, built in JavaScript with Vite, React, and Zustand.
 Find visual components in `/components`, with subfolders `graph` (SVG), `inspector`, `layout`, and `generic`. A design system would be more thorough.
 
 There are currently no tests included here, pending a choice of tools.
-
-# Aims
-
-1. Accessible and localizable.
-2. Modular node types.
-3. Prioritize readability and simplicity over real-time synthesis.
