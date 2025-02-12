@@ -113,7 +113,8 @@ function VisualizationWaveform({ synthNodeId, w, h }) {
       const lineClass = lineCount == highlightRow ? 'wf highlight' : 'wf';
       
       svg.push( <path className={lineClass} key={key++} d={path.join('')} /> );
-      svg.push( <line key={key++} className="axis" x1={lineOriginX} y1={lineOriginY} x2={lineOriginX + lineLength} y2={lineOriginY} /> );
+      svg.push( <line key={key++} className="axis" x1={lineOriginX} y1={lineOriginY} x2={lineOriginX - 2} y2={lineOriginY} /> );
+      svg.push( <line key={key++} className="axis" x1={lineOriginX + lineLength} y1={lineOriginY} x2={lineOriginX + lineLength + 2} y2={lineOriginY} /> );
     }
   }
 
